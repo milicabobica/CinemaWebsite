@@ -59,49 +59,6 @@
         </select>
     </div>
 
-    @* <div class="col-md-2"> *@
-    @*     <select class="form-select" name="day"> *@
-    @* *@
-    @*         <option value="">Any day</option> *@
-    @* *@
-    @*         <option value="Monday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Monday")"> *@
-    @*             Monday *@
-    @*         </option> *@
-    @* *@
-    @*         <option value="Tuesday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Tuesday")"> *@
-    @*             Tuesday *@
-    @*         </option> *@
-    @* *@
-    @*         <option value="Wednesday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Wednesday")"> *@
-    @*             Wednesday *@
-    @*         </option> *@
-    @* *@
-    @*         <option value="Thursday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Thursday")"> *@
-    @*             Thursday *@
-    @*         </option> *@
-    @* *@
-    @*         <option value="Friday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Friday")"> *@
-    @*             Friday *@
-    @*         </option> *@
-    @* *@
-    @*         <option value="Saturday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Saturday")"> *@
-    @*             Saturday *@
-    @*         </option> *@
-    @* *@
-    @*         <option value="Sunday" *@
-    @*                 selected="@(Context.Request.Query["day"] == "Sunday")"> *@
-    @*             Sunday *@
-    @*         </option> *@
-    @* *@
-    @*     </select> *@
-    @* </div> *@
-
     <!-- Filter -->
     <div class="col-md-1">
         <button class="btn btn-primary w-100" type="submit">
@@ -124,6 +81,7 @@
 
     <thead>
     <tr>
+        <th></th>
         <th>Title</th>
         <th>Language</th>
         <th>Release</th>
@@ -137,8 +95,8 @@
     @foreach (var item in Model)
     {
         <tr>
-
-            <td>@item.Title</td>
+            <th><img src="@item.PosterUrl" width="80"/></th>
+            <td><a asp-action="Details"asp-route-id="@item.Id">@item.Title</a></td>
 
             <td>@item.Language</td>
 
@@ -152,15 +110,10 @@
 
             <td>
 
-                <a asp-action="Details"
-                   asp-route-id="@item.Id">
-                    Details
-                </a>
+                @* <a asp-action="Details" asp-route-id="@item.Id"> Details </a> *@
 
                 @if (User.IsInRole("Admin"))
                 {
-                    <span> | </span>
-
                     <a asp-action="Edit"
                        asp-route-id="@item.Id">
                         Edit

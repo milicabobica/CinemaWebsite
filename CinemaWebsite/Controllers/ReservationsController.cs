@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
-[Authorize]
 public class ReservationsController(
     ApplicationDbContext context,
     IReservationService reservationService,
@@ -71,7 +70,14 @@ public class ReservationsController(
             return View(model);
         }
 
+        return RedirectToAction(nameof(Payment), new {  id = result.Reservation!.Id });
+
         return RedirectToAction(nameof(Details), new { id = result.Reservation!.Id });
+    }
+
+    public async Task<IActionResult> Payment(int id)
+    {
+        return View();
     }
 
     public async Task<IActionResult> Details(int id)

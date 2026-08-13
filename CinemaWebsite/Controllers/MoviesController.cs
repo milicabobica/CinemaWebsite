@@ -9,7 +9,7 @@ namespace CinemaWebsite.Controllers;
 public class MoviesController(ApplicationDbContext context) : Controller
 {
     [AllowAnonymous]
-    public async Task<IActionResult> Index(string? search, int? genreId, string? status, string? language)
+    public async Task<IActionResult> Index(string? search, int? genreId, string? status, string? language, string? day)
     {
         var query = context.Movies
             .Include(m => m.MovieGenres)
@@ -18,12 +18,15 @@ public class MoviesController(ApplicationDbContext context) : Controller
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            query = query.Where(m => m.Title.Contains(search) || m.Description.Contains(search));
+            query = query.Where(m =>
+                m.Title.Contains(search) ||
+                m.Description.Contains(search));
         }
 
         if (genreId.HasValue)
         {
-            query = query.Where(m => m.MovieGenres.Any(g => g.GenreId == genreId.Value));
+            query = query.Where(m =>
+                m.MovieGenres.Any(g => g.GenreId == genreId.Value));
         }
 
         if (!string.IsNullOrWhiteSpace(language))
@@ -34,12 +37,50 @@ public class MoviesController(ApplicationDbContext context) : Controller
         if (!string.IsNullOrWhiteSpace(status))
         {
             var now = DateTime.UtcNow;
-            if (status == "NowShowing") query = query.Where(m => m.ReleaseDate <= now);
-            if (status == "ComingSoon") query = query.Where(m => m.ReleaseDate > now);
+
+            if (status == "NowShowing")
+            {
+                query = query.Where(m => m.ReleaseDate <= now);
+            }
+            else if (status == "ComingSoon")
+            {
+                query = query.Where(m => m.ReleaseDate > now);
+            }
+        }
+        
+        
+        // if (!string.IsNullOrWhiteSpace(day))
+        // {
+        //     if (Enum.TryParse<DayOfWeek>(day, true, out var selectedDay))
+        //     {
+        //         query = query.Where(m =>
+        //             m.ReleaseDate.DayOfWeek == selectedDay);
+        //     }
+        // }
+        
+        DayOfWeek selectedDay;
+
+        if (string.IsNullOrWhiteSpace(day) ||
+            !Enum.TryParse(day, true, out selectedDay))
+        {
+            selectedDay = DateTime.Today.DayOfWeek;
         }
 
-        ViewBag.Genres = await context.Genres.AsNoTracking().OrderBy(g => g.Name).ToListAsync();
-        return View(await query.OrderBy(m => m.Title).ToListAsync());
+        // Filter movies by selected day
+        query = query.Where(m =>
+            m.ReleaseDate.DayOfWeek == selectedDay);
+
+        ViewBag.SelectedDay = selectedDay;
+
+
+        ViewBag.Genres = await context.Genres
+            .AsNoTracking()
+            .OrderBy(g => g.Name)
+            .ToListAsync();
+
+        return View(await query
+            .OrderBy(m => m.Title)
+            .ToListAsync());
     }
 
     [AllowAnonymous]

@@ -2,46 +2,185 @@
 
 @{
     ViewData["Title"] = "Movies";
+    var selectedDay = ViewBag.SelectedDay is DayOfWeek day ? day : DateTime.Today.DayOfWeek;
+
+    var days = Enum.GetValues<DayOfWeek>();
 }
 
 <h3>Movies</h3>
 
 <form method="get" class="row g-2 mb-3">
-    <div class="col-md-3"><input class="form-control" name="search" value="@Context.Request.Query["search"]" placeholder="Search" /></div>
-    <div class="col-md-2"><input class="form-control" name="language" value="@Context.Request.Query["language"]" placeholder="Language" /></div>
+
+    <!-- Search -->
+    <div class="col-md-3">
+        <input class="form-control"
+               name="search"
+               value="@Context.Request.Query["search"]"
+               placeholder="Search movies..." />
+    </div>
+
+    <!-- Language -->
+    <div class="col-md-2">
+        <input class="form-control"
+               name="language"
+               value="@Context.Request.Query["language"]"
+               placeholder="Language" />
+    </div>
+
+    <!-- Status -->
     <div class="col-md-2">
         <select class="form-select" name="status">
             <option value="">Any status</option>
-            <option value="NowShowing">Now showing</option>
-            <option value="ComingSoon">Coming soon</option>
+
+            <option value="NowShowing"
+                    selected="@(Context.Request.Query["status"] == "NowShowing")">
+                Now showing
+            </option>
+
+            <option value="ComingSoon"
+                    selected="@(Context.Request.Query["status"] == "ComingSoon")">
+                Coming soon
+            </option>
         </select>
     </div>
-    <div class="col-md-2"><button class="btn btn-primary" type="submit">Filter</button></div>
+
+    <!-- Day -->
+    <div class="col-md-2">
+        <select class="form-select" name="day">
+
+            @foreach (var day in days)
+            {
+                <option value="@day"
+                        selected="@(day == selectedDay)">
+                    @day
+                </option>
+            }
+
+        </select>
+    </div>
+
+    @* <div class="col-md-2"> *@
+    @*     <select class="form-select" name="day"> *@
+    @* *@
+    @*         <option value="">Any day</option> *@
+    @* *@
+    @*         <option value="Monday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Monday")"> *@
+    @*             Monday *@
+    @*         </option> *@
+    @* *@
+    @*         <option value="Tuesday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Tuesday")"> *@
+    @*             Tuesday *@
+    @*         </option> *@
+    @* *@
+    @*         <option value="Wednesday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Wednesday")"> *@
+    @*             Wednesday *@
+    @*         </option> *@
+    @* *@
+    @*         <option value="Thursday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Thursday")"> *@
+    @*             Thursday *@
+    @*         </option> *@
+    @* *@
+    @*         <option value="Friday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Friday")"> *@
+    @*             Friday *@
+    @*         </option> *@
+    @* *@
+    @*         <option value="Saturday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Saturday")"> *@
+    @*             Saturday *@
+    @*         </option> *@
+    @* *@
+    @*         <option value="Sunday" *@
+    @*                 selected="@(Context.Request.Query["day"] == "Sunday")"> *@
+    @*             Sunday *@
+    @*         </option> *@
+    @* *@
+    @*     </select> *@
+    @* </div> *@
+
+    <!-- Filter -->
+    <div class="col-md-1">
+        <button class="btn btn-primary w-100" type="submit">
+            Filter
+        </button>
+    </div>
+
 </form>
 
 @if (User.IsInRole("Admin"))
 {
-    <p><a asp-action="Create" class="btn btn-success">Create movie</a></p>
+    <p>
+        <a asp-action="Create" class="btn btn-success">
+            Create movie
+        </a>
+    </p>
 }
 
 <table class="table table-striped">
-    <thead><tr><th>Title</th><th>Language</th><th>Release</th><th></th></tr></thead>
+
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Language</th>
+        <th>Release</th>
+        <th>Day</th>
+        <th></th>
+    </tr>
+    </thead>
+
     <tbody>
+
     @foreach (var item in Model)
     {
         <tr>
+
             <td>@item.Title</td>
+
             <td>@item.Language</td>
-            <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
+
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @item.ReleaseDate.ToString("yyyy-MM-dd")
+            </td>
+
+            <td>
+                @item.ReleaseDate.ToString("dddd")
+            </td>
+
+            <td>
+
+                <a asp-action="Details"
+                   asp-route-id="@item.Id">
+                    Details
+                </a>
+
                 @if (User.IsInRole("Admin"))
                 {
-                    <span> | </span><a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <span> | </span><a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <span> | </span>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id">
+                        Edit
+                    </a>
+
+                    <span> | </span>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id">
+                        Delete
+                    </a>
                 }
+
             </td>
+
         </tr>
     }
+
     </tbody>
+
 </table>
+
+

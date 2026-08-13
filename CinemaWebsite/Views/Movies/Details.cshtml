@@ -14,10 +14,11 @@
 {
     <li>
         @screening.StartTime.ToString("yyyy-MM-dd HH:mm") - @screening.CinemaHall.Name - @screening.Price
-        @if (User.Identity?.IsAuthenticated == true)
-        {
-            <a asp-controller="Reservations" asp-action="Create" asp-route-screeningId="@screening.Id">Reserve</a>
-        }
+        @* @if (User.Identity?.IsAuthenticated == true) *@
+        @* { *@
+        @*     <a asp-controller="Reservations" asp-action="Create" asp-route-screeningId="@screening.Id">Reserve</a> *@
+        @* } *@
+        <a asp-controller="Reservations" asp-action="Create" asp-route-screeningId="@screening.Id">Reserve</a>
     </li>
 }
 </ul>

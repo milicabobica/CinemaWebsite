@@ -5,7 +5,7 @@
 
 <h1>Payment</h1>
 
-<div class="pill-breadcrumb"><a asp-controller="Home" asp-action="Index">Home</a><span>&gt;</span><a asp-controller="ObservationReservation" asp-action="MyReservations">Reservations</a><span>&gt;</span><span>Payment</span></div>
+<div class="pill-breadcrumb"><a asp-controller="Home" asp-action="Index">Home</a><span>&gt;</span><a asp-controller="Reservations" asp-action="MyReservations">Reservations</a><span>&gt;</span><span>Payment</span></div>
 
 <div class="row g-4 booking-shell booking-reference-shell">
     <div class="col-lg-7">
@@ -16,7 +16,18 @@
             <form asp-action="Payment" method="post">
                 @Html.AntiForgeryToken()
                 <input asp-for="ReservationId" type="hidden" />
+                <input asp-for="IsEmailRequired" type="hidden" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" readonly="@(!Model.IsEmailRequired)" />
+                    @if (!Model.IsEmailRequired)
+                    {
+                        <div class="form-text">Using your account email.</div>
+                    }
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
             <div class="mb-3">
                 <label asp-for="CardholderName" class="form-label"></label>
@@ -50,7 +61,7 @@
             </div>
 
                 <button type="submit" class="btn btn-primary">Confirm and pay</button>
-                <a  asp-controller="ObservationReservation" asp-action="Create" asp-route-telescopeId="@ViewData["TelescopeId"]" class="btn btn-outline-secondary">Back</a>
+                <a asp-controller="Reservations" asp-action="Details" asp-route-id="@Model.ReservationId" class="btn btn-outline-secondary">Back</a>
             </form>
         </div>
     </div>

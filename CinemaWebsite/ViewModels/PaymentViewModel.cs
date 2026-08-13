@@ -7,6 +7,12 @@ public class PaymentViewModel
 {
     public int ReservationId { get; set; }
 
+    [Display(Name = "Email")]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    public bool IsEmailRequired { get; set; }
+
     [Required]
     [Display(Name = "Cardholder Name")]
     public string CardholderName { get; set; } = string.Empty;

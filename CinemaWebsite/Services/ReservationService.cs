@@ -58,7 +58,7 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             ReservationDate = DateTime.UtcNow,
             NumberOfTickets = ticketCount,
             TotalPrice = screening.Price * ticketCount,
-            Status = ReservationStatus.Confirmed
+            Status = ReservationStatus.Pending
         };
 
         context.Reservations.Add(reservation);

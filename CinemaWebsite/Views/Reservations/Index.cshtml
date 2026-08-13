@@ -1,0 +1,3 @@
+@model IEnumerable<CinemaWebsite.Models.Reservation>
+<h3>All Reservations</h3>
+<table class="table"><tr><th>User</th><th>Movie</th><th>Tickets</th><th>Status</th></tr>@foreach (var r in Model){<tr><td>@r.User?.Email</td><td>@r.Screening.Movie.Title</td><td>@r.NumberOfTickets</td><td>@r.Status</td></tr>}</table>

@@ -1,0 +1,3 @@
+@model IEnumerable<CinemaWebsite.Models.ContactMessage>
+<h3>Contact Messages</h3>
+<table class="table"><tr><th>From</th><th>Subject</th><th>Date</th><th>Read</th><th></th></tr>@foreach (var m in Model){<tr><td>@m.Name (@m.Email)</td><td>@m.Subject</td><td>@m.SentAt</td><td>@m.IsRead</td><td><a asp-action="Details" asp-route-id="@m.Id">Details</a></td></tr>}</table>

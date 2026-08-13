@@ -1,0 +1,4 @@
+@model CinemaWebsite.Models.Genre
+<h3>@Model.Name</h3>
+<ul>@foreach (var mg in Model.MovieGenres){<li>@mg.Movie.Title</li>}</ul>
+<a asp-action="Index">Back</a>

@@ -1,0 +1,44 @@
+@model CinemaWebsite.Models.Movie
+<h3>Edit Movie</h3>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <label asp-for="Title" class="form-label"></label>
+    <input asp-for="Title" class="form-control mb-2" />
+
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" class="form-control mb-2"></textarea>
+
+    <label asp-for="Director" class="form-label"></label>
+    <input asp-for="Director" class="form-control mb-2" />
+
+    <label asp-for="Cast" class="form-label"></label>
+    <input asp-for="Cast" class="form-control mb-2" />
+
+    <label asp-for="Duration" class="form-label"></label>
+    <input asp-for="Duration" class="form-control mb-2" />
+
+    <label asp-for="ReleaseDate" class="form-label"></label>
+    <input asp-for="ReleaseDate" type="datetime-local" class="form-control mb-2" />
+
+    <label asp-for="Language" class="form-label"></label>
+    <input asp-for="Language" class="form-control mb-2" />
+
+    <label asp-for="SubtitleLanguage" class="form-label"></label>
+    <input asp-for="SubtitleLanguage" class="form-control mb-2" />
+
+    <label asp-for="AgeRating" class="form-label"></label>
+    <input asp-for="AgeRating" class="form-control mb-2" />
+
+    <label asp-for="Rating" class="form-label"></label>
+    <input asp-for="Rating" class="form-control mb-2" />
+
+    <label asp-for="PosterUrl" class="form-label"></label>
+    <input asp-for="PosterUrl" class="form-control mb-2" />
+
+    <label asp-for="TrailerUrl" class="form-label"></label>
+    <input asp-for="TrailerUrl" class="form-control mb-2" />
+
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

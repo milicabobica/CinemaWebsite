@@ -1,8 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model CinemaWebsite.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h3>Now Showing</h3>
+<ul>@foreach (var m in Model.NowShowingMovies){<li><a asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">@m.Title</a></li>}</ul>
+
+<h3>Coming Soon</h3>
+<ul>@foreach (var m in Model.ComingSoonMovies){<li>@m.Title (@m.ReleaseDate.ToString("yyyy-MM-dd"))</li>}</ul>
+
+<h3>Latest News</h3>
+<ul>@foreach (var n in Model.LatestNews){<li><a asp-controller="News" asp-action="Details" asp-route-id="@n.Id">@n.Title</a></li>}</ul>
+
+<h3>Services</h3>
+<ul>@foreach (var s in Model.Services){<li>@s.Name</li>}</ul>
+
+<p>Total movies: @Model.MovieCount</p>
+<p>Total halls: @Model.CinemaHallCount</p>

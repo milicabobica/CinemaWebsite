@@ -1,0 +1,20 @@
+@model CinemaWebsite.Models.ContactMessage
+<h3>Contact Us</h3>
+@if (TempData["ContactSubmitted"] != null){<div class="alert alert-success">@TempData["ContactSubmitted"]</div>}
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control mb-2" />
+
+    <label asp-for="Email" class="form-label"></label>
+    <input asp-for="Email" class="form-control mb-2" />
+
+    <label asp-for="Subject" class="form-label"></label>
+    <input asp-for="Subject" class="form-control mb-2" />
+
+    <label asp-for="Message" class="form-label"></label>
+    <textarea asp-for="Message" class="form-control mb-2"></textarea>
+
+    <button class="btn btn-primary" type="submit">Send</button>
+</form>

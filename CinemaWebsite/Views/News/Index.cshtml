@@ -1,0 +1,4 @@
+@model IEnumerable<CinemaWebsite.Models.News>
+<h3>News</h3>
+@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
+<ul>@foreach (var n in Model){<li><a asp-action="Details" asp-route-id="@n.Id">@n.Title</a> (@(n.IsPublished ? "Published" : "Draft"))</li>}</ul>

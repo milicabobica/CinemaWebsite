@@ -1,0 +1,3 @@
+@model CinemaWebsite.Models.Service
+<h3>Delete Service</h3><p>Delete <strong>@Model.Name</strong>?</p>
+<form asp-action="Delete" method="post"><input type="hidden" asp-for="Id" /><button class="btn btn-danger" type="submit">Delete</button></form>

@@ -1,0 +1,4 @@
+@model IEnumerable<CinemaWebsite.Models.CinemaHall>
+<h3>Cinema Halls</h3>
+@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
+<table class="table"><tr><th>Name</th><th>Capacity</th><th></th></tr>@foreach (var h in Model){<tr><td>@h.Name</td><td>@h.Capacity</td><td><a asp-action="Details" asp-route-id="@h.Id">Details</a></td></tr>}</table>

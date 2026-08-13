@@ -1,0 +1,26 @@
+@model CinemaWebsite.Models.Employee
+<h3>Edit Employee</h3>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <label asp-for="FirstName" class="form-label"></label>
+    <input asp-for="FirstName" class="form-control mb-2" />
+
+    <label asp-for="LastName" class="form-label"></label>
+    <input asp-for="LastName" class="form-control mb-2" />
+
+    <label asp-for="Position" class="form-label"></label>
+    <input asp-for="Position" class="form-control mb-2" />
+
+    <label asp-for="Email" class="form-label"></label>
+    <input asp-for="Email" class="form-control mb-2" />
+
+    <label asp-for="Phone" class="form-label"></label>
+    <input asp-for="Phone" class="form-control mb-2" />
+
+    <label asp-for="PhotoUrl" class="form-label"></label>
+    <input asp-for="PhotoUrl" class="form-control mb-2" />
+
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

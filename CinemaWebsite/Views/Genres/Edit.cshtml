@@ -1,0 +1,9 @@
+@model CinemaWebsite.Models.Genre
+<h3>Edit Genre</h3>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control mb-2" />
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

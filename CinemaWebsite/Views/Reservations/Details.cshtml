@@ -1,0 +1,4 @@
+@model CinemaWebsite.Models.Reservation
+<h3>Reservation #@Model.Id</h3>
+<p><strong>Movie:</strong> @Model.Screening.Movie.Title</p><p><strong>Hall:</strong> @Model.Screening.CinemaHall.Name</p><p><strong>Tickets:</strong> @Model.NumberOfTickets</p><p><strong>Total:</strong> @Model.TotalPrice</p><p><strong>Status:</strong> @Model.Status</p>
+<a asp-action="MyReservations">Back</a>

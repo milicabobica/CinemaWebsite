@@ -1,0 +1,4 @@
+@model CinemaWebsite.Models.ContactMessage
+<h3>@Model.Subject</h3><p><strong>From:</strong> @Model.Name (@Model.Email)</p><p>@Model.Message</p>
+<form asp-action="MarkAsRead" method="post" class="mb-2"><input type="hidden" name="id" value="@Model.Id" /><button class="btn btn-secondary" type="submit">Mark as read</button></form>
+<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>

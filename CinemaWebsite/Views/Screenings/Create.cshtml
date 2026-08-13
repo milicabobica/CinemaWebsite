@@ -1,0 +1,35 @@
+@model CinemaWebsite.Models.Screening
+<h3>Create Screening</h3>
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <label asp-for="MovieId" class="form-label"></label>
+    <select asp-for="MovieId" asp-items="ViewBag.Movies" class="form-select mb-2"></select>
+    <span asp-validation-for="MovieId" class="text-danger"></span>
+
+    <label asp-for="CinemaHallId" class="form-label"></label>
+    <select asp-for="CinemaHallId" asp-items="ViewBag.Halls" class="form-select mb-2"></select>
+    <span asp-validation-for="CinemaHallId" class="text-danger"></span>
+
+    <label asp-for="StartTime" class="form-label"></label>
+    <input asp-for="StartTime" type="datetime-local" class="form-control mb-2" />
+    <span asp-validation-for="StartTime" class="text-danger"></span>
+
+    <label asp-for="EndTime" class="form-label"></label>
+    <input asp-for="EndTime" type="datetime-local" class="form-control mb-2" />
+    <span asp-validation-for="EndTime" class="text-danger"></span>
+
+    <label asp-for="Price" class="form-label"></label>
+    <input asp-for="Price" class="form-control mb-2" />
+    <span asp-validation-for="Price" class="text-danger"></span>
+
+    <label asp-for="Language" class="form-label"></label>
+    <input asp-for="Language" class="form-control mb-2" />
+    <span asp-validation-for="Language" class="text-danger"></span>
+
+    <label asp-for="SubtitleLanguage" class="form-label"></label>
+    <input asp-for="SubtitleLanguage" class="form-control mb-2" />
+    <span asp-validation-for="SubtitleLanguage" class="text-danger"></span>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

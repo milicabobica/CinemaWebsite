@@ -1,0 +1,14 @@
+@model CinemaWebsite.Models.Reservation
+@{ var screening = (CinemaWebsite.Models.Screening)ViewBag.Screening; }
+<h3>Reserve Tickets</h3>
+<p>@screening.Movie.Title - @screening.StartTime - Seats available: @ViewBag.AvailableSeats</p>
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="ScreeningId" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <label asp-for="NumberOfTickets" class="form-label"></label>
+    <input asp-for="NumberOfTickets" class="form-control mb-2" />
+    <span asp-validation-for="NumberOfTickets" class="text-danger"></span>
+
+    <button class="btn btn-primary" type="submit">Reserve</button>
+</form>

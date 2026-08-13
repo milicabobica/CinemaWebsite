@@ -24,9 +24,44 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-controller="Movies" asp-action="Index">Movies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Screenings" asp-action="Index">Screenings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Services" asp-action="Index">Services</a>
+                    </li>
+                    @* <li class="nav-item"> *@
+                    @*     <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">Employees</a> *@
+                    @* </li> *@
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="News" asp-action="Index">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="ContactMessages" asp-action="Create">Contact</a>
                     </li>
                 </ul>
+                @* <form asp-controller="Home" asp-action="SetLanguage" method="post" class="me-2"> *@
+                @*     @Html.AntiForgeryToken() *@
+                @*     <input type="hidden" name="culture" value="en" /> *@
+                @*     <button class="btn btn-sm btn-outline-secondary" type="submit">EN</button> *@
+                @* </form> *@
+                @* <form asp-controller="Home" asp-action="SetLanguage" method="post" class="me-2"> *@
+                @*     @Html.AntiForgeryToken() *@
+                @*     <input type="hidden" name="culture" value="mk" /> *@
+                @*     <button class="btn btn-sm btn-outline-secondary" type="submit">MK</button> *@
+                @* </form> *@
+                @* <form asp-controller="Home" asp-action="SetCookieConsent" method="post" class="me-2"> *@
+                @*     @Html.AntiForgeryToken() *@
+                @*     <input type="hidden" name="consent" value="AcceptAll" /> *@
+                @*     <button class="btn btn-sm btn-outline-success" type="submit">Accept All Cookies</button> *@
+                @* </form> *@
+                @* <form asp-controller="Home" asp-action="SetCookieConsent" method="post" class="me-2"> *@
+                @*     @Html.AntiForgeryToken() *@
+                @*     <input type="hidden" name="consent" value="NecessaryOnly" /> *@
+                @*     <button class="btn btn-sm btn-outline-warning" type="submit">Necessary Only</button> *@
+                @* </form> *@
                 <partial name="_LoginPartial"/>
             </div>
         </div>

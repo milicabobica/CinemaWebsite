@@ -1,0 +1,3 @@
+@model CinemaWebsite.Models.ContactMessage
+<h3>Delete Message</h3><p>Delete message from <strong>@Model.Name</strong>?</p>
+<form asp-action="Delete" method="post"><input type="hidden" asp-for="Id" /><button class="btn btn-danger" type="submit">Delete</button></form>

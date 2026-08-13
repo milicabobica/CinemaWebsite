@@ -1,0 +1,28 @@
+@model CinemaWebsite.Models.News
+<h3>Edit News</h3>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <label asp-for="Title" class="form-label"></label>
+    <input asp-for="Title" class="form-control mb-2" />
+
+    <label asp-for="Summary" class="form-label"></label>
+    <input asp-for="Summary" class="form-control mb-2" />
+
+    <label asp-for="Content" class="form-label"></label>
+    <textarea asp-for="Content" class="form-control mb-2"></textarea>
+
+    <label asp-for="Author" class="form-label"></label>
+    <input asp-for="Author" class="form-control mb-2" />
+
+    <label asp-for="PublishedDate" class="form-label"></label>
+    <input asp-for="PublishedDate" type="datetime-local" class="form-control mb-2" />
+
+    <div class="form-check mb-2">
+        <input asp-for="IsPublished" class="form-check-input" />
+        <label asp-for="IsPublished" class="form-check-label"></label>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

@@ -1,0 +1,3 @@
+@model CinemaWebsite.Models.Screening
+<h3>Delete Screening</h3><div asp-validation-summary="ModelOnly" class="text-danger"></div><p>Delete screening for <strong>@Model.Movie.Title</strong> in <strong>@Model.CinemaHall.Name</strong>?</p>
+<form asp-action="Delete" method="post"><input type="hidden" asp-for="Id" /><button class="btn btn-danger" type="submit">Delete</button></form>

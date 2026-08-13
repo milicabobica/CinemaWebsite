@@ -1,0 +1,25 @@
+@model CinemaWebsite.Models.Movie
+
+<h3>@Model.Title</h3>
+<p>@Model.Description</p>
+<p><strong>Director:</strong> @Model.Director</p>
+<p><strong>Cast:</strong> @Model.Cast</p>
+<p><strong>Language:</strong> @Model.Language</p>
+<p><strong>Age rating:</strong> @Model.AgeRating</p>
+<p><strong>Rating:</strong> @Model.Rating</p>
+
+<h4>Screenings</h4>
+<ul>
+@foreach (var screening in Model.Screenings.OrderBy(s => s.StartTime))
+{
+    <li>
+        @screening.StartTime.ToString("yyyy-MM-dd HH:mm") - @screening.CinemaHall.Name - @screening.Price
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-controller="Reservations" asp-action="Create" asp-route-screeningId="@screening.Id">Reserve</a>
+        }
+    </li>
+}
+</ul>
+
+<a asp-action="Index">Back</a>

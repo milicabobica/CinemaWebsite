@@ -4,5 +4,9 @@
 {
     <div class="alert alert-success">@paymentSuccessMessage</div>
 }
-<p><strong>Movie:</strong> @Model.Screening.Movie.Title</p><p><strong>Hall:</strong> @Model.Screening.CinemaHall.Name</p><p><strong>Tickets:</strong> @Model.NumberOfTickets</p><p><strong>Total:</strong> @Model.TotalPrice</p><p><strong>Status:</strong> @(Model.Status == CinemaWebsite.Models.ReservationStatus.Confirmed ? "Paid" : Model.Status.ToString())</p>
-<a asp-action="MyReservations">Back</a>
+<p><strong>Movie:</strong> @Model.Screening.Movie.Title</p>
+<p><strong>Hall:</strong> @Model.Screening.CinemaHall.Name</p>
+<p><strong>Tickets:</strong> @Model.NumberOfTickets</p>
+<p><strong>Total:</strong> @Model.TotalPrice</p>
+<p><strong>Status:</strong> @(Model.Status == CinemaWebsite.Models.ReservationStatus.Confirmed ? "Paid" : Model.Status.ToString())</p>
+<a asp-controller="Home" asp-action="Index" >Back</a>

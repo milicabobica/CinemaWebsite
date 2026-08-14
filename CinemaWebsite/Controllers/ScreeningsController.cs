@@ -45,7 +45,12 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
                 "To create a screening, add at least one movie and one available hall first.");
         }
 
-        return View(new Screening());
+        var start = DateTime.Now.Date;
+        return View(new Screening
+        {
+            StartTime = start,
+            EndTime = start.AddHours(2)
+        });
     }
 
     [HttpPost]
@@ -56,6 +61,7 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
         ModelState.Remove(nameof(Screening.Movie));
         ModelState.Remove(nameof(Screening.CinemaHall));
         ModelState.Remove(nameof(Screening.Reservations));
+        ModelState.Remove(nameof(Screening.EndTime));
 
         var hasMovies = await context.Movies.AnyAsync();
         var hasAvailableHalls = await context.CinemaHalls.AnyAsync(h => h.IsAvailable);
@@ -65,6 +71,7 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
                 "Cannot create screening because there are no movies or no available halls.");
         }
 
+        await ApplyAutoEndTimeAsync(item);
         await ValidateScreeningAsync(item);
         if (!ModelState.IsValid)
         {
@@ -96,7 +103,9 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
         ModelState.Remove(nameof(Screening.Movie));
         ModelState.Remove(nameof(Screening.CinemaHall));
         ModelState.Remove(nameof(Screening.Reservations));
+        ModelState.Remove(nameof(Screening.EndTime));
 
+        await ApplyAutoEndTimeAsync(item);
         await ValidateScreeningAsync(item, id);
         if (!ModelState.IsValid)
         {
@@ -196,5 +205,25 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
         {
             ModelState.AddModelError(string.Empty, "Screening overlaps with another screening in this hall.");
         }
+    }
+
+    private async Task ApplyAutoEndTimeAsync(Screening item)
+    {
+        var movie = await context.Movies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == item.MovieId);
+
+        if (movie is null)
+        {
+            return;
+        }
+
+        if (movie.Duration <= 0)
+        {
+            ModelState.AddModelError(nameof(Screening.MovieId), "Selected movie has invalid duration.");
+            return;
+        }
+
+        item.EndTime = item.StartTime.AddMinutes(movie.Duration);
     }
 }

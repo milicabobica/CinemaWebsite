@@ -11,6 +11,9 @@ public class MoviesController(ApplicationDbContext context) : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Index(string? search, int? genreId, string? status, string? language, string? day)
     {
+        var now = DateTime.UtcNow;
+        await DeletePastScreeningsAsync(now);
+
         var query = context.Movies
             .Include(m => m.MovieGenres)
             .ThenInclude(mg => mg.Genre)
@@ -36,8 +39,6 @@ public class MoviesController(ApplicationDbContext context) : Controller
 
         if (!string.IsNullOrWhiteSpace(status))
         {
-            var now = DateTime.UtcNow;
-
             if (status == "NowShowing")
             {
                 query = query.Where(m => m.ReleaseDate <= now);
@@ -58,19 +59,18 @@ public class MoviesController(ApplicationDbContext context) : Controller
         //     }
         // }
         
-        DayOfWeek selectedDay;
-
-        if (string.IsNullOrWhiteSpace(day) ||
-            !Enum.TryParse(day, true, out selectedDay))
+        if (!string.IsNullOrWhiteSpace(day) && Enum.TryParse<DayOfWeek>(day, true, out var selectedDay))
         {
-            selectedDay = DateTime.Today.DayOfWeek;
+            query = query.Where(m => context.Screenings.Any(s =>
+                s.MovieId == m.Id &&
+                s.StartTime >= now &&
+                s.StartTime.DayOfWeek == selectedDay));
+            ViewBag.SelectedDay = selectedDay;
         }
-
-        // Filter movies by selected day
-        query = query.Where(m =>
-            m.ReleaseDate.DayOfWeek == selectedDay);
-
-        ViewBag.SelectedDay = selectedDay;
+        else
+        {
+            ViewBag.SelectedDay = null;
+        }
 
 
         ViewBag.Genres = await context.Genres
@@ -84,8 +84,10 @@ public class MoviesController(ApplicationDbContext context) : Controller
     }
 
     [AllowAnonymous]
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int id, string? day)
     {
+        var now = DateTime.UtcNow;
+
         var movie = await context.Movies
             .Include(m => m.MovieGenres)
             .ThenInclude(mg => mg.Genre)
@@ -93,13 +95,60 @@ public class MoviesController(ApplicationDbContext context) : Controller
             .ThenInclude(s => s.CinemaHall)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (movie is null) return NotFound();
+
+        movie.Screenings = movie.Screenings
+            .Where(s => s.StartTime >= now)
+            .OrderBy(s => s.StartTime)
+            .ToList();
+
+        if (!string.IsNullOrWhiteSpace(day) && Enum.TryParse<DayOfWeek>(day, true, out var selectedDay))
+        {
+            movie.Screenings = movie.Screenings
+                .Where(s => s.StartTime.DayOfWeek == selectedDay)
+                .OrderBy(s => s.StartTime)
+                .ToList();
+            ViewBag.FilteredDay = selectedDay;
+        }
+
         return View(movie);
+    }
+
+    private async Task DeletePastScreeningsAsync(DateTime now)
+    {
+        var pastScreeningIds = await context.Screenings
+            .Where(s => s.StartTime < now)
+            .Select(s => s.Id)
+            .ToListAsync();
+
+        if (!pastScreeningIds.Any())
+        {
+            return;
+        }
+
+        var reservationsToDelete = await context.Reservations
+            .Where(r => pastScreeningIds.Contains(r.ScreeningId))
+            .ToListAsync();
+
+        if (reservationsToDelete.Any())
+        {
+            context.Reservations.RemoveRange(reservationsToDelete);
+        }
+
+        var screeningsToDelete = await context.Screenings
+            .Where(s => pastScreeningIds.Contains(s.Id))
+            .ToListAsync();
+
+        context.Screenings.RemoveRange(screeningsToDelete);
+        await context.SaveChangesAsync();
     }
 
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
-        return View(new Movie());
+        return View(new Movie
+        {
+            ReleaseDate = DateTime.Now.Date
+        });
     }
 
     [HttpPost]

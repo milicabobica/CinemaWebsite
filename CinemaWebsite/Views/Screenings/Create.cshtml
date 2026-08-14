@@ -3,21 +3,19 @@
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <label asp-for="MovieId" class="form-label"></label>
+    <label asp-for="MovieId" class="form-label">Movie</label>
     <select asp-for="MovieId" asp-items="ViewBag.Movies" class="form-select mb-2"></select>
     <span asp-validation-for="MovieId" class="text-danger"></span>
 
-    <label asp-for="CinemaHallId" class="form-label"></label>
+    <label asp-for="CinemaHallId" class="form-label">Cinema Hall</label>
     <select asp-for="CinemaHallId" asp-items="ViewBag.Halls" class="form-select mb-2"></select>
     <span asp-validation-for="CinemaHallId" class="text-danger"></span>
 
-    <label asp-for="StartTime" class="form-label"></label>
+    <label asp-for="StartTime" class="form-label">Start Time</label>
     <input asp-for="StartTime" type="datetime-local" class="form-control mb-2" />
     <span asp-validation-for="StartTime" class="text-danger"></span>
 
-    <label asp-for="EndTime" class="form-label"></label>
-    <input asp-for="EndTime" type="datetime-local" class="form-control mb-2" />
-    <span asp-validation-for="EndTime" class="text-danger"></span>
+    <div class="form-text mb-2">End time is calculated automatically from start time + movie duration.</div>
 
     <label asp-for="Price" class="form-label"></label>
     <input asp-for="Price" class="form-control mb-2" />
@@ -27,7 +25,7 @@
     <input asp-for="Language" class="form-control mb-2" />
     <span asp-validation-for="Language" class="text-danger"></span>
 
-    <label asp-for="SubtitleLanguage" class="form-label"></label>
+    <label asp-for="SubtitleLanguage" class="form-label">Subtitle Language</label>
     <input asp-for="SubtitleLanguage" class="form-control mb-2" />
     <span asp-validation-for="SubtitleLanguage" class="text-danger"></span>
 

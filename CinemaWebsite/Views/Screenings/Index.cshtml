@@ -7,7 +7,7 @@
      {
          <tr><td>@s.Movie.Title</td>
              <td>@s.CinemaHall.Name</td>
-             <td>@s.StartTime</td>
+             <td>@s.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
              <td>@s.Price</td>
              <td><a asp-action="Details" asp-route-id="@s.Id">Details</a> |
                  <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> |

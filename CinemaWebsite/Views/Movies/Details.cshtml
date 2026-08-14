@@ -13,10 +13,12 @@
 
 <h4>Screenings</h4>
 <ul>
-@foreach (var screening in Model.Screenings.OrderBy(s => s.StartTime))
+@foreach (var screening in Model.Screenings
+    .Where(s => s.StartTime >= DateTime.UtcNow)
+    .OrderBy(s => s.StartTime))
 {
     <li>
-        @screening.StartTime.ToString("D HH:mm") - @screening.CinemaHall.Name - @screening.Price
+        @screening.StartTime.ToString("dd/MM/yyyy HH:mm") - @screening.CinemaHall.Name - @screening.Price
         @* @if (User.Identity?.IsAuthenticated == true) *@
         @* { *@
         @*     <a asp-controller="Reservations" asp-action="Create" asp-route-screeningId="@screening.Id">Reserve</a> *@

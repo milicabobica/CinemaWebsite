@@ -7,7 +7,7 @@
 }
 else
 {
-    <p>@screening.Movie.Title - @screening.StartTime </p>
+    <p>@screening.Movie.Title - @screening.StartTime.ToString("dd/MM/yyyy HH:mm") </p>
 }
 <form asp-action="Create" method="post">
     <input type="hidden" asp-for="ScreeningId" />

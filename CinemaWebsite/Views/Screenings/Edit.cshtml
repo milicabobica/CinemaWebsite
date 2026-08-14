@@ -16,9 +16,7 @@
     <input asp-for="StartTime" type="datetime-local" class="form-control mb-2" />
     <span asp-validation-for="StartTime" class="text-danger"></span>
 
-    <label asp-for="EndTime" class="form-label"></label>
-    <input asp-for="EndTime" type="datetime-local" class="form-control mb-2" />
-    <span asp-validation-for="EndTime" class="text-danger"></span>
+    <div class="form-text mb-2">End time is calculated automatically from start time + movie duration.</div>
 
     <label asp-for="Price" class="form-label"></label>
     <input asp-for="Price" class="form-control mb-2" />

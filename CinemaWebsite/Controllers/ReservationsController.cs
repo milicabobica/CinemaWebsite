@@ -51,6 +51,10 @@ public class ReservationsController(
             .Include(s => s.CinemaHall)
             .FirstOrDefaultAsync(s => s.Id == screeningId);
         if (screening is null) return NotFound();
+        if (screening.StartTime < DateTime.UtcNow)
+        {
+            return RedirectToAction("Details", "Movies", new { id = screening.MovieId });
+        }
 
         var available = await reservationService.GetAvailableSeatsAsync(screeningId);
         ViewBag.Screening = screening;
@@ -65,10 +69,19 @@ public class ReservationsController(
         var userId = userManager.GetUserId(User);
         if (userId is null) return Challenge();
 
+        var screening = await context.Screenings
+            .FirstOrDefaultAsync(s => s.Id == model.ScreeningId);
+        if (screening is null) return NotFound();
+        if (screening.StartTime < DateTime.UtcNow)
+        {
+            ModelState.AddModelError(string.Empty, "This screening has already started or passed.");
+            return RedirectToAction(nameof(Create), new { screeningId = model.ScreeningId });
+        }
+
         var result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, model.NumberOfTickets);
         if (!result.Success)
         {
-            var screening = await context.Screenings
+            screening = await context.Screenings
                 .Include(s => s.Movie)
                 .Include(s => s.CinemaHall)
                 .FirstOrDefaultAsync(s => s.Id == model.ScreeningId);

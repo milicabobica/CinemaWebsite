@@ -2,8 +2,7 @@
 
 @{
     ViewData["Title"] = "Movies";
-    var selectedDay = ViewBag.SelectedDay is DayOfWeek day ? day : DateTime.Today.DayOfWeek;
-
+    var selectedDay = ViewBag.SelectedDay as DayOfWeek?;
     var days = Enum.GetValues<DayOfWeek>();
 }
 
@@ -47,11 +46,12 @@
     <!-- Day -->
     <div class="col-md-2">
         <select class="form-select" name="day">
+            <option value="" selected="@(selectedDay is null)">Any day</option>
 
             @foreach (var day in days)
             {
                 <option value="@day"
-                        selected="@(day == selectedDay)">
+                        selected="@(selectedDay.HasValue && day == selectedDay.Value)">
                     @day
                 </option>
             }
@@ -85,7 +85,7 @@
         <th>Title</th>
         <th>Language</th>
         <th>Release</th>
-        <th>Day</th>
+        @* <th>Day</th> *@
         <th></th>
     </tr>
     </thead>
@@ -96,17 +96,26 @@
     {
         <tr>
             <th><img src="@item.PosterUrl" width="80"/></th>
-            <td><a asp-action="Details"asp-route-id="@item.Id">@item.Title</a></td>
+            <td>
+                @if (selectedDay.HasValue)
+                {
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-day="@selectedDay.Value">@item.Title</a>
+                }
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                }
+            </td>
 
             <td>@item.Language</td>
 
             <td>
-                @item.ReleaseDate.ToString("D")
+                @item.ReleaseDate.ToString("dd/MM/yyyy")
             </td>
 
-            <td>
-                @item.ReleaseDate.ToString("D")
-            </td>
+            @* <td> *@
+            @*     @item.ReleaseDate.ToString("dddd") *@
+            @* </td> *@
 
             <td>
 

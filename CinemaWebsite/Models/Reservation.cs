@@ -15,6 +15,9 @@ public class Reservation
 
     public string? UserId { get; set; }
 
+    [EmailAddress]
+    public string? ReservationEmail { get; set; }
+
     public ApplicationUser? User { get; set; }
 
     [Required]

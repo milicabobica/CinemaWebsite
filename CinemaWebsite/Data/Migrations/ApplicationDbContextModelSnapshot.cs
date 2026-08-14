@@ -338,6 +338,9 @@ namespace CinemaWebsite.Data.Migrations
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ReservationEmail")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ScreeningId")
                         .HasColumnType("INTEGER");
 

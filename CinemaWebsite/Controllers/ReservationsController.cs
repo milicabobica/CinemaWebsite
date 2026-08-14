@@ -124,7 +124,7 @@ public class ReservationsController(
         }
 
         var currentUser = await userManager.GetUserAsync(User);
-        var userEmail = currentUser?.Email ?? string.Empty;
+        var userEmail = currentUser?.Email ?? reservation.ReservationEmail ?? string.Empty;
         var model = new PaymentViewModel
         {
             ReservationId = reservation.Id,
@@ -155,7 +155,7 @@ public class ReservationsController(
 
         model.TotalPrice = reservation.TotalPrice;
         var currentUser = await userManager.GetUserAsync(User);
-        var storedEmail = currentUser?.Email ?? string.Empty;
+        var storedEmail = currentUser?.Email ?? reservation.ReservationEmail ?? string.Empty;
         model.IsEmailRequired = string.IsNullOrWhiteSpace(storedEmail);
         if (!model.IsEmailRequired)
         {
@@ -177,6 +177,7 @@ public class ReservationsController(
         }
 
         reservation.Status = ReservationStatus.Confirmed;
+        reservation.ReservationEmail = model.Email;
         await context.SaveChangesAsync();
 
         TempData["PaymentSuccessMessage"] = $"Payment successful. Your ticket will arrive on mail: {model.Email}.";

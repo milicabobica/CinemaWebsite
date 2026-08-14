@@ -5,7 +5,7 @@
     <th>Tickets</th>
     <th>Status</th>
 </tr>@foreach (var r in Model){<tr>
-         <td>@r.User?.Email</td>
+         <td>@(r.User?.Email ?? r.User?.UserName ?? r.ReservationEmail ?? "-")</td>
          <td>@r.Screening.Movie.Title</td>
          <td>@r.NumberOfTickets</td>
          <td>@r.Status</td>

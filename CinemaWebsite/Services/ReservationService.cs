@@ -24,7 +24,7 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
         return Math.Max(0, screening.CinemaHall.Capacity - reservedSeats);
     }
 
-    public async Task<(bool Success, string Error, Reservation? Reservation)> CreateReservationAsync(string userId, int screeningId, int ticketCount)
+    public async Task<(bool Success, string Error, Reservation? Reservation)> CreateReservationAsync(string? userId, int screeningId, int ticketCount)
     {
         if (ticketCount <= 0)
         {
@@ -67,12 +67,22 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
         return (true, string.Empty, reservation);
     }
 
-    public Task<bool> CanAccessReservationAsync(Reservation reservation, string currentUserId, bool isAdmin)
+    public Task<bool> CanAccessReservationAsync(Reservation reservation, string? currentUserId, bool isAdmin)
     {
-        return Task.FromResult(isAdmin || reservation.UserId == currentUserId);
+        if (isAdmin)
+        {
+            return Task.FromResult(true);
+        }
+
+        if (string.IsNullOrWhiteSpace(currentUserId) || string.IsNullOrWhiteSpace(reservation.UserId))
+        {
+            return Task.FromResult(false);
+        }
+
+        return Task.FromResult(reservation.UserId == currentUserId);
     }
 
-    public async Task<(bool Success, string Error)> CancelReservationAsync(Reservation reservation, string currentUserId, bool isAdmin)
+    public async Task<(bool Success, string Error)> CancelReservationAsync(Reservation reservation, string? currentUserId, bool isAdmin)
     {
         if (!await CanAccessReservationAsync(reservation, currentUserId, isAdmin))
         {

@@ -56,6 +56,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(r => r.User)
             .WithMany(u => u.Reservations)
             .HasForeignKey(r => r.UserId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Screening → Reservation

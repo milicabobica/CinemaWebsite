@@ -13,10 +13,9 @@ public class Reservation
 {
     public int Id { get; set; }
 
-    [Required]
-    public string UserId { get; set; } = string.Empty;
+    public string? UserId { get; set; }
 
-    public ApplicationUser User { get; set; } = null!;
+    public ApplicationUser? User { get; set; }
 
     [Required]
     public int ScreeningId { get; set; }

@@ -16,6 +16,7 @@
             <form asp-action="Payment" method="post">
                 @Html.AntiForgeryToken()
                 <input asp-for="ReservationId" type="hidden" />
+                <input asp-for="AccessToken" type="hidden" />
                 <input asp-for="IsEmailRequired" type="hidden" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

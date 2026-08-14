@@ -349,7 +349,6 @@ namespace CinemaWebsite.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -583,8 +582,7 @@ namespace CinemaWebsite.Data.Migrations
                     b.HasOne("CinemaWebsite.Models.ApplicationUser", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Screening");
 

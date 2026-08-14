@@ -3,6 +3,7 @@ using CinemaWebsite.Models;
 using CinemaWebsite.Services;
 using CinemaWebsite.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,11 @@ namespace CinemaWebsite.Controllers;
 public class ReservationsController(
     ApplicationDbContext context,
     IReservationService reservationService,
-    UserManager<ApplicationUser> userManager) : Controller
+    UserManager<ApplicationUser> userManager,
+    IDataProtectionProvider dataProtectionProvider) : Controller
 {
+    private readonly IDataProtector reservationTokenProtector =
+        dataProtectionProvider.CreateProtector("ReservationGuestAccessToken");
     public async Task<IActionResult> MyReservations()
     {
         var userId = userManager.GetUserId(User);
@@ -67,7 +71,6 @@ public class ReservationsController(
     public async Task<IActionResult> Create(Reservation model)
     {
         var userId = userManager.GetUserId(User);
-        if (userId is null) return Challenge();
 
         var screening = await context.Screenings
             .FirstOrDefaultAsync(s => s.Id == model.ScreeningId);
@@ -95,11 +98,18 @@ public class ReservationsController(
             return View(model);
         }
 
-        return RedirectToAction(nameof(Payment), new {  id = result.Reservation!.Id });
+        var reservationId = result.Reservation!.Id;
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            var guestToken = CreateReservationToken(reservationId);
+            return RedirectToAction(nameof(Payment), new { id = reservationId, token = guestToken });
+        }
+
+        return RedirectToAction(nameof(Payment), new { id = reservationId });
     }
 
     
-    public async Task<IActionResult> Payment(int id)
+    public async Task<IActionResult> Payment(int id, string? token)
     {
         var reservation = await context.Reservations
             .Include(r => r.User)
@@ -107,21 +117,21 @@ public class ReservationsController(
         if (reservation is null) return NotFound();
 
         var userId = userManager.GetUserId(User);
-        if (userId is null) return Challenge();
-
         var isAdmin = User.IsInRole("Admin");
-        if (!await reservationService.CanAccessReservationAsync(reservation, userId, isAdmin))
+        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
         {
             return Forbid();
         }
 
-        var userEmail = reservation.User?.Email ?? string.Empty;
+        var currentUser = await userManager.GetUserAsync(User);
+        var userEmail = currentUser?.Email ?? string.Empty;
         var model = new PaymentViewModel
         {
             ReservationId = reservation.Id,
             TotalPrice = reservation.TotalPrice,
             Email = userEmail,
-            IsEmailRequired = string.IsNullOrWhiteSpace(userEmail)
+            IsEmailRequired = string.IsNullOrWhiteSpace(userEmail),
+            AccessToken = token ?? string.Empty
         };
 
         return View(model);
@@ -137,16 +147,15 @@ public class ReservationsController(
         if (reservation is null) return NotFound();
 
         var userId = userManager.GetUserId(User);
-        if (userId is null) return Challenge();
-
         var isAdmin = User.IsInRole("Admin");
-        if (!await reservationService.CanAccessReservationAsync(reservation, userId, isAdmin))
+        if (!await CanAccessReservationAsync(reservation, model.AccessToken, userId, isAdmin))
         {
             return Forbid();
         }
 
         model.TotalPrice = reservation.TotalPrice;
-        var storedEmail = reservation.User?.Email ?? string.Empty;
+        var currentUser = await userManager.GetUserAsync(User);
+        var storedEmail = currentUser?.Email ?? string.Empty;
         model.IsEmailRequired = string.IsNullOrWhiteSpace(storedEmail);
         if (!model.IsEmailRequired)
         {
@@ -171,6 +180,14 @@ public class ReservationsController(
         await context.SaveChangesAsync();
 
         TempData["PaymentSuccessMessage"] = $"Payment successful. Your ticket will arrive on mail: {model.Email}.";
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            var guestToken = string.IsNullOrWhiteSpace(model.AccessToken)
+                ? CreateReservationToken(reservation.Id)
+                : model.AccessToken;
+            return RedirectToAction(nameof(Details), new { id = reservation.Id, token = guestToken });
+        }
+
         return RedirectToAction(nameof(Details), new { id = reservation.Id });
     }
     
@@ -190,7 +207,7 @@ public class ReservationsController(
         return true;
     }
 
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int id, string? token)
     {
         var reservation = await context.Reservations
             .Include(r => r.User)
@@ -201,10 +218,8 @@ public class ReservationsController(
         if (reservation is null) return NotFound();
 
         var userId = userManager.GetUserId(User);
-        if (userId is null) return Challenge();
-
         var isAdmin = User.IsInRole("Admin");
-        if (!await reservationService.CanAccessReservationAsync(reservation, userId, isAdmin))
+        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
         {
             return Forbid();
         }
@@ -212,7 +227,7 @@ public class ReservationsController(
         return View(reservation);
     }
 
-    public async Task<IActionResult> Cancel(int id)
+    public async Task<IActionResult> Cancel(int id, string? token)
     {
         var reservation = await context.Reservations
             .Include(r => r.Screening)
@@ -221,34 +236,81 @@ public class ReservationsController(
         if (reservation is null) return NotFound();
 
         var userId = userManager.GetUserId(User);
-        if (userId is null) return Challenge();
-
         var isAdmin = User.IsInRole("Admin");
-        if (!await reservationService.CanAccessReservationAsync(reservation, userId, isAdmin))
+        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
         {
             return Forbid();
         }
 
+        ViewBag.GuestToken = token;
         return View(reservation);
     }
 
     [HttpPost, ActionName("Cancel")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CancelConfirmed(int id)
+    public async Task<IActionResult> CancelConfirmed(int id, string? token)
     {
         var reservation = await context.Reservations.FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
 
         var userId = userManager.GetUserId(User);
-        if (userId is null) return Challenge();
-
         var isAdmin = User.IsInRole("Admin");
+        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
+        {
+            return Forbid();
+        }
+
         var result = await reservationService.CancelReservationAsync(reservation, userId, isAdmin);
         if (!result.Success)
         {
             return result.Error == "Forbidden" ? Forbid() : BadRequest(result.Error);
         }
 
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         return RedirectToAction(nameof(MyReservations));
+    }
+
+    private async Task<bool> CanAccessReservationAsync(Reservation reservation, string? token, string? userId, bool isAdmin)
+    {
+        if (await reservationService.CanAccessReservationAsync(reservation, userId, isAdmin))
+        {
+            return true;
+        }
+
+        return IsValidReservationToken(reservation.Id, token);
+    }
+
+    private string CreateReservationToken(int reservationId)
+    {
+        var payload = $"{reservationId}|{DateTime.UtcNow.Ticks}";
+        return reservationTokenProtector.Protect(payload);
+    }
+
+    private bool IsValidReservationToken(int reservationId, string? token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return false;
+        }
+
+        try
+        {
+            var payload = reservationTokenProtector.Unprotect(token);
+            var parts = payload.Split('|');
+            if (parts.Length != 2)
+            {
+                return false;
+            }
+
+            return int.TryParse(parts[0], out var tokenReservationId) && tokenReservationId == reservationId;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

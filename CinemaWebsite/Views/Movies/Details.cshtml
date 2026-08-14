@@ -16,7 +16,7 @@
 @foreach (var screening in Model.Screenings.OrderBy(s => s.StartTime))
 {
     <li>
-        @screening.StartTime.ToString("yyyy-MM-dd HH:mm") - @screening.CinemaHall.Name - @screening.Price
+        @screening.StartTime.ToString("D HH:mm") - @screening.CinemaHall.Name - @screening.Price
         @* @if (User.Identity?.IsAuthenticated == true) *@
         @* { *@
         @*     <a asp-controller="Reservations" asp-action="Create" asp-route-screeningId="@screening.Id">Reserve</a> *@

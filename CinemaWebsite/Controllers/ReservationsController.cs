@@ -143,6 +143,11 @@ public class ReservationsController(
         {
             ModelState.AddModelError(nameof(PaymentViewModel.Email), "Email is required.");
         }
+        
+        if (!IsExpirationValid(model.ExpirationDate))
+        {
+            ModelState.AddModelError(nameof(model.ExpirationDate), "Card expiration date is invalid or already expired.");
+        }
 
         if (!ModelState.IsValid)
         {
@@ -154,6 +159,22 @@ public class ReservationsController(
 
         TempData["PaymentSuccessMessage"] = $"Payment successful. Your ticket will arrive on mail: {model.Email}.";
         return RedirectToAction(nameof(Details), new { id = reservation.Id });
+    }
+    
+    private static bool IsExpirationValid(string expiration)
+    {
+        if (string.IsNullOrWhiteSpace(expiration)) return false;
+        var parts = expiration.Split('/');
+        if (parts.Length != 2) return false;
+        if (!int.TryParse(parts[0], out var month) || !int.TryParse(parts[1], out var year)) return false;
+        if (month is < 1 or > 12) return false;
+
+        var fullYear = 2000 + year;
+        var now = DateTime.UtcNow;
+        if (fullYear < now.Year) return false;
+        if (fullYear == now.Year && month < now.Month) return false;
+
+        return true;
     }
 
     public async Task<IActionResult> Details(int id)

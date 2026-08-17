@@ -1,5 +1,5 @@
 @model CinemaWebsite.Models.Reservation
-@{ var screening = ViewBag.Screening as CinemaWebsite.Models.Screening; }
+@{ var screening = ViewBag.Screening as CinemaWebsite.Models.Screening; var seatMap = ViewBag.SeatMap; }
 <h3>Reserve Tickets</h3>
 @if (screening is null)
 {
@@ -9,9 +9,16 @@ else
 {
     <p>@screening.Movie.Title - @screening.StartTime.ToString("dd/MM/yyyy HH:mm") </p>
 }
+
 <form asp-action="Create" method="post">
     <input type="hidden" asp-for="ScreeningId" />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Select seats</label>
+        @Html.Partial("_SeatMap")
+        <div class="form-text">Click seats to select. You may also enter number of tickets to auto-assign.</div>
+    </div>
 
     <label asp-for="NumberOfTickets" class="form-label"></label>
     <input asp-for="NumberOfTickets" class="form-control mb-2" />

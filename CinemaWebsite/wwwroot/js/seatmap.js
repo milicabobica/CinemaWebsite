@@ -2,7 +2,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const seatMap = document.getElementById('seat-map');
     if (!seatMap) return;
 
+    const pricePerSeat = parseFloat(seatMap.dataset.price || '0');
     const selected = new Set();
+
+    function updateSummary() {
+        const selectedCountEl = document.getElementById('selectedCount');
+        const totalPriceEl = document.getElementById('totalPrice');
+        const seatPriceEl = document.getElementById('seatPrice');
+        const ticketInput = document.querySelector('input[name="NumberOfTickets"]');
+
+        const count = selected.size;
+        if (selectedCountEl) selectedCountEl.textContent = String(count);
+        if (seatPriceEl) seatPriceEl.textContent = pricePerSeat.toFixed(2);
+        if (totalPriceEl) totalPriceEl.textContent = (pricePerSeat * count).toFixed(2);
+        if (ticketInput) ticketInput.value = String(count === 0 ? ticketInput.value : count);
+
+        const hidden = document.getElementById('selectedSeatIds');
+        if (hidden) hidden.value = Array.from(selected).join(',');
+    }
+
     seatMap.addEventListener('click', function (e) {
         const btn = e.target.closest('button.seat.available');
         if (!btn) return;
@@ -14,11 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
             selected.add(id);
             btn.classList.add('selected');
         }
-        const hidden = document.getElementById('selectedSeatIds');
-        if (hidden) hidden.value = Array.from(selected).join(',');
+        updateSummary();
     });
 
-    // If form is submitted, convert selectedSeatIds into multiple inputs for model binding
+    // if form is submitted, convert selectedSeatIds into multiple inputs for model binding
     const form = document.querySelector('form[asp-action="Create"]') || document.querySelector('form');
     if (form) {
         form.addEventListener('submit', function () {
@@ -37,4 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    // initialize summary in case seats are pre-selected
+    updateSummary();
 });

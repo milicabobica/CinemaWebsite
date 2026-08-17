@@ -16,13 +16,14 @@ else
 
     <div class="mb-3">
         <label class="form-label">Select seats</label>
-        @Html.Partial("_SeatMap")
-        <div class="form-text">Click seats to select. You may also enter number of tickets to auto-assign.</div>
-    </div>
+            <div class="mb-1 text-muted">Price per seat: <strong>@(screening?.Price.ToString("C"))</strong></div>
+            @Html.Partial("_SeatMap")
+            <div class="form-text">Click seats to select. You may also enter number of tickets to auto-assign.</div>
+        </div>
 
-    <label asp-for="NumberOfTickets" class="form-label"></label>
-    <input asp-for="NumberOfTickets" class="form-control mb-2" />
-    <span asp-validation-for="NumberOfTickets" class="text-danger"></span>
+        <label asp-for="NumberOfTickets" class="form-label"></label>
+        <input asp-for="NumberOfTickets" class="form-control mb-2" />
+        <span asp-validation-for="NumberOfTickets" class="text-danger"></span>
 
     <button class="btn btn-primary" type="submit">Reserve</button>
 </form>

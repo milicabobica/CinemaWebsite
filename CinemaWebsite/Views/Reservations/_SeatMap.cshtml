@@ -1,0 +1,30 @@
+@{ var seatMap = ViewBag.SeatMap as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>(); }
+
+@{
+    var grouped = seatMap.GroupBy(s => (string)s.Row).OrderBy(g => g.Key);
+}
+
+<div id="seat-map" class="seat-map">
+    @foreach (var rowGroup in grouped)
+    {
+        <div class="seat-row" data-row="@rowGroup.Key">
+            <div class="row-label">@rowGroup.Key</div>
+            <div class="row-seats">
+                @foreach (var seat in rowGroup.OrderBy(s => (int)s.Number))
+                {
+                    var seatId = (int)seat.SeatId;
+                    var isReserved = (bool)seat.IsReserved;
+                    var css = isReserved ? "seat reserved" : "seat available";
+                    <button type="button" class="@css" data-seat-id="@seatId" @(isReserved ? "disabled" : "")>
+                        @seat.Number
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<input type="hidden" id="selectedSeatIds" name="selectedSeatIds" />
+
+<link href="/css/seatmap.css" rel="stylesheet" />
+<script src="/js/seatmap.js"></script>

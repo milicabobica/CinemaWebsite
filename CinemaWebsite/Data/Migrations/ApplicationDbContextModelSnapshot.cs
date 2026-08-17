@@ -363,6 +363,21 @@ namespace CinemaWebsite.Data.Migrations
                     b.ToTable("Reservations");
                 });
 
+            modelBuilder.Entity("CinemaWebsite.Models.ReservationSeat", b =>
+                {
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ReservationId", "SeatId");
+
+                    b.HasIndex("SeatId");
+
+                    b.ToTable("ReservationSeats");
+                });
+
             modelBuilder.Entity("CinemaWebsite.Models.Screening", b =>
                 {
                     b.Property<int>("Id")
@@ -401,6 +416,33 @@ namespace CinemaWebsite.Data.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("Screenings");
+                });
+
+            modelBuilder.Entity("CinemaWebsite.Models.Seat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CinemaHallId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Row")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaHallId");
+
+                    b.ToTable("Seats");
                 });
 
             modelBuilder.Entity("CinemaWebsite.Models.Service", b =>
@@ -592,6 +634,25 @@ namespace CinemaWebsite.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CinemaWebsite.Models.ReservationSeat", b =>
+                {
+                    b.HasOne("CinemaWebsite.Models.Reservation", "Reservation")
+                        .WithMany("ReservationSeats")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CinemaWebsite.Models.Seat", "Seat")
+                        .WithMany("ReservationSeats")
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Reservation");
+
+                    b.Navigation("Seat");
+                });
+
             modelBuilder.Entity("CinemaWebsite.Models.Screening", b =>
                 {
                     b.HasOne("CinemaWebsite.Models.CinemaHall", "CinemaHall")
@@ -609,6 +670,17 @@ namespace CinemaWebsite.Data.Migrations
                     b.Navigation("CinemaHall");
 
                     b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("CinemaWebsite.Models.Seat", b =>
+                {
+                    b.HasOne("CinemaWebsite.Models.CinemaHall", "CinemaHall")
+                        .WithMany("Seats")
+                        .HasForeignKey("CinemaHallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CinemaHall");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -670,6 +742,8 @@ namespace CinemaWebsite.Data.Migrations
             modelBuilder.Entity("CinemaWebsite.Models.CinemaHall", b =>
                 {
                     b.Navigation("Screenings");
+
+                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("CinemaWebsite.Models.Genre", b =>
@@ -684,9 +758,19 @@ namespace CinemaWebsite.Data.Migrations
                     b.Navigation("Screenings");
                 });
 
+            modelBuilder.Entity("CinemaWebsite.Models.Reservation", b =>
+                {
+                    b.Navigation("ReservationSeats");
+                });
+
             modelBuilder.Entity("CinemaWebsite.Models.Screening", b =>
                 {
                     b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("CinemaWebsite.Models.Seat", b =>
+                {
+                    b.Navigation("ReservationSeats");
                 });
 #pragma warning restore 612, 618
         }

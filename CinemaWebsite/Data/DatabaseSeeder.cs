@@ -72,5 +72,29 @@ public static class DatabaseSeeder
             );
             await context.SaveChangesAsync();
         }
+
+        // seed seats for halls (row/number grid). Uses default 12 seats per row and fills up to hall.Capacity.
+        if (!context.Seats.Any())
+        {
+            var halls = await context.CinemaHalls.ToListAsync();
+            const int seatsPerRow = 12;
+            foreach (var hall in halls)
+            {
+                var total = hall.Capacity;
+                var rows = (int)Math.Ceiling(total / (double)seatsPerRow);
+                for (int r = 0; r < rows && r < 26; r++) // limit to 26 rows (A-Z)
+                {
+                    var rowChar = ((char)('A' + r)).ToString();
+                    for (int n = 1; n <= seatsPerRow; n++)
+                    {
+                        var seatIndex = r * seatsPerRow + n;
+                        if (seatIndex > total) break;
+                        context.Seats.Add(new Seat { CinemaHallId = hall.Id, Row = rowChar, Number = n });
+                    }
+                }
+            }
+
+            await context.SaveChangesAsync();
+        }
     }
 }

@@ -4,7 +4,7 @@
     var grouped = seatMap.GroupBy(s => (string)s.Row).OrderBy(g => g.Key);
 }
 
-<div id="seat-map" class="seat-map" data-price="@(screening?.Price.ToString("F2") ?? "0.00")">
+<div id="seat-map" class="seat-map" data-price="@(screening?.Price.ToString("F2") ?? "0.00")" role="application" aria-label="Seat map">
     <div class="screen">SCREEN</div>
 
     @foreach (var rowGroup in grouped)
@@ -17,8 +17,9 @@
                     var seatId = (int)seat.SeatId;
                     var isReserved = (bool)seat.IsReserved;
                     var css = isReserved ? "seat reserved" : "seat available";
-                    <button type="button" class="@css" data-seat-id="@seatId" @(isReserved ? "disabled" : "")>
-                        @seat.Number
+                    var seatLabel = $"{rowGroup.Key}{seat.Number}";
+                    <button type="button" class="@css" data-seat-id="@seatId" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(isReserved ? "disabled" : "")>
+                        <span class="seat-number">@seat.Number</span>
                     </button>
                 }
             </div>
@@ -29,6 +30,12 @@
         <span>Selected: <strong id="selectedCount">0</strong></span>
         <span class="ms-3">Price per seat: <strong id="seatPrice">@((screening?.Price.ToString("F2")) ?? "0.00")</strong></span>
         <span class="ms-3">Total: <strong id="totalPrice">0.00</strong></span>
+    </div>
+
+    <div class="seat-legend mt-2">
+        <span class="legend-item"><span class="legend-box available"></span> Available</span>
+        <span class="legend-item ms-3"><span class="legend-box selected"></span> Selected</span>
+        <span class="legend-item ms-3"><span class="legend-box reserved"></span> Reserved</span>
     </div>
 </div>
 

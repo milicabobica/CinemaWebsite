@@ -25,15 +25,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const btn = e.target.closest('button.seat.available');
         if (!btn) return;
         const id = btn.dataset.seatId;
-        if (selected.has(id)) {
-            selected.delete(id);
-            btn.classList.remove('selected');
-        } else {
+
+        if (!selected.has(id)) {
             selected.add(id);
             btn.classList.add('selected');
+        } else {
+            selected.delete(id);
+            btn.classList.remove('selected');
         }
         updateSummary();
     });
+
+    // when number of tickets input exists, keep it in sync: selections update it; manual edits won't be enforced here
+    const ticketInputEl = document.querySelector('input[name="NumberOfTickets"]');
 
     // if form is submitted, convert selectedSeatIds into multiple inputs for model binding
     const form = document.querySelector('form[asp-action="Create"]') || document.querySelector('form');

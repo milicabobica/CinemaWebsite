@@ -3,8 +3,22 @@
 <img src="@Model.PosterUrl" width="80"/>
 <h3>@Model.Title</h3>
 <p>@Model.Description</p>
-<p><strong>Trailer:</strong><iframe src="https://www.youtube.com/embed/pBk4NYhWNMM" width="1053" height="592" title="Barbie | Main Trailer" frameborder="0"></iframe></p>
-@* <iframe width="1053" height="592" src="https://www.youtube.com/embed/pBk4NYhWNMM" title="Barbie | Main Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> *@
+@{ string? trailer = Model.TrailerUrl; string? embedUrl = null; if (!string.IsNullOrWhiteSpace(trailer)) { if (trailer.Contains("youtube.com/embed/")) { embedUrl = trailer; } else if (trailer.Contains("watch?v=")) { embedUrl = trailer.Replace("watch?v=", "embed/"); } else if (trailer.Contains("youtu.be/")) { var id = trailer.Split('/').Last(); embedUrl = $"https://www.youtube.com/embed/{id}"; } }
+}
+@if (!string.IsNullOrWhiteSpace(embedUrl))
+{
+    <p><strong>Trailer:</strong>
+        <iframe src="@embedUrl" width="1053" height="592" title="@Model.Title Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </p>
+}
+else if (!string.IsNullOrWhiteSpace(trailer))
+{
+    <p><strong>Trailer:</strong> <a href="@trailer" target="_blank" rel="noopener">Watch trailer</a></p>
+}
+else
+{
+    <p><strong>Trailer:</strong> Not available</p>
+}
 <p><strong>Director:</strong> @Model.Director</p>
 <p><strong>Cast:</strong> @Model.Cast</p>
 <p><strong>Language:</strong> @Model.Language</p>

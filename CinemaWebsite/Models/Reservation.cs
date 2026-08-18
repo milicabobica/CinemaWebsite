@@ -33,5 +33,7 @@ public class Reservation
 
     [Range(0, 100000)] public decimal TotalPrice { get; set; }
 
+    public ICollection<ReservationSeat> ReservationSeats { get; set; } = new List<ReservationSeat>();
+
     public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
 }

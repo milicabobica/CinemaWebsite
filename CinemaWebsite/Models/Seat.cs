@@ -17,5 +17,8 @@ public class Seat
 
     public bool IsAvailable { get; set; } = true;
 
+    public SeatType Type { get; set; } = SeatType.Standard;
+
+    public int? PairSeatId { get; set; }
     public ICollection<ReservationSeat> ReservationSeats { get; set; } = new List<ReservationSeat>();
 }

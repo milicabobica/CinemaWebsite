@@ -433,10 +433,16 @@ namespace CinemaWebsite.Data.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("PairSeatId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Row")
                         .IsRequired()
                         .HasMaxLength(2)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

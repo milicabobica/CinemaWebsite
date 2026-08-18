@@ -49,7 +49,9 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             SeatId = s.Id,
             Row = s.Row,
             Number = s.Number,
-            IsReserved = reservedSeatIds.Contains(s.Id)
+            IsReserved = reservedSeatIds.Contains(s.Id),
+            SeatType = s.Type,
+            PairSeatId = s.PairSeatId
         });
     }
 
@@ -75,7 +77,7 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             return (false, "Cannot reserve tickets for past screenings.", null);
         }
 
-        // Validate seats belong to hall
+        // validate seats belong to hall
         var seats = await context.Seats.Where(s => seatList.Contains(s.Id)).ToListAsync();
         if (seats.Count != seatList.Count)
         {
@@ -131,8 +133,7 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             return (false, "Failed to create reservation.", null);
         }
     }
-
-    // Keep original API: auto-assign first available seats
+    
     public async Task<(bool Success, string Error, Reservation? Reservation)> CreateReservationAsync(string? userId, int screeningId, int ticketCount)
     {
         if (ticketCount <= 0)

@@ -16,9 +16,12 @@
                 {
                     var seatId = (int)seat.SeatId;
                     var isReserved = (bool)seat.IsReserved;
-                    var css = isReserved ? "seat reserved" : "seat available";
+                    var isCouple = seat.SeatType == CinemaWebsite.Models.SeatType.Couple;
+                    var pairSeatId = seat.PairSeatId as int?;
+                    var couplePosClass = isCouple ? ((int)seat.Number % 2 == 1 ? " couple-left" : " couple-right") : "";
+                    var css = (isReserved ? "seat reserved" : "seat available") + couplePosClass;
                     var seatLabel = $"{rowGroup.Key}{seat.Number}";
-                    <button type="button" class="@css" data-seat-id="@seatId" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(isReserved ? "disabled" : "")>
+                    <button type="button" class="@css" data-seat-id="@seatId" data-pair-id="@(pairSeatId?.ToString() ?? "")" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(isReserved ? "disabled" : "")>
                         <span class="seat-number">@seat.Number</span>
                     </button>
                 }
@@ -36,6 +39,7 @@
         <span class="legend-item"><span class="legend-box available"></span> Available</span>
         <span class="legend-item ms-3"><span class="legend-box selected"></span> Selected</span>
         <span class="legend-item ms-3"><span class="legend-box reserved"></span> Reserved</span>
+        <span class="legend-item ms-3"><span class="legend-box couple"></span> Couple</span>
     </div>
 </div>
 

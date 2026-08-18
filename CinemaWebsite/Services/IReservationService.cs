@@ -8,6 +8,8 @@ public class SeatStatus
     public string Row { get; set; } = string.Empty;
     public int Number { get; set; }
     public bool IsReserved { get; set; }
+    public SeatType SeatType { get; set; }
+    public int? PairSeatId { get; set; }
 }
 
 public interface IReservationService

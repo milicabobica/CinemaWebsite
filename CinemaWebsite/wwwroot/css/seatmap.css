@@ -87,6 +87,29 @@
   pointer-events: none;
 }
 
+.seat.couple-left,
+.seat.couple-right {
+  width: 28px;
+}
+
+.seat.couple-left {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+
+.seat.couple-right {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: none;
+  margin-left: -6px !important;
+}
+
+.legend-box.couple {
+  width: 22px;
+  background: var(--bg-elevated);
+}
+
 .seat-summary {
   display: flex;
   justify-content: center;

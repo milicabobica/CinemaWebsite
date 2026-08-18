@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const pricePerSeat = parseFloat(seatMap.dataset.price || '0');
     const selected = new Set();
 
+    function seatButton(id) {
+        return seatMap.querySelector(`button.seat[data-seat-id="${id}"]`);
+    }
+
     function updateSummary() {
         const selectedCountEl = document.getElementById('selectedCount');
         const totalPriceEl = document.getElementById('totalPrice');
@@ -21,23 +25,37 @@ document.addEventListener('DOMContentLoaded', function () {
         if (hidden) hidden.value = Array.from(selected).join(',');
     }
 
+    function selectSeat(id) {
+        const btn = seatButton(id);
+        if (!btn || btn.disabled) return;
+        selected.add(id);
+        btn.classList.add('selected');
+    }
+
+    function deselectSeat(id) {
+        const btn = seatButton(id);
+        selected.delete(id);
+        if (btn) btn.classList.remove('selected');
+    }
+
     seatMap.addEventListener('click', function (e) {
         const btn = e.target.closest('button.seat.available');
         if (!btn) return;
-        const id = btn.dataset.seatId;
 
-        if (!selected.has(id)) {
-            selected.add(id);
-            btn.classList.add('selected');
+        const id = btn.dataset.seatId;
+        const pairId = btn.dataset.pairId;
+        const isSelected = selected.has(id);
+
+        if (!isSelected) {
+            selectSeat(id);
+            if (pairId) selectSeat(pairId);
         } else {
-            selected.delete(id);
-            btn.classList.remove('selected');
+            deselectSeat(id);
+            if (pairId) deselectSeat(pairId);
         }
+
         updateSummary();
     });
-
-    // when number of tickets input exists, keep it in sync: selections update it; manual edits won't be enforced here
-    const ticketInputEl = document.querySelector('input[name="NumberOfTickets"]');
 
     // if form is submitted, convert selectedSeatIds into multiple inputs for model binding
     const form = document.querySelector('form[asp-action="Create"]') || document.querySelector('form');

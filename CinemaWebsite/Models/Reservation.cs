@@ -11,6 +11,8 @@ public enum ReservationStatus
 
 public class Reservation
 {
+    public static readonly TimeSpan PendingDuration = TimeSpan.FromMinutes(10);
+
     public int Id { get; set; }
 
     public string? UserId { get; set; }
@@ -36,4 +38,6 @@ public class Reservation
     public ICollection<ReservationSeat> ReservationSeats { get; set; } = new List<ReservationSeat>();
 
     public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
+
+    public DateTime? ExpiresAtUtc { get; set; }
 }

@@ -14,6 +14,7 @@ public class SeatStatus
 
 public interface IReservationService
 {
+    Task<int> ExpirePendingReservationsAsync();
     Task<int> GetAvailableSeatsAsync(int screeningId);
     Task<(bool Success, string Error, Reservation? Reservation)> CreateReservationAsync(string? userId, int screeningId, int ticketCount);
 

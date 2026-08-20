@@ -6,8 +6,31 @@ namespace CinemaWebsite.Services;
 
 public class ReservationService(ApplicationDbContext context) : IReservationService
 {
+    public async Task<int> ExpirePendingReservationsAsync()
+    {
+        var now = DateTime.UtcNow;
+        var expiredReservations = await context.Reservations
+            .Where(r => r.Status == ReservationStatus.Pending && r.ExpiresAtUtc != null && r.ExpiresAtUtc <= now)
+            .ToListAsync();
+
+        if (!expiredReservations.Any())
+        {
+            return 0;
+        }
+
+        foreach (var reservation in expiredReservations)
+        {
+            reservation.Status = ReservationStatus.Cancelled;
+        }
+
+        await context.SaveChangesAsync();
+        return expiredReservations.Count;
+    }
+
     public async Task<int> GetAvailableSeatsAsync(int screeningId)
     {
+        await ExpirePendingReservationsAsync();
+
         var screening = await context.Screenings
             .Include(s => s.CinemaHall)
             .FirstOrDefaultAsync(s => s.Id == screeningId);
@@ -17,8 +40,14 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             return 0;
         }
 
+        var now = DateTime.UtcNow;
+
         var reservedSeats = await context.ReservationSeats
-            .Where(rs => rs.Reservation.ScreeningId == screeningId && rs.Reservation.Status != ReservationStatus.Cancelled)
+            .Where(rs => rs.Reservation.ScreeningId == screeningId
+                         && rs.Reservation.Status != ReservationStatus.Cancelled
+                         && (rs.Reservation.Status != ReservationStatus.Pending
+                             || rs.Reservation.ExpiresAtUtc == null
+                             || rs.Reservation.ExpiresAtUtc > now))
             .CountAsync();
 
         return Math.Max(0, screening.CinemaHall.Capacity - reservedSeats);
@@ -26,6 +55,8 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
 
     public async Task<IEnumerable<SeatStatus>> GetSeatMapAsync(int screeningId)
     {
+        await ExpirePendingReservationsAsync();
+
         var screening = await context.Screenings
             .Include(s => s.CinemaHall)
             .FirstOrDefaultAsync(s => s.Id == screeningId);
@@ -39,8 +70,14 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             .ThenBy(s => s.Number)
             .ToListAsync();
 
+        var now = DateTime.UtcNow;
+
         var reservedSeatIds = await context.ReservationSeats
-            .Where(rs => rs.Reservation.ScreeningId == screeningId && rs.Reservation.Status != ReservationStatus.Cancelled)
+            .Where(rs => rs.Reservation.ScreeningId == screeningId
+                         && rs.Reservation.Status != ReservationStatus.Cancelled
+                         && (rs.Reservation.Status != ReservationStatus.Pending
+                             || rs.Reservation.ExpiresAtUtc == null
+                             || rs.Reservation.ExpiresAtUtc > now))
             .Select(rs => rs.SeatId)
             .ToListAsync();
 
@@ -57,6 +94,8 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
 
     public async Task<(bool Success, string Error, Reservation? Reservation)> CreateReservationAsync(string? userId, int screeningId, IEnumerable<int> seatIds)
     {
+        await ExpirePendingReservationsAsync();
+
         var seatList = seatIds?.ToList() ?? new List<int>();
         if (!seatList.Any())
         {
@@ -93,8 +132,15 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
         using var tx = await context.Database.BeginTransactionAsync();
         try
         {
+            var now = DateTime.UtcNow;
+
             var alreadyReserved = await context.ReservationSeats
-                .Where(rs => seatList.Contains(rs.SeatId) && rs.Reservation.ScreeningId == screeningId && rs.Reservation.Status != ReservationStatus.Cancelled)
+                .Where(rs => seatList.Contains(rs.SeatId)
+                             && rs.Reservation.ScreeningId == screeningId
+                             && rs.Reservation.Status != ReservationStatus.Cancelled
+                             && (rs.Reservation.Status != ReservationStatus.Pending
+                                 || rs.Reservation.ExpiresAtUtc == null
+                                 || rs.Reservation.ExpiresAtUtc > now))
                 .Select(rs => rs.SeatId)
                 .ToListAsync();
 
@@ -108,10 +154,11 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             {
                 UserId = userId,
                 ScreeningId = screeningId,
-                ReservationDate = DateTime.UtcNow,
+                ReservationDate = now,
                 NumberOfTickets = seatList.Count,
                 TotalPrice = screening.Price * seatList.Count,
-                Status = ReservationStatus.Pending
+                Status = ReservationStatus.Pending,
+                ExpiresAtUtc = now.Add(Reservation.PendingDuration)
             };
 
             context.Reservations.Add(reservation);
@@ -136,6 +183,8 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
     
     public async Task<(bool Success, string Error, Reservation? Reservation)> CreateReservationAsync(string? userId, int screeningId, int ticketCount)
     {
+        await ExpirePendingReservationsAsync();
+
         if (ticketCount <= 0)
         {
             return (false, "Ticket count must be greater than zero.", null);
@@ -179,6 +228,7 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
         }
 
         reservation.Status = ReservationStatus.Cancelled;
+        reservation.ExpiresAtUtc = null;
         await context.SaveChangesAsync();
         return (true, string.Empty);
     }

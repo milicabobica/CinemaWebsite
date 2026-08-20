@@ -332,6 +332,9 @@ namespace CinemaWebsite.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("ExpiresAtUtc")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("NumberOfTickets")
                         .HasColumnType("INTEGER");
 

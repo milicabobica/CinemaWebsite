@@ -20,6 +20,8 @@ public class ReservationsController(
         dataProtectionProvider.CreateProtector("ReservationGuestAccessToken");
     public async Task<IActionResult> MyReservations()
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var userId = userManager.GetUserId(User);
         if (userId is null) return Challenge();
 
@@ -37,6 +39,8 @@ public class ReservationsController(
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var allReservations = await context.Reservations
             .Include(r => r.User)
             .Include(r => r.Screening)
@@ -50,6 +54,8 @@ public class ReservationsController(
     [HttpGet]
     public async Task<IActionResult> Create(int screeningId)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var screening = await context.Screenings
             .Include(s => s.Movie)
             .Include(s => s.CinemaHall)
@@ -70,6 +76,8 @@ public class ReservationsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Reservation model, int[]? selectedSeatIds)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var userId = userManager.GetUserId(User);
 
         var screening = await context.Screenings
@@ -120,10 +128,17 @@ public class ReservationsController(
     
     public async Task<IActionResult> Payment(int id, string? token)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var reservation = await context.Reservations
             .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
+
+        if (reservation.Status != ReservationStatus.Pending)
+        {
+            return RedirectToAction(nameof(Details), new { id, token });
+        }
 
         var userId = userManager.GetUserId(User);
         var isAdmin = User.IsInRole("Admin");
@@ -150,10 +165,17 @@ public class ReservationsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Payment(PaymentViewModel model)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var reservation = await context.Reservations
             .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.Id == model.ReservationId);
         if (reservation is null) return NotFound();
+
+        if (reservation.Status != ReservationStatus.Pending)
+        {
+            return BadRequest("Reservation is no longer pending.");
+        }
 
         var userId = userManager.GetUserId(User);
         var isAdmin = User.IsInRole("Admin");
@@ -219,6 +241,8 @@ public class ReservationsController(
 
     public async Task<IActionResult> Details(int id, string? token)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var reservation = await context.Reservations
             .Include(r => r.User)
             .Include(r => r.Screening)
@@ -239,6 +263,8 @@ public class ReservationsController(
 
     public async Task<IActionResult> Cancel(int id, string? token)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var reservation = await context.Reservations
             .Include(r => r.Screening)
             .ThenInclude(s => s.Movie)
@@ -260,6 +286,8 @@ public class ReservationsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CancelConfirmed(int id, string? token)
     {
+        await reservationService.ExpirePendingReservationsAsync();
+
         var reservation = await context.Reservations.FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
 

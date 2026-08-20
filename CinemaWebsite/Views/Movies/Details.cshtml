@@ -27,8 +27,7 @@ else
 
 <h4>Screenings</h4>
 <ul>
-@foreach (var screening in Model.Screenings
-    .Where(s => s.StartTime >= DateTime.UtcNow)
+@foreach (var screening in Model.Screenings.Where(s => s.StartTime >= DateTime.UtcNow)
     .OrderBy(s => s.StartTime))
 {
     <li>

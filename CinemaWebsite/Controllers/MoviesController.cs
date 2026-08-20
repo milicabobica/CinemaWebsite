@@ -12,7 +12,6 @@ public class MoviesController(ApplicationDbContext context) : Controller
     public async Task<IActionResult> Index(string? search, int? genreId, string? status, string? language, string? day)
     {
         var now = DateTime.UtcNow;
-        await DeletePastScreeningsAsync(now);
 
         var query = context.Movies
             .Include(m => m.MovieGenres)
@@ -113,34 +112,6 @@ public class MoviesController(ApplicationDbContext context) : Controller
         return View(movie);
     }
 
-    private async Task DeletePastScreeningsAsync(DateTime now)
-    {
-        var pastScreeningIds = await context.Screenings
-            .Where(s => s.StartTime < now)
-            .Select(s => s.Id)
-            .ToListAsync();
-
-        if (!pastScreeningIds.Any())
-        {
-            return;
-        }
-
-        var reservationsToDelete = await context.Reservations
-            .Where(r => pastScreeningIds.Contains(r.ScreeningId))
-            .ToListAsync();
-
-        if (reservationsToDelete.Any())
-        {
-            context.Reservations.RemoveRange(reservationsToDelete);
-        }
-
-        var screeningsToDelete = await context.Screenings
-            .Where(s => pastScreeningIds.Contains(s.Id))
-            .ToListAsync();
-
-        context.Screenings.RemoveRange(screeningsToDelete);
-        await context.SaveChangesAsync();
-    }
 
     [Authorize(Roles = "Admin")]
     public IActionResult Create()

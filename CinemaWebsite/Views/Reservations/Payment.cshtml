@@ -70,6 +70,10 @@
         <div class="app-card payment-summary-card p-4" style="position: sticky; top: 100px;">
             <h5 class="fw-bold mb-3">Price details</h5>
             <p class="mb-2 text-muted">Reservation ID: #@Model.ReservationId</p>
+            <p class="mb-2 text-muted">Movie: @Model.MovieTitle</p>
+            <p class="mb-2 text-muted">Hall: @Model.HallName</p>
+            <p class="mb-2 text-muted">Screening: @Model.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</p>
+            <p class="mb-2 text-muted">Seats: @(Model.Seats.Any() ? string.Join(", ", Model.Seats.Select(s => $"Row {s.Row}, Seat {s.Number}")) : "-")</p>
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span>Total Price</span>
                 <span class="fw-bold fs-4">@Model.TotalPrice.ToString("C")</span>

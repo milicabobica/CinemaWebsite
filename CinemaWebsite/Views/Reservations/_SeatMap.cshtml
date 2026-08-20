@@ -24,6 +24,12 @@
                     <button type="button" class="@css" data-seat-id="@seatId" data-pair-id="@(pairSeatId?.ToString() ?? "")" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(isReserved ? "disabled" : "")>
                         <span class="seat-number">@seat.Number</span>
                     </button>
+                    <input type="checkbox"
+                           class="d-none seat-select-input"
+                           name="selectedSeatIds"
+                           value="@seatId"
+                           data-seat-id="@seatId"
+                           @(isReserved ? "disabled" : "") />
                 }
             </div>
         </div>
@@ -42,8 +48,6 @@
         <span class="legend-item ms-3"><span class="legend-box couple"></span> Couple</span>
     </div>
 </div>
-
-<input type="hidden" id="selectedSeatIds" name="selectedSeatIds" />
 
 <link href="/css/seatmap.css" rel="stylesheet" />
 <script src="/js/seatmap.js"></script>

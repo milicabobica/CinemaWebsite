@@ -29,11 +29,13 @@ public class ReservationsController(
             .Include(r => r.Screening)
             .ThenInclude(s => s.Movie)
             .Include(r => r.Screening.CinemaHall)
+            .Include(r => r.ReservationSeats)
+            .ThenInclude(rs => rs.Seat)
             .Where(r => r.UserId == userId)
             .OrderByDescending(r => r.ReservationDate)
             .ToListAsync();
 
-        return View(reservations);
+        return View(reservations.Select(MapReservationToDisplayModel).ToList());
     }
 
     [Authorize(Roles = "Admin")]
@@ -45,10 +47,13 @@ public class ReservationsController(
             .Include(r => r.User)
             .Include(r => r.Screening)
             .ThenInclude(s => s.Movie)
+            .Include(r => r.Screening.CinemaHall)
+            .Include(r => r.ReservationSeats)
+            .ThenInclude(rs => rs.Seat)
             .OrderByDescending(r => r.ReservationDate)
             .ToListAsync();
 
-        return View(allReservations);
+        return View(allReservations.Select(MapReservationToDisplayModel).ToList());
     }
 
     [HttpGet]
@@ -89,15 +94,57 @@ public class ReservationsController(
             return RedirectToAction(nameof(Create), new { screeningId = model.ScreeningId });
         }
 
-        (bool Success, string Error, Reservation? Reservation) result;
-        if (selectedSeatIds != null && selectedSeatIds.Length > 0)
+        if (selectedSeatIds is null || selectedSeatIds.Length == 0)
         {
-            result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, selectedSeatIds);
+            ModelState.AddModelError(string.Empty, "Please select at least one seat.");
         }
-        else
+
+        var distinctSeatIds = selectedSeatIds?.Distinct().ToArray() ?? [];
+        if (selectedSeatIds is not null && distinctSeatIds.Length != selectedSeatIds.Length)
         {
-            result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, model.NumberOfTickets);
+            ModelState.AddModelError(string.Empty, "Duplicate seat selection detected. Please select seats again.");
         }
+
+        if (distinctSeatIds.Length > 0)
+        {
+            model.NumberOfTickets = distinctSeatIds.Length;
+            ModelState.Remove(nameof(Reservation.NumberOfTickets));
+            ModelState.Remove($"{nameof(model)}.{nameof(Reservation.NumberOfTickets)}");
+        }
+
+        ModelState.Remove(nameof(Reservation.Screening));
+        ModelState.Remove($"{nameof(model)}.{nameof(Reservation.Screening)}");
+
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .SelectMany(x => x.Value!.Errors.Select(e =>
+                    $"{x.Key}: {e.ErrorMessage} {e.Exception?.Message}"
+                ))
+                .ToList();
+
+            foreach (var error in errors)
+            {
+                Console.WriteLine("MODELSTATE ERROR: " + error);
+            }
+            
+            screening = await context.Screenings
+                .Include(s => s.Movie)
+                .Include(s => s.CinemaHall)
+                .FirstOrDefaultAsync(s => s.Id == model.ScreeningId);
+
+            if (screening is null) return NotFound();
+
+            var seatMapForValidation = await reservationService.GetSeatMapAsync(model.ScreeningId);
+            ViewBag.Screening = screening;
+            ViewBag.SeatMap = seatMapForValidation;
+            return View(model);
+        }
+
+        var result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, distinctSeatIds);
+        
+        
 
         if (!result.Success)
         {
@@ -132,6 +179,11 @@ public class ReservationsController(
 
         var reservation = await context.Reservations
             .Include(r => r.User)
+            .Include(r => r.Screening)
+            .ThenInclude(s => s.Movie)
+            .Include(r => r.Screening.CinemaHall)
+            .Include(r => r.ReservationSeats)
+            .ThenInclude(rs => rs.Seat)
             .FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
 
@@ -155,7 +207,11 @@ public class ReservationsController(
             TotalPrice = reservation.TotalPrice,
             Email = userEmail,
             IsEmailRequired = string.IsNullOrWhiteSpace(userEmail),
-            AccessToken = token ?? string.Empty
+            AccessToken = token ?? string.Empty,
+            MovieTitle = reservation.Screening.Movie.Title,
+            HallName = reservation.Screening.CinemaHall.Name,
+            ScreeningStartTime = reservation.Screening.StartTime,
+            Seats = MapSeats(reservation)
         };
 
         return View(model);
@@ -169,6 +225,11 @@ public class ReservationsController(
 
         var reservation = await context.Reservations
             .Include(r => r.User)
+            .Include(r => r.Screening)
+            .ThenInclude(s => s.Movie)
+            .Include(r => r.Screening.CinemaHall)
+            .Include(r => r.ReservationSeats)
+            .ThenInclude(rs => rs.Seat)
             .FirstOrDefaultAsync(r => r.Id == model.ReservationId);
         if (reservation is null) return NotFound();
 
@@ -185,6 +246,10 @@ public class ReservationsController(
         }
 
         model.TotalPrice = reservation.TotalPrice;
+        model.MovieTitle = reservation.Screening.Movie.Title;
+        model.HallName = reservation.Screening.CinemaHall.Name;
+        model.ScreeningStartTime = reservation.Screening.StartTime;
+        model.Seats = MapSeats(reservation);
         var currentUser = await userManager.GetUserAsync(User);
         var storedEmail = currentUser?.Email ?? reservation.ReservationEmail ?? string.Empty;
         model.IsEmailRequired = string.IsNullOrWhiteSpace(storedEmail);
@@ -248,6 +313,8 @@ public class ReservationsController(
             .Include(r => r.Screening)
             .ThenInclude(s => s.Movie)
             .Include(r => r.Screening.CinemaHall)
+            .Include(r => r.ReservationSeats)
+            .ThenInclude(rs => rs.Seat)
             .FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
 
@@ -258,7 +325,7 @@ public class ReservationsController(
             return Forbid();
         }
 
-        return View(reservation);
+        return View(MapReservationToDisplayModel(reservation));
     }
 
     public async Task<IActionResult> Cancel(int id, string? token)
@@ -350,5 +417,34 @@ public class ReservationsController(
         {
             return false;
         }
+    }
+
+    private static ReservationDisplayViewModel MapReservationToDisplayModel(Reservation reservation)
+    {
+        return new ReservationDisplayViewModel
+        {
+            Id = reservation.Id,
+            CustomerEmail = reservation.User?.Email ?? reservation.User?.UserName ?? reservation.ReservationEmail,
+            MovieTitle = reservation.Screening.Movie.Title,
+            HallName = reservation.Screening.CinemaHall.Name,
+            ScreeningStartTime = reservation.Screening.StartTime,
+            NumberOfTickets = reservation.NumberOfTickets,
+            TotalPrice = reservation.TotalPrice,
+            Status = reservation.Status,
+            Seats = MapSeats(reservation)
+        };
+    }
+
+    private static List<ReservationSeatViewModel> MapSeats(Reservation reservation)
+    {
+        return reservation.ReservationSeats
+            .Select(rs => new ReservationSeatViewModel
+            {
+                Row = rs.Seat.Row,
+                Number = rs.Seat.Number
+            })
+            .OrderBy(s => s.Row)
+            .ThenBy(s => s.Number)
+            .ToList();
     }
 }

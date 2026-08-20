@@ -1,12 +1,16 @@
-@model IEnumerable<CinemaWebsite.Models.Reservation>
+@model IEnumerable<CinemaWebsite.ViewModels.ReservationDisplayViewModel>
 <h3>All Reservations</h3>
 <table class="table"><tr><th>User</th>
     <th>Movie</th>
+    <th>Screening</th>
+    <th>Seats</th>
     <th>Tickets</th>
     <th>Status</th>
 </tr>@foreach (var r in Model){<tr>
-         <td>@(r.User?.Email ?? r.User?.UserName ?? r.ReservationEmail ?? "-")</td>
-         <td>@r.Screening.Movie.Title</td>
+         <td>@(r.CustomerEmail ?? "-")</td>
+         <td>@r.MovieTitle</td>
+         <td>@r.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</td>
+         <td>@(r.Seats.Any() ? string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}")) : "-")</td>
          <td>@r.NumberOfTickets</td>
          <td>@r.Status</td>
          </tr>}</table>

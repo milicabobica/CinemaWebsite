@@ -39,4 +39,12 @@ public class PaymentViewModel
     public string BillingAddress { get; set; } = string.Empty;
 
     public decimal TotalPrice { get; set; }
+
+    public string MovieTitle { get; set; } = string.Empty;
+
+    public string HallName { get; set; } = string.Empty;
+
+    public DateTime ScreeningStartTime { get; set; }
+
+    public List<ReservationSeatViewModel> Seats { get; set; } = new();
 }

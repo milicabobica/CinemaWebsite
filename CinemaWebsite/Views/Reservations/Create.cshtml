@@ -15,10 +15,10 @@ else
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
-        <label class="form-label">Select seats</label>
+        <div class="form-label">Select seats</div>
             <div class="mb-1 text-muted">Price per seat: <strong>@(screening?.Price.ToString("C"))</strong></div>
             @Html.Partial("_SeatMap")
-            <div class="form-text">Click seats to select. You may also enter number of tickets to auto-assign.</div>
+            <div class="form-text">Click seats to select. Ticket count must match selected seats.</div>
         </div>
 
         <label asp-for="NumberOfTickets" class="form-label"></label>

@@ -20,22 +20,27 @@ document.addEventListener('DOMContentLoaded', function () {
         if (seatPriceEl) seatPriceEl.textContent = pricePerSeat.toFixed(2);
         if (totalPriceEl) totalPriceEl.textContent = (pricePerSeat * count).toFixed(2);
         if (ticketInput) ticketInput.value = String(count === 0 ? ticketInput.value : count);
+    }
 
-        const hidden = document.getElementById('selectedSeatIds');
-        if (hidden) hidden.value = Array.from(selected).join(',');
+    function seatInput(id) {
+        return seatMap.querySelector(`input.seat-select-input[data-seat-id="${id}"]`);
     }
 
     function selectSeat(id) {
         const btn = seatButton(id);
+        const input = seatInput(id);
         if (!btn || btn.disabled) return;
         selected.add(id);
         btn.classList.add('selected');
+        if (input && !input.disabled) input.checked = true;
     }
 
     function deselectSeat(id) {
         const btn = seatButton(id);
+        const input = seatInput(id);
         selected.delete(id);
         if (btn) btn.classList.remove('selected');
+        if (input) input.checked = false;
     }
 
     seatMap.addEventListener('click', function (e) {
@@ -56,26 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         updateSummary();
     });
-
-    // if form is submitted, convert selectedSeatIds into multiple inputs for model binding
-    const form = document.querySelector('form[asp-action="Create"]') || document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function () {
-            const hidden = document.getElementById('selectedSeatIds');
-            if (!hidden) return;
-            const val = hidden.value;
-            // remove previous inputs
-            document.querySelectorAll('input[name="selectedSeatIds"]').forEach(i => i.remove());
-            if (!val) return;
-            val.split(',').forEach(id => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'selectedSeatIds';
-                input.value = id;
-                form.appendChild(input);
-            });
-        });
-    }
 
     // initialize summary in case seats are pre-selected
     updateSummary();

@@ -60,15 +60,15 @@ public class ReservationsController(
             return RedirectToAction("Details", "Movies", new { id = screening.MovieId });
         }
 
-        var available = await reservationService.GetAvailableSeatsAsync(screeningId);
+        var seatMap = await reservationService.GetSeatMapAsync(screeningId);
         ViewBag.Screening = screening;
-        ViewBag.AvailableSeats = available;
+        ViewBag.SeatMap = seatMap;
         return View(new Reservation { ScreeningId = screeningId, NumberOfTickets = 1 });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Reservation model)
+    public async Task<IActionResult> Create(Reservation model, int[]? selectedSeatIds)
     {
         var userId = userManager.GetUserId(User);
 
@@ -81,7 +81,16 @@ public class ReservationsController(
             return RedirectToAction(nameof(Create), new { screeningId = model.ScreeningId });
         }
 
-        var result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, model.NumberOfTickets);
+        (bool Success, string Error, Reservation? Reservation) result;
+        if (selectedSeatIds != null && selectedSeatIds.Length > 0)
+        {
+            result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, selectedSeatIds);
+        }
+        else
+        {
+            result = await reservationService.CreateReservationAsync(userId, model.ScreeningId, model.NumberOfTickets);
+        }
+
         if (!result.Success)
         {
             screening = await context.Screenings
@@ -91,9 +100,9 @@ public class ReservationsController(
 
             if (screening is null) return NotFound();
 
-            var available = await reservationService.GetAvailableSeatsAsync(model.ScreeningId);
+            var seatMap = await reservationService.GetSeatMapAsync(model.ScreeningId);
             ViewBag.Screening = screening;
-            ViewBag.AvailableSeats = available;
+            ViewBag.SeatMap = seatMap;
             ModelState.AddModelError(string.Empty, result.Error);
             return View(model);
         }

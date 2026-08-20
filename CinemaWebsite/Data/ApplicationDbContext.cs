@@ -16,6 +16,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<News> News { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<ContactMessage> ContactMessages { get; set; }
+    public DbSet<Seat> Seats { get; set; }
+    public DbSet<ReservationSeat> ReservationSeats { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -65,6 +67,29 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany(s => s.Reservations)
             .HasForeignKey(r => r.ScreeningId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Reservation ↔ Seat (many-to-many)
+        builder.Entity<ReservationSeat>()
+            .HasKey(rs => new { rs.ReservationId, rs.SeatId });
+
+        builder.Entity<ReservationSeat>()
+            .HasOne(rs => rs.Reservation)
+            .WithMany(r => r.ReservationSeats)
+            .HasForeignKey(rs => rs.ReservationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<ReservationSeat>()
+            .HasOne(rs => rs.Seat)
+            .WithMany(s => s.ReservationSeats)
+            .HasForeignKey(rs => rs.SeatId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // CinemaHall → Seat
+        builder.Entity<Seat>()
+            .HasOne(s => s.CinemaHall)
+            .WithMany(h => h.Seats)
+            .HasForeignKey(s => s.CinemaHallId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Cinema Hall number should be unique
         builder.Entity<CinemaHall>()

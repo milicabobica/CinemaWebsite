@@ -31,5 +31,7 @@ public class CinemaHall
 
     public bool IsAvailable { get; set; } = true;
 
+    public ICollection<Seat> Seats { get; set; } = new List<Seat>();
+
     public ICollection<Screening> Screenings { get; set; } = new List<Screening>();
 }

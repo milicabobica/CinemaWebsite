@@ -1,3 +1,38 @@
 @model IEnumerable<CinemaWebsite.ViewModels.ReservationDisplayViewModel>
 <h3>My Reservations</h3>
-<table class="table"><tr><th>Movie</th><th>Screening</th><th>Seats</th><th>Tickets</th><th>Total</th><th>Status</th><th></th></tr>@foreach (var r in Model){<tr><td>@r.MovieTitle</td><td>@r.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</td><td>@(r.Seats.Any() ? string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}")) : "-")</td><td>@r.NumberOfTickets</td><td>@r.TotalPrice</td><td>@r.Status</td><td><a asp-action="Details" asp-route-id="@r.Id">Details</a></td></tr>}</table>
+<table class="table">
+    <tr>
+        <th>Movie</th>
+        <th>Screening</th>
+        <th>Seats</th>
+        <th>Tickets</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+    @foreach (var r in Model)
+    {
+        var isPastReservation = r.ScreeningStartTime <= DateTime.UtcNow;
+        var canCancel = !isPastReservation && r.Status != CinemaWebsite.Models.ReservationStatus.Cancelled;
+
+        <tr>
+            <td>@r.MovieTitle</td>
+            <td>@r.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@(r.Seats.Any() ? string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}")) : "-")</td>
+            <td>@r.NumberOfTickets</td>
+            <td>@r.TotalPrice</td>
+            <td>@r.Status</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@r.Id">Details</a>
+                @if (canCancel)
+                {
+                    <span>|</span>
+                    <form asp-action="Cancel" asp-route-id="@r.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-link p-0 align-baseline">Cancel</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+</table>

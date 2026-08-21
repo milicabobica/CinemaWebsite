@@ -35,6 +35,12 @@
                             <a class="nav-link text-dark" asp-controller="Reservations" asp-action="Index">Reservations</a>
                         </li>
                     }
+                    else if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Reservations" asp-action="MyReservations">My Reservations</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-controller="Services" asp-action="Index">Services</a>
                     </li>

@@ -8,7 +8,7 @@
         <div class="confirmation-success">
             <span class="confirmation-icon" aria-hidden="true">✓</span>
             <div>
-                <h1>Reservation #@Model.Id</h1>
+                <h1>Reservation confirmed!</h1>
                 <p>Your booking details are ready.</p>
             </div>
         </div>
@@ -48,7 +48,18 @@
 
             <div class="confirmation-total">
                 <span>Total</span>
-                <strong>@Model.TotalPrice</strong>
+                <strong>@Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("de-DE"))</strong>
+                @* Force a specific culture: *@
+                @* @Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("en-GB")) *@
+                @* // Output: £1,234.50 *@
+                    
+                @* Remove the currency symbol but keep formatting: *@
+                @* @Model.TotalPrice.ToString("N2") // Output: 1,234.50 *@
+                    
+                @* Use a custom symbol: *@
+                @* var culture = (System.Globalization.CultureInfo)System.Globalization.CultureInfo.CurrentCulture.Clone(); *@
+                @* culture.NumberFormat.CurrencySymbol = "USD"; *@
+                @* @Model.TotalPrice.ToString("C", culture) // Output: USD1,234.50 *@
             </div>
         </div>
 

@@ -4,13 +4,13 @@
 }
 
 <section class="payment-page">
-    <div class="payment-breadcrumb">
-        <a asp-controller="Home" asp-action="Index">Home</a>
-        <span>&gt;</span>
-        <a asp-controller="Reservations" asp-action="MyReservations">Reservations</a>
-        <span>&gt;</span>
-        <span>Payment</span>
-    </div>
+    @* <div class="payment-breadcrumb"> *@
+    @*     <a asp-controller="Home" asp-action="Index">Home</a> *@
+    @*     <span>&gt;</span> *@
+    @*     <a asp-controller="Reservations" asp-action="MyReservations">Reservations</a> *@
+    @*     <span>&gt;</span> *@
+    @*     <span>Payment</span> *@
+    @* </div> *@
 
     <div class="row g-4 payment-shell">
         <div class="col-lg-7">
@@ -74,10 +74,10 @@
             <aside class="payment-summary">
                 <h2 class="payment-summary-title">Reservation summary</h2>
 
-                <div class="payment-summary-row">
-                    <span>Reservation</span>
-                    <strong>#@Model.ReservationId</strong>
-                </div>
+                @* <div class="payment-summary-row"> *@
+                @*     <span>Reservation</span> *@
+                @*     <strong>#@Model.ReservationId</strong> *@
+                @* </div> *@
                 <div class="payment-summary-row">
                     <span>Movie</span>
                     <strong>@Model.MovieTitle</strong>
@@ -103,7 +103,18 @@
 
                 <div class="payment-total">
                     <span>Total</span>
-                    <strong>@Model.TotalPrice.ToString("C")</strong>
+                    <strong>@Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("de-DE"))</strong>
+                    @* Force a specific culture: *@
+                    @* @Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("en-GB")) *@
+                    @* // Output: £1,234.50 *@
+                    
+                    @* Remove the currency symbol but keep formatting: *@
+                    @* @Model.TotalPrice.ToString("N2") // Output: 1,234.50 *@
+                    
+                    @* Use a custom symbol: *@
+                    @* var culture = (System.Globalization.CultureInfo)System.Globalization.CultureInfo.CurrentCulture.Clone(); *@
+                    @* culture.NumberFormat.CurrencySymbol = "USD"; *@
+                    @* @Model.TotalPrice.ToString("C", culture) // Output: USD1,234.50 *@
                 </div>
             </aside>
         </div>

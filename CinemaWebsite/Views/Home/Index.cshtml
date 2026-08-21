@@ -53,35 +53,33 @@
         <h3>Coming Soon</h3>
         <a asp-controller="Movies" asp-action="Index">See schedule</a>
     </div>
-    <div class="coming-soon-list">
+    <div class="home-card-grid">
         @foreach (var m in Model.ComingSoonMovies)
         {
-            <div class="coming-soon-item">
-                <span class="coming-title">@m.Title</span>
-                <span class="coming-date">@m.ReleaseDate.ToString("dd/MM/yyyy")</span>
-            </div>
+            <article class="home-movie-card">
+                <a class="movie-poster-wrap" asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">
+                    <img src="@(string.IsNullOrWhiteSpace(m.PosterUrl) ? "https://via.placeholder.com/600x900?text=No+Poster" : m.PosterUrl)" alt="@m.Title poster" loading="lazy" />
+                </a>
+                <div class="movie-card-content">
+                    <h4><a asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">@m.Title</a></h4>
+                    <p>@m.ReleaseDate.ToString("dd MMM yyyy")</p>
+                </div>
+            </article>
         }
     </div>
 </section>
 
-<section class="home-section home-info-grid">
-    <div class="home-info-block">
+<section class="home-section">
+    <div class="section-heading-row">
         <h3>Latest News</h3>
-        <ul>
-            @foreach (var n in Model.LatestNews)
-            {
-                <li><a asp-controller="News" asp-action="Details" asp-route-id="@n.Id">@n.Title</a></li>
-            }
-        </ul>
     </div>
-    <div class="home-info-block">
-        <h3>Services</h3>
-        <ul>
-            @foreach (var s in Model.Services)
-            {
-                <li>@s.Name</li>
-            }
-        </ul>
+    <div class="coming-soon-list news-list">
+        @foreach (var n in Model.LatestNews)
+        {
+            <div class="coming-soon-item news-item">
+                <a class="coming-title" asp-controller="News" asp-action="Details" asp-route-id="@n.Id">@n.Title</a>
+            </div>
+        }
     </div>
 </section>
 

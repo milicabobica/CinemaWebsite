@@ -209,12 +209,13 @@ body.home-page main {
 .coming-soon-list {
     display: grid;
     gap: 0.65rem;
+    
 }
 
 .coming-soon-item {
     background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.07);
-    border-radius: 14px;
+    /*border-radius: 14px;*/
     padding: 0.88rem 1rem;
     display: flex;
     justify-content: space-between;
@@ -222,11 +223,22 @@ body.home-page main {
 }
 
 .coming-title {
-    font-weight: 500;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-decoration: none;
 }
 
 .coming-date {
     color: #6a6a6a;
+}
+
+.news-list .news-item {
+    justify-content: flex-start;
+}
+
+.news-list .coming-title:hover {
+    color: #000;
+    opacity: 0.75;
 }
 
 .home-info-grid {

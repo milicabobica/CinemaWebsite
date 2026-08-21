@@ -28,7 +28,7 @@ html {
 :root {
   --bg: #0A0E1A;
   --bg-elevated: #12172A;
-  --text: #F0F0F0;
+  --text: #efefef;
   --text-muted: rgba(240, 240, 240, 0.55);
   --accent: #5B7B9A;
   --accent-hover: #6E8FB0;

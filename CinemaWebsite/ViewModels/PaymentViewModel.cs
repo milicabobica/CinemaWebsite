@@ -7,7 +7,7 @@ public class PaymentViewModel
 {
     public int ReservationId { get; set; }
 
-    public string AccessToken { get; set; } = string.Empty;
+    public string? AccessToken { get; set; } = string.Empty;
 
     [Display(Name = "Email")]
     [EmailAddress]

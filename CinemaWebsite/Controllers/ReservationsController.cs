@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace CinemaWebsite.Controllers;
 
@@ -250,6 +251,11 @@ public class ReservationsController(
         model.HallName = reservation.Screening.CinemaHall.Name;
         model.ScreeningStartTime = reservation.Screening.StartTime;
         model.Seats = MapSeats(reservation);
+
+        model.CardNumber = new string((model.CardNumber ?? string.Empty).Where(char.IsDigit).ToArray());
+        model.Cvv = new string((model.Cvv ?? string.Empty).Where(char.IsDigit).ToArray());
+        model.ExpirationDate = NormalizeExpiration(model.ExpirationDate);
+
         var currentUser = await userManager.GetUserAsync(User);
         var storedEmail = currentUser?.Email ?? reservation.ReservationEmail ?? string.Empty;
         model.IsEmailRequired = string.IsNullOrWhiteSpace(storedEmail);
@@ -257,7 +263,20 @@ public class ReservationsController(
         {
             model.Email = storedEmail;
         }
-        else if (string.IsNullOrWhiteSpace(model.Email))
+        else
+        {
+            model.Email = (model.Email ?? string.Empty).Trim();
+        }
+
+        ModelState.Clear();
+        TryValidateModel(model);
+
+        if (!model.IsEmailRequired)
+        {
+            ModelState.Remove(nameof(PaymentViewModel.Email));
+        }
+
+        if (model.IsEmailRequired && string.IsNullOrWhiteSpace(model.Email))
         {
             ModelState.AddModelError(nameof(PaymentViewModel.Email), "Email is required.");
         }
@@ -265,6 +284,23 @@ public class ReservationsController(
         if (!IsExpirationValid(model.ExpirationDate))
         {
             ModelState.AddModelError(nameof(model.ExpirationDate), "Card expiration date is invalid or already expired.");
+        }
+        
+        foreach (var state in ModelState)
+        {
+            foreach (var error in state.Value.Errors)
+            {
+                Console.WriteLine(
+                    $"PAYMENT MODELSTATE ERROR: {state.Key} - {error.ErrorMessage}"
+                );
+
+                if (error.Exception != null)
+                {
+                    Console.WriteLine(
+                        $"EXCEPTION: {error.Exception.Message}"
+                    );
+                }
+            }
         }
 
         if (!ModelState.IsValid)
@@ -286,6 +322,37 @@ public class ReservationsController(
         }
 
         return RedirectToAction(nameof(Details), new { id = reservation.Id });
+    }
+
+    private static string NormalizeExpiration(string expiration)
+    {
+        if (string.IsNullOrWhiteSpace(expiration)) return string.Empty;
+
+        var input = expiration.Trim();
+        var slashMatch = Regex.Match(input, "^(0[1-9]|1[0-2])\\/(\\d{2}|\\d{4})$");
+        if (slashMatch.Success)
+        {
+            var month = slashMatch.Groups[1].Value;
+            var year = slashMatch.Groups[2].Value;
+            return year.Length == 4 ? $"{month}/{year[^2..]}" : $"{month}/{year}";
+        }
+
+        var digitsOnly = new string(input.Where(char.IsDigit).ToArray());
+        if (digitsOnly.Length == 6)
+        {
+            var month = digitsOnly[..2];
+            var year = digitsOnly[2..];
+            return $"{month}/{year[^2..]}";
+        }
+
+        if (digitsOnly.Length == 4)
+        {
+            var month = digitsOnly[..2];
+            var year = digitsOnly[2..];
+            return $"{month}/{year}";
+        }
+
+        return input;
     }
     
     private static bool IsExpirationValid(string expiration)

@@ -1,0 +1,321 @@
+﻿body.home-page {
+    /*background: #f7f7f5;*/
+    /*color: #151515;*/
+    background: var(--bg);
+    color: var(--text);
+}
+
+body.home-page header .navbar {
+    background: #f7f7f5 !important;
+    border-bottom: none;
+    box-shadow: none !important;
+    min-height: 82px;
+    margin-bottom: 0 !important;
+    padding: 0 1.25rem;
+}
+
+body.home-page header .navbar-brand {
+    color: #111 !important;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+body.home-page header .navbar-collapse {
+    align-items: center;
+}
+
+body.home-page header .navbar-nav.flex-grow-1 {
+    justify-content: center;
+    gap: 1.2rem;
+}
+
+body.home-page header .navbar .nav-link,
+body.home-page header .navbar .btn-link.nav-link {
+    color: #171717 !important;
+    font-size: 1.06rem;
+    font-weight: 500;
+}
+
+body.home-page header .navbar .nav-link:hover,
+body.home-page .section-heading-row a:hover,
+body.home-page .home-info-block a:hover {
+    color: #000 !important;
+    opacity: 0.7;
+}
+
+body.home-page > .container {
+    max-width: 1320px;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+body.home-page main {
+    padding-top: 0.5rem;
+}
+
+.home-hero {
+    min-height: 72vh;
+    display: grid;
+    grid-template-columns: minmax(260px, 360px) 1fr;
+    align-items: center;
+    column-gap: 3rem;
+    padding: 4.5rem 0 2rem;
+}
+
+.home-hero-content h1 {
+    font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    line-height: 1;
+}
+
+.home-hero-content p {
+    font-size: 1.85rem;
+    margin-bottom: 2.1rem;
+    color: #1f1f1f;
+    font-weight: 400;
+}
+
+.home-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.95rem 1.7rem;
+    border-radius: 999px;
+    background: #fff;
+    color: #171717;
+    font-size: 1.23rem;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.home-hero-btn:hover {
+    color: #171717;
+    transform: translateY(-1px);
+}
+
+.home-hero-visuals {
+    position: relative;
+    height: clamp(310px, 45vw, 560px);
+}
+
+.hero-sphere {
+    position: absolute;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+}
+
+.hero-sphere::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.3) 58%, rgba(170, 170, 170, 0.2));
+}
+
+.hero-sphere-primary {
+    width: clamp(220px, 29vw, 350px);
+    height: clamp(220px, 29vw, 350px);
+    left: 9%;
+    bottom: 1%;
+}
+
+.hero-sphere-secondary {
+    width: clamp(220px, 29vw, 350px);
+    height: clamp(220px, 29vw, 350px);
+    right: 10%;
+    bottom: 1%;
+}
+
+.home-section {
+    margin-top: 3.5rem;
+}
+
+.section-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+.section-heading-row h3,
+.home-info-block h3 {
+    margin: 0;
+    color: #141414;
+    font-size: 1.65rem;
+    font-weight: 600;
+}
+
+.section-heading-row a,
+.home-info-block a {
+    color: #242424;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.home-card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.35rem;
+}
+
+.home-movie-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.movie-poster-wrap {
+    display: block;
+    aspect-ratio: 2 / 3;
+    background: #e8e8e8;
+}
+
+.movie-poster-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-card-content {
+    padding: 1rem 1rem 1.2rem;
+}
+
+.movie-card-content h4 {
+    margin: 0 0 0.35rem;
+    font-size: 1.1rem;
+}
+
+.movie-card-content h4 a {
+    color: #181818;
+    text-decoration: none;
+}
+
+.movie-card-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.96rem;
+}
+
+.coming-soon-list {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.coming-soon-item {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 14px;
+    padding: 0.88rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+}
+
+.coming-title {
+    font-weight: 500;
+}
+
+.coming-date {
+    color: #6a6a6a;
+}
+
+.home-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem;
+    padding-bottom: 2rem;
+}
+
+.home-info-block {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    padding: 1.3rem;
+}
+
+.home-info-block ul {
+    margin: 1rem 0 0;
+    padding-left: 1.1rem;
+}
+
+.home-info-block li {
+    margin-bottom: 0.65rem;
+}
+
+body.home-page footer {
+    background: #f7f7f5 !important;
+    border-top-color: rgba(0, 0, 0, 0.08);
+    color: #777;
+}
+
+@media (max-width: 991.98px) {
+    .home-hero {
+        grid-template-columns: 1fr;
+        row-gap: 2rem;
+        min-height: auto;
+    }
+
+    .home-hero-visuals {
+        height: 300px;
+    }
+
+    .hero-sphere-primary {
+        left: 12%;
+    }
+
+    .hero-sphere-secondary {
+        right: 12%;
+    }
+
+    .home-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    body.home-page header .navbar-nav.flex-grow-1 {
+        justify-content: flex-start;
+        gap: 0;
+    }
+
+    .home-hero {
+        padding-top: 2rem;
+    }
+
+    .home-hero-content p {
+        font-size: 1.25rem;
+    }
+
+    .home-hero-visuals {
+        height: 230px;
+    }
+
+    .hero-sphere-primary,
+    .hero-sphere-secondary {
+        width: 170px;
+        height: 170px;
+    }
+
+    .hero-sphere-primary {
+        left: 8%;
+    }
+
+    .hero-sphere-secondary {
+        right: 8%;
+    }
+
+    .home-card-grid,
+    .home-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .coming-soon-item {
+        flex-direction: column;
+    }
+}

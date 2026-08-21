@@ -2,32 +2,84 @@
 
 @{
     ViewData["Title"] = "Home";
+    ViewData["BodyClass"] = "home-page";
+
+    var featuredMovie = Model.NowShowingMovies.FirstOrDefault();
+    var secondaryMovie = Model.ComingSoonMovies.FirstOrDefault() ?? Model.NowShowingMovies.Skip(1).FirstOrDefault();
 }
 
-<h3>Now Showing</h3>
-<ul>@foreach (var m in Model.NowShowingMovies)
-    {
-        <li><a asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">@m.Title</a></li>
-    }
-    </ul>
+<section class="home-hero">
+    <div class="home-hero-content">
+        <h1>@(featuredMovie?.Title ?? "Now Showing")</h1>
+        <p>@(featuredMovie?.Director is not null ? $"by {featuredMovie.Director}" : "Discover the latest cinema experience")</p>
+        @if (featuredMovie is not null)
+        {
+            <a class="home-hero-btn" asp-controller="Movies" asp-action="Details" asp-route-id="@featuredMovie.Id">view details <span aria-hidden="true">→</span></a>
+        }
+    </div>
+    <div class="home-hero-visuals" aria-hidden="true">
+        <div class="hero-sphere hero-sphere-primary" style="background-image: url('@(featuredMovie?.PosterUrl ?? "")')"></div>
+        <div class="hero-sphere hero-sphere-secondary" style="background-image: url('@(secondaryMovie?.PosterUrl ?? "")')"></div>
+    </div>
+</section>
 
-<h3>Coming Soon</h3>
-<ul>@foreach (var m in Model.ComingSoonMovies)
-    {
-        <li>@m.Title (@m.ReleaseDate.ToString("dd/MM/yyyy"))</li>
-    }</ul>
+<section class="home-section">
+    <div class="section-heading-row">
+        <h3>Now Showing</h3>
+        <a asp-controller="Movies" asp-action="Index">Browse all</a>
+    </div>
+    <div class="home-card-grid">
+        @foreach (var m in Model.NowShowingMovies)
+        {
+            <article class="home-movie-card">
+                <a class="movie-poster-wrap" asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">
+                    <img src="@(string.IsNullOrWhiteSpace(m.PosterUrl) ? "https://via.placeholder.com/600x900?text=No+Poster" : m.PosterUrl)" alt="@m.Title poster" loading="lazy" />
+                </a>
+                <div class="movie-card-content">
+                    <h4><a asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">@m.Title</a></h4>
+                    <p>@m.ReleaseDate.ToString("dd MMM yyyy")</p>
+                </div>
+            </article>
+        }
+    </div>
+</section>
 
-<h3>Latest News</h3>
-<ul>@foreach (var n in Model.LatestNews)
-    {
-        <li><a asp-controller="News" asp-action="Details" asp-route-id="@n.Id">@n.Title</a></li>
-    }</ul>
+<section class="home-section">
+    <div class="section-heading-row">
+        <h3>Coming Soon</h3>
+        <a asp-controller="Movies" asp-action="Index">See schedule</a>
+    </div>
+    <div class="coming-soon-list">
+        @foreach (var m in Model.ComingSoonMovies)
+        {
+            <div class="coming-soon-item">
+                <span class="coming-title">@m.Title</span>
+                <span class="coming-date">@m.ReleaseDate.ToString("dd/MM/yyyy")</span>
+            </div>
+        }
+    </div>
+</section>
 
-<h3>Services</h3>
-<ul>@foreach (var s in Model.Services)
-    {
-        <li>@s.Name</li>
-    }</ul>
+<section class="home-section home-info-grid">
+    <div class="home-info-block">
+        <h3>Latest News</h3>
+        <ul>
+            @foreach (var n in Model.LatestNews)
+            {
+                <li><a asp-controller="News" asp-action="Details" asp-route-id="@n.Id">@n.Title</a></li>
+            }
+        </ul>
+    </div>
+    <div class="home-info-block">
+        <h3>Services</h3>
+        <ul>
+            @foreach (var s in Model.Services)
+            {
+                <li>@s.Name</li>
+            }
+        </ul>
+    </div>
+</section>
 
 @* <p>Total movies: @Model.MovieCount</p> *@
 @* <p>Total halls: @Model.CinemaHallCount</p> *@

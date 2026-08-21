@@ -5,7 +5,7 @@
     color: var(--text);
 }
 
-body.home-page header .navbar {
+header .navbar {
     background: #f7f7f5 !important;
     border-bottom: none;
     box-shadow: none !important;
@@ -14,34 +14,34 @@ body.home-page header .navbar {
     padding: 0 1.25rem;
 }
 
-body.home-page header .navbar-brand {
+header .navbar-brand {
     color: #111 !important;
     font-size: 1.45rem;
     font-weight: 700;
     letter-spacing: -0.02em;
 }
 
-body.home-page header .navbar-collapse {
+header .navbar-collapse {
     align-items: center;
 }
 
-body.home-page header .navbar-nav.flex-grow-1 {
+header .navbar-nav.flex-grow-1 {
     justify-content: center;
     gap: 1.2rem;
 }
 
-body.home-page header .navbar .nav-link,
-body.home-page header .navbar .btn-link.nav-link {
+header .navbar .nav-link,
+header .navbar .btn-link.nav-link {
     color: #171717 !important;
     font-size: 1.06rem;
     font-weight: 500;
 }
 
-body.home-page header .navbar .nav-link:hover,
+header .navbar .nav-link:hover,
+header .navbar .btn-link.nav-link:hover,
 body.home-page .section-heading-row a:hover,
 body.home-page .home-info-block a:hover {
-    /*color: #000 !important;*/
-    color: #fff !important;
+    color: #000 !important;
     opacity: 0.7;
 }
 
@@ -252,10 +252,22 @@ body.home-page main {
     margin-bottom: 0.65rem;
 }
 
-body.home-page footer {
+footer {
     background: #f7f7f5 !important;
     border-top-color: rgba(0, 0, 0, 0.08);
     color: #777;
+}
+
+footer.text-muted {
+    color: #777 !important;
+}
+
+footer a {
+    color: #4f4f4f;
+}
+
+footer a:hover {
+    color: #222;
 }
 
 @media (max-width: 991.98px) {
@@ -283,7 +295,7 @@ body.home-page footer {
 }
 
 @media (max-width: 767.98px) {
-    body.home-page header .navbar-nav.flex-grow-1 {
+    header .navbar-nav.flex-grow-1 {
         justify-content: flex-start;
         gap: 0;
     }

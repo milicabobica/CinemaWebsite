@@ -21,6 +21,27 @@
 
     <label asp-for="ReleaseDate" class="form-label"></label>
     <input asp-for="ReleaseDate" type="datetime-local" class="form-control mb-2" />
+    
+    <div class="mb-3">
+        <label class="form-label">Genres</label>
+
+        @foreach (var genre in ViewBag.Genres)
+        {
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="selectedGenreIds"
+                       value="@genre.Id" />
+                <label class="form-check-label">
+                    @genre.Name
+                </label>
+            </div>
+        }
+
+        <span class="text-danger">
+            @Html.ValidationMessage("selectedGenreIds")
+        </span>
+    </div>
 
     <label asp-for="Language" class="form-label"></label>
     <input asp-for="Language" class="form-control mb-2" />

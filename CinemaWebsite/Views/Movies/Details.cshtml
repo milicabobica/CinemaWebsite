@@ -21,14 +21,19 @@ else
 }
 <p><strong>Director:</strong> @Model.Director</p>
 <p><strong>Cast:</strong> @Model.Cast</p>
+@if (Model.MovieGenres.Any()) {
+    <p>
+        <strong>Genres:</strong>
+        @string.Join(", ", Model.MovieGenres.Select(genre =>  genre.Genre.Name))
+    </p>
+}
 <p><strong>Language:</strong> @Model.Language</p>
 <p><strong>Age rating:</strong> @Model.AgeRating</p>
 <p><strong>Rating:</strong> @Model.Rating</p>
 
 <h4>Screenings</h4>
 <ul>
-@foreach (var screening in Model.Screenings
-    .Where(s => s.StartTime >= DateTime.UtcNow)
+@foreach (var screening in Model.Screenings.Where(s => s.StartTime >= DateTime.UtcNow)
     .OrderBy(s => s.StartTime))
 {
     <li>

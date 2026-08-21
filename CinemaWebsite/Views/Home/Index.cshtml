@@ -10,16 +10,20 @@
 
 <section class="home-hero">
     <div class="home-hero-content">
-        <h1>@(featuredMovie?.Title ?? "Now Showing")</h1>
-        <p>@(featuredMovie?.Director is not null ? $"by {featuredMovie.Director}" : "Discover the latest cinema experience")</p>
-        @if (featuredMovie is not null)
-        {
-            <a class="home-hero-btn" asp-controller="Movies" asp-action="Details" asp-route-id="@featuredMovie.Id">view details <span aria-hidden="true">→</span></a>
-        }
+        @* <h1>@(featuredMovie?.Title ?? "Now Showing")</h1> *@
+        @* <p>@(featuredMovie?.Director is not null ? $"by {featuredMovie.Director}" : "Discover the latest cinema experience")</p> *@
+        @* @if (featuredMovie is not null) *@
+        @* { *@
+        @*     <a class="home-hero-btn" asp-controller="Movies" asp-action="Details" asp-route-id="@featuredMovie.Id">view details <span aria-hidden="true">→</span></a> *@
+        @* } *@
+        <h1>Generic welcome text</h1>
+        <p>Another text maybe</p>
+        <a class="home-hero-btn" asp-controller="Movies" asp-action="Index">view movies <span aria-hidden="true">→</span></a>
     </div>
     <div class="home-hero-visuals" aria-hidden="true">
         <div class="hero-sphere hero-sphere-primary" style="background-image: url('@(featuredMovie?.PosterUrl ?? "")')"></div>
         <div class="hero-sphere hero-sphere-secondary" style="background-image: url('@(secondaryMovie?.PosterUrl ?? "")')"></div>
+        @* nekoja slika ne znam sto da se stavi *@
     </div>
 </section>
 

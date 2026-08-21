@@ -74,7 +74,7 @@ body.home-page main {
 .home-hero-content p {
     font-size: 1.85rem;
     margin-bottom: 2.1rem;
-    color: #1f1f1f;
+    color: #a6a6a6;
     font-weight: 400;
 }
 
@@ -145,7 +145,7 @@ body.home-page main {
 .section-heading-row h3,
 .home-info-block h3 {
     margin: 0;
-    color: #141414;
+    color: #a3a3a3;
     font-size: 1.65rem;
     font-weight: 600;
 }

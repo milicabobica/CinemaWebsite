@@ -40,7 +40,8 @@ body.home-page header .navbar .btn-link.nav-link {
 body.home-page header .navbar .nav-link:hover,
 body.home-page .section-heading-row a:hover,
 body.home-page .home-info-block a:hover {
-    color: #000 !important;
+    /*color: #000 !important;*/
+    color: #fff !important;
     opacity: 0.7;
 }
 
@@ -84,7 +85,8 @@ body.home-page main {
     gap: 0.7rem;
     padding: 0.95rem 1.7rem;
     border-radius: 999px;
-    background: #fff;
+    /*background: #fff;*/
+    background: var(--accent);
     color: #171717;
     font-size: 1.23rem;
     text-decoration: none;
@@ -94,6 +96,7 @@ body.home-page main {
 .home-hero-btn:hover {
     color: #171717;
     transform: translateY(-1px);
+    background: var(--accent-hover);
 }
 
 .home-hero-visuals {
@@ -152,7 +155,8 @@ body.home-page main {
 
 .section-heading-row a,
 .home-info-block a {
-    color: #242424;
+    /*color: #242424;*/
+    color: #a3a3a3;
     text-decoration: none;
     font-weight: 500;
 }
@@ -165,7 +169,7 @@ body.home-page main {
 
 .home-movie-card {
     background: #fff;
-    border-radius: 20px;
+    /*border-radius: 20px;*/
     overflow: hidden;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }

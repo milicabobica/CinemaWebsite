@@ -31,6 +31,21 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="AdminDashboard">Admin Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Genres" asp-action="Index">Genres</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="CinemaHalls" asp-action="Index">Cinema Halls</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">Employees</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="ContactMessages" asp-action="Index">Contact Messages</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Screenings" asp-action="Index">Screenings</a>
                         </li>
                         <li class="nav-item">

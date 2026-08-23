@@ -15,7 +15,7 @@
         <input class="form-control"
                name="search"
                value="@Context.Request.Query["search"]"
-               placeholder="Search movies..." />
+               placeholder="Search movies..."/>
     </div>
 
     <!-- Language -->
@@ -23,7 +23,7 @@
         <input class="form-control"
                name="language"
                value="@Context.Request.Query["language"]"
-               placeholder="Language" />
+               placeholder="Language"/>
     </div>
 
     <!-- Status -->
@@ -48,8 +48,7 @@
         <select class="form-select" name="day">
             <option value="" selected="@(selectedDay is null)">Any day</option>
 
-            @foreach (var day in days)
-            {
+            @foreach (var day in days) {
                 <option value="@day"
                         selected="@(selectedDay.HasValue && day == selectedDay.Value)">
                     @day
@@ -58,6 +57,20 @@
 
         </select>
     </div>
+
+    <!-- genre -->
+    <div class="col-md-2">
+        <select name="genreId" class="form-select">
+            <option value="">All Genres</option>
+
+            @foreach (var genre in ViewBag.Genres) {
+                <option value="@genre.Id" selected="@(Context.Request.Query["genreId"] == genre.Id.ToString())">
+                    @genre.Name
+                </option>
+            }
+        </select>
+    </div>
+
 
     <!-- Filter -->
     <div class="col-md-1">
@@ -68,8 +81,7 @@
 
 </form>
 
-@if (User.IsInRole("Admin"))
-{
+@if (User.IsInRole("Admin")) {
     <p>
         <a asp-action="Create" class="btn btn-success">
             Create movie
@@ -92,17 +104,14 @@
 
     <tbody>
 
-    @foreach (var item in Model)
-    {
+    @foreach (var item in Model) {
         <tr>
             <th><img src="@item.PosterUrl" width="80"/></th>
             <td>
-                @if (selectedDay.HasValue)
-                {
+                @if (selectedDay.HasValue) {
                     <a asp-action="Details" asp-route-id="@item.Id" asp-route-day="@selectedDay.Value">@item.Title</a>
                 }
-                else
-                {
+                else {
                     <a asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
                 }
             </td>
@@ -121,8 +130,7 @@
 
                 @* <a asp-action="Details" asp-route-id="@item.Id"> Details </a> *@
 
-                @if (User.IsInRole("Admin"))
-                {
+                @if (User.IsInRole("Admin")) {
                     <a asp-action="Edit"
                        asp-route-id="@item.Id">
                         Edit

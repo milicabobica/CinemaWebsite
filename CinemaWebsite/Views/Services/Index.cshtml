@@ -1,4 +1,48 @@
 @model IEnumerable<CinemaWebsite.Models.Service>
-<h3>Services</h3>
-@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
-<ul>@foreach (var s in Model){<li><a asp-action="Details" asp-route-id="@s.Id">@s.Name</a></li>}</ul>
+
+@{
+    ViewData["Title"] = "Services";
+}
+
+<div class="page-header">
+    <h2>Services</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Create service</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">🍿</div>
+        <p class="text-muted">No services found.</p>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var s in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column gap-2">
+                        <h5 class="card-title mb-2">@s.Name</h5>
+                        @if (!string.IsNullOrWhiteSpace(s.Description))
+                        {
+                            <p class="text-muted small mb-3">@(s.Description.Length > 120 ? s.Description[..120] + "…" : s.Description)</p>
+                        }
+                        <div class="mt-auto d-flex gap-2 flex-wrap">
+                            <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@s.Id" class="btn btn-sm btn-danger">Delete</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

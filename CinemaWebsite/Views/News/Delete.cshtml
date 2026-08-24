@@ -1,3 +1,24 @@
 @model CinemaWebsite.Models.News
-<h3>Delete News</h3><p>Delete <strong>@Model.Title</strong>?</p>
-<form asp-action="Delete" method="post"><input type="hidden" asp-for="Id" /><button class="btn btn-danger" type="submit">Delete</button></form>
+
+@{
+    ViewData["Title"] = "Delete Article";
+}
+
+<div class="delete-confirm-card card mx-auto mt-4">
+    <div class="card-header d-flex align-items-center gap-2">
+        <span>⚠️</span>
+        <strong>Confirm deletion</strong>
+    </div>
+    <div class="card-body">
+        <p class="mb-1">You are about to permanently delete the article:</p>
+        <p class="fw-bold fs-5 mb-3">@Model.Title</p>
+        <p class="text-muted small">This action cannot be undone.</p>
+        <div class="d-flex gap-2 mt-4">
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id"/>
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </div>
+</div>

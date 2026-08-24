@@ -36,26 +36,62 @@ a:hover {
 
 /* ── navbar ──────────────────────────────────────────────── */
 .navbar {
-  background-color: var(--bg-elevated) !important;
-  border-bottom: 1px solid var(--border);
-  min-height: 64px;
+  background-color: rgba(18, 23, 42, 0.85) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(240, 240, 240, 0.05);
+  min-height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  transition: all 0.3s ease;
 }
 
 .navbar-brand {
   color: var(--text) !important;
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   letter-spacing: -.02em;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navbar-brand:hover {
+  transform: translateY(-1px);
+  text-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .navbar .nav-link,
 .navbar .btn-link.nav-link {
-  color: var(--text) !important;
+  color: var(--text-muted) !important;
   font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+  padding: 0.5rem 0.25rem !important;
+  margin: 0 0.75rem;
 }
+
+.navbar .nav-link::after,
+.navbar .btn-link.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--accent);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
 .navbar .nav-link:hover,
 .navbar .btn-link.nav-link:hover {
-  color: var(--accent) !important;
+  color: var(--text) !important;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .btn-link.nav-link:hover::after {
+  width: 100%;
 }
 
 /* hamburger icon visible on dark bg */

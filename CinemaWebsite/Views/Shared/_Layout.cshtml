@@ -25,36 +25,6 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Movies" asp-action="Index">Movies</a>
                     </li>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="AdminDashboard">Admin Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Genres" asp-action="Index">Genres</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="CinemaHalls" asp-action="Index">Cinema Halls</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Employees" asp-action="Index">Employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="ContactMessages" asp-action="Index">Contact Messages</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Screenings" asp-action="Index">Screenings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reservations" asp-action="Index">Reservations</a>
-                        </li>
-                    }
-                    else if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Reservations" asp-action="MyReservations">My Reservations</a>
-                        </li>
-                    }
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Services" asp-action="Index">Services</a>
                     </li>
@@ -64,6 +34,31 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="ContactMessages" asp-action="Create">Contact</a>
                     </li>
+                    
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin Tools
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="AdminDashboard">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Screenings" asp-action="Index">Manage Screenings</a></li>
+                                <li><a class="dropdown-item" asp-controller="Reservations" asp-action="Index">All Reservations</a></li>
+                                <li><a class="dropdown-item" asp-controller="CinemaHalls" asp-action="Index">Cinema Halls</a></li>
+                                <li><a class="dropdown-item" asp-controller="Genres" asp-action="Index">Genres</a></li>
+                                <li><a class="dropdown-item" asp-controller="Employees" asp-action="Index">Employees</a></li>
+                                <li><a class="dropdown-item" asp-controller="ContactMessages" asp-action="Index">Inbox</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Reservations" asp-action="MyReservations">My Reservations</a>
+                        </li>
+                    }
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>

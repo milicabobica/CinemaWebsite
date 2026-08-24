@@ -1,2 +1,42 @@
 @model CinemaWebsite.Models.News
-<h3>@Model.Title</h3><p>@Model.Summary</p><div>@Model.Content</div><p>@Model.Author - @Model.PublishedDate</p>
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="page-header">
+    <h1 class="h2">@Model.Title</h1>
+    <div class="d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex gap-3 mb-3 flex-wrap">
+                    <small class="text-muted">@Model.PublishedDate.ToString("dd MMM yyyy")</small>
+                    @if (!string.IsNullOrWhiteSpace(Model.Author))
+                    {
+                        <small class="text-muted">by @Model.Author</small>
+                    }
+                    @if (!Model.IsPublished)
+                    {
+                        <span class="badge" style="background:rgba(200,150,0,.2);color:#c8a000;border:1px solid rgba(200,150,0,.3)">Draft</span>
+                    }
+                </div>
+                @if (!string.IsNullOrWhiteSpace(Model.Summary))
+                {
+                    <p class="lead text-muted mb-3">@Model.Summary</p>
+                }
+                <div style="line-height:1.75">@Model.Content</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,63 @@
 @model IEnumerable<CinemaWebsite.Models.News>
-<h3>News</h3>
-@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
-<ul>@foreach (var n in Model){<li><a asp-action="Details" asp-route-id="@n.Id">@n.Title</a> (@(n.IsPublished ? "Published" : "Draft"))</li>}</ul>
+
+@{
+    ViewData["Title"] = "News";
+}
+
+<div class="page-header">
+    <h2>News</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Create article</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">📰</div>
+        <p class="text-muted">No news articles yet.</p>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var n in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            @if (!n.IsPublished)
+                            {
+                                <span class="badge" style="background:rgba(200,150,0,.2);color:#c8a000;border:1px solid rgba(200,150,0,.3)">Draft</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Published</span>
+                            }
+                        </div>
+                        <h6 class="card-title mb-0">
+                            <a asp-action="Details" asp-route-id="@n.Id"
+                               class="text-decoration-none" style="color:var(--text)">@n.Title</a>
+                        </h6>
+                        @if (!string.IsNullOrWhiteSpace(n.Summary))
+                        {
+                            <p class="text-muted small mb-0">@(n.Summary.Length > 100 ? n.Summary[..100] + "…" : n.Summary)</p>
+                        }
+                        <div class="mt-auto d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <small class="text-muted">@n.PublishedDate.ToString("dd MMM yyyy")</small>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="d-flex gap-1">
+                                    <a asp-action="Edit" asp-route-id="@n.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@n.Id" class="btn btn-sm btn-danger">Delete</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

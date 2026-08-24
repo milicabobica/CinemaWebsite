@@ -90,8 +90,32 @@ a:hover {
 }
 
 .navbar .nav-link:hover::after,
-.navbar .btn-link.nav-link:hover::after {
+.navbar .btn-link.nav-link:hover::after,
+.navbar .dropdown-toggle[aria-expanded="true"]::after {
   width: 100%;
+}
+
+/* ── dropdowns ───────────────────────────────────────────── */
+.dropdown-menu-dark {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+}
+.dropdown-menu-dark .dropdown-item {
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  transition: all 0.2s;
+}
+.dropdown-menu-dark .dropdown-item:hover {
+  background-color: var(--accent-dim);
+  color: var(--text);
+}
+.dropdown-menu-dark .dropdown-divider {
+  border-color: var(--border);
 }
 
 /* hamburger icon visible on dark bg */

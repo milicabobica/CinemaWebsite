@@ -1,4 +1,42 @@
 @model CinemaWebsite.Models.Genre
-<h3>@Model.Name</h3>
-<ul>@foreach (var mg in Model.MovieGenres){<li>@mg.Movie.Title</li>}</ul>
-<a asp-action="Index">Back</a>
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="page-header">
+    <h2>@Model.Name</h2>
+    <div class="d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+</div>
+
+@if (Model.MovieGenres.Any())
+{
+    <div class="row g-3">
+        @foreach (var mg in Model.MovieGenres)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@mg.Movie.Id"
+                               class="text-decoration-none" style="color:var(--text)">@mg.Movie.Title</a>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        <p class="text-muted">No movies in this genre yet.</p>
+    </div>
+}

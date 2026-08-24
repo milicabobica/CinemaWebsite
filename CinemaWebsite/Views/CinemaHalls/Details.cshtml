@@ -1,2 +1,44 @@
 @model CinemaWebsite.Models.CinemaHall
-<h3>@Model.Name</h3><p>Number: @Model.Number</p><p>Capacity: @Model.Capacity</p><p>Type: @Model.HallType</p>
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="page-header">
+    <h2>@Model.Name</h2>
+    <div class="d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+</div>
+
+<div class="form-page-card">
+    <div class="card">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <div class="text-muted small">Hall Number</div>
+                    <div class="fw-semibold">@Model.Number</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small">Capacity</div>
+                    <div class="fw-semibold">@Model.Capacity seats</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small">Type</div>
+                    <div class="fw-semibold"><span class="badge bg-secondary">@Model.HallType</span></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small">Available</div>
+                    <div class="fw-semibold @(Model.IsAvailable ? "text-success" : "text-muted")">
+                        @(Model.IsAvailable ? "Yes" : "No")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,17 +1,56 @@
 @model IEnumerable<CinemaWebsite.Models.Screening>
-<h3>Screenings</h3>
-@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
-<table class="table"><tr>
-    <th>Movie</th><th>Hall</th><th>Start</th><th>Price</th><th></th>
-</tr>@foreach (var s in Model)
-     {
-         <tr><td>@s.Movie.Title</td>
-             <td>@s.CinemaHall.Name</td>
-             <td>@s.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
-             <td>@s.Price</td>
-             <td><a asp-action="Details" asp-route-id="@s.Id">Details</a> |
-                 <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> |
-                 <a asp-action="Delete" asp-route-id="@s.Id">Delete</a> 
-                 </td> 
-             </tr>
-     }</table>
+
+@{
+    ViewData["Title"] = "Screenings";
+}
+
+<div class="page-header">
+    <h2>Screenings</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Create screening</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">🕒</div>
+        <p class="text-muted">No screenings found.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>Movie</th>
+                <th>Hall</th>
+                <th>Start Time</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td class="fw-semibold">@s.Movie.Title</td>
+                    <td>@s.CinemaHall.Name</td>
+                    <td>@s.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@s.Price</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary ms-1">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@s.Id" class="btn btn-sm btn-danger ms-1">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

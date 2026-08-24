@@ -7,47 +7,44 @@ body.home-page > .container {
 }
 
 body.home-page main {
-    padding-top: .5rem;
+    padding-top: 0; /* Changed from .5rem since hero now uses carousel full width */
 }
 
-/* ── hero ────────────────────────────────────────────────── */
-.home-hero {
-    min-height: 58vh;
+/* ── hero carousel ───────────────────────────────────────── */
+.home-hero-carousel {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    margin-bottom: 3.5rem;
+    margin-top: 1rem;
+}
+
+.home-hero-carousel .carousel-item {
+    transition: transform .6s ease-in-out;
+}
+
+.hero-carousel-slide {
+    min-height: clamp(400px, 60vh, 600px);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 4rem 0 2.5rem;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 4rem;
+}
+
+.hero-carousel-content {
+    max-width: 600px;
+    z-index: 2;
     position: relative;
+    padding-bottom: 2rem;
 }
 
-.home-hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(91,123,154,.12), transparent);
-    pointer-events: none;
-}
-
-.home-hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 560px;
-}
-
-.home-hero-content h1 {
-    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+.hero-carousel-content h1 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
     font-weight: 700;
-    letter-spacing: -.03em;
-    margin-bottom: 1rem;
-    line-height: 1.05;
-    color: var(--text);
-}
-
-.home-hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: var(--text-muted);
-    font-weight: 400;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
 }
 
 .home-hero-btn {
@@ -67,6 +64,35 @@ body.home-page main {
     color: #fff;
     background: var(--accent-hover);
     transform: translateY(-2px);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 8%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.home-hero-carousel:hover .carousel-control-prev,
+.home-hero-carousel:hover .carousel-control-next {
+    opacity: 0.8;
+}
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1 !important;
+}
+
+.carousel-indicators {
+    margin-bottom: 1.5rem;
+}
+.carousel-indicators [data-bs-target] {
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+}
+.carousel-indicators .active {
+    background-color: var(--accent);
 }
 
 /* ── sections ────────────────────────────────────────────── */
@@ -232,20 +258,18 @@ body.home-page main {
     .services-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .hero-carousel-slide {
+        padding: 3rem 2rem;
+    }
 }
 
 @media (max-width: 767.98px) {
-    .home-hero {
-        padding-top: 2rem;
-    }
-    .home-hero-content h1 {
-        font-size: 2rem;
-    }
-    .home-hero-content p {
-        font-size: 1rem;
-    }
     .home-card-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hero-carousel-slide {
+        min-height: 350px;
+        padding: 2rem 1.5rem;
     }
 }
 

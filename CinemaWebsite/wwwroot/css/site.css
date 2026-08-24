@@ -178,14 +178,22 @@ table {
   color: var(--text);
 }
 .table {
+  --bs-table-color: var(--text);
   --bs-table-bg: var(--bg-card);
   --bs-table-striped-bg: var(--bg-elevated);
+  --bs-table-striped-color: var(--text);
+  --bs-table-active-bg: rgba(91,123,154,.08);
+  --bs-table-active-color: var(--text);
   --bs-table-hover-bg: rgba(91,123,154,.08);
+  --bs-table-hover-color: var(--text);
   --bs-table-border-color: var(--border);
-  color: var(--text);
+  color: var(--text) !important;
+}
+.table > :not(caption) > * > * {
+  color: var(--text) !important;
 }
 .table thead th {
-  color: var(--text-muted);
+  color: var(--text-muted) !important;
   font-size: .8rem;
   font-weight: 600;
   text-transform: uppercase;

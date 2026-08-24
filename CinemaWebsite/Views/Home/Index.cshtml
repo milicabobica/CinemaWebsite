@@ -7,44 +7,47 @@
 
 @if (Model.NowShowingMovies.Any())
 {
-    var carouselMovies = Model.NowShowingMovies.Take(5).ToList();
-    
-    <div id="homeHeroCarousel" class="carousel slide home-hero-carousel carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            @for (int i = 0; i < carouselMovies.Count; i++)
-            {
-                <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
-            }
-        </div>
-        <div class="carousel-inner">
-            @for (int i = 0; i < carouselMovies.Count; i++)
-            {
-                var m = carouselMovies[i];
-                <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <div class="hero-carousel-slide" style="background: linear-gradient(to top, var(--bg) 0%, rgba(10, 14, 26, 0.4) 100%), url('@(string.IsNullOrWhiteSpace(m.PosterUrl) ? "https://placehold.co/1200x600/12172A/5B7B9A?text=No+Poster" : m.PosterUrl)') center/cover no-repeat;">
-                        <div class="hero-carousel-content">
-                            <h1>@m.Title</h1>
-                            <a class="home-hero-btn" asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">
-                                View Details <span aria-hidden="true">→</span>
-                            </a>
-                        </div>
-                    </div>
+    <section class="home-hero-marquee text-center">
+        <h1 class="display-4 fw-bold mb-3 text-white">Your local cinema experience</h1>
+        <p class="text-muted fs-5 mb-4">Book tickets, discover new films, and enjoy every seat in the house.</p>
+        
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <!-- Group 1 -->
+                <div class="marquee-group">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        foreach (var m in Model.NowShowingMovies)
+                        {
+                            <div class="marquee-item">
+                                <a asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">
+                                    <img src="@(string.IsNullOrWhiteSpace(m.PosterUrl) ? "https://placehold.co/400x600/12172A/5B7B9A?text=No+Poster" : m.PosterUrl)" alt="@m.Title">
+                                </a>
+                            </div>
+                        }
+                    }
                 </div>
-            }
+                <!-- Duplicate group for seamless looping -->
+                <div class="marquee-group" aria-hidden="true">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        foreach (var m in Model.NowShowingMovies)
+                        {
+                            <div class="marquee-item">
+                                <a asp-controller="Movies" asp-action="Details" asp-route-id="@m.Id">
+                                    <img src="@(string.IsNullOrWhiteSpace(m.PosterUrl) ? "https://placehold.co/400x600/12172A/5B7B9A?text=No+Poster" : m.PosterUrl)" alt="@m.Title">
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
+    </section>
 }
 else
 {
-    <section class="home-hero-carousel d-flex align-items-center justify-content-center bg-dark" style="min-height: 400px; border: 1px solid var(--border);">
+    <section class="home-hero-marquee d-flex align-items-center justify-content-center bg-dark" style="min-height: 400px; border: 1px solid var(--border); border-radius: 16px; margin: 2rem 0;">
         <div class="text-center p-4">
             <h1 class="text-white mb-4">Your local cinema experience</h1>
             <a class="home-hero-btn" asp-controller="Movies" asp-action="Index">

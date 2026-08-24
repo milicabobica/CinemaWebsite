@@ -1,13 +1,98 @@
 @model CinemaWebsite.ViewModels.AdminDashboardViewModel
-<h3>Admin Dashboard</h3>
-<ul><li>Total movies: @Model.TotalMovies</li>
-    <li>Now showing: @Model.NowShowingMovies</li>
-    <li>Coming soon: @Model.ComingSoonMovies</li>
-    <li>Genres: @Model.TotalGenres</li>
-    <li>Halls: @Model.TotalHalls</li>
-    <li>Screenings: @Model.TotalScreenings</li>
-    <li>Reservations: @Model.TotalReservations</li>
-    <li>Confirmed: @Model.ConfirmedReservations</li>
-    <li>Cancelled: @Model.CancelledReservations</li>
-    <li>Unread messages: @Model.UnreadContactMessages</li>
-    <li>Published news: @Model.PublishedNews</li></ul>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="page-header">
+    <h2>Admin Dashboard</h2>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <h5 class="text-muted mb-3 mt-2">Movies & Screenings</h5>
+    </div>
+    
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Total Movies</span>
+            <span class="stat-value text-primary">@Model.TotalMovies</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Now Showing</span>
+            <span class="stat-value text-success">@Model.NowShowingMovies</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Coming Soon</span>
+            <span class="stat-value" style="color: #c8a000;">@Model.ComingSoonMovies</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Screenings</span>
+            <span class="stat-value">@Model.TotalScreenings</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <h5 class="text-muted mb-3 mt-2">Reservations</h5>
+    </div>
+    
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Total</span>
+            <span class="stat-value text-primary">@Model.TotalReservations</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Confirmed</span>
+            <span class="stat-value text-success">@Model.ConfirmedReservations</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Cancelled</span>
+            <span class="stat-value text-danger">@Model.CancelledReservations</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <h5 class="text-muted mb-3 mt-2">System & Content</h5>
+    </div>
+    
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Cinema Halls</span>
+            <span class="stat-value">@Model.TotalHalls</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Genres</span>
+            <span class="stat-value">@Model.TotalGenres</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Published News</span>
+            <span class="stat-value">@Model.PublishedNews</span>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="stat-card">
+            <span class="stat-label">Unread Messages</span>
+            <span class="stat-value @(Model.UnreadContactMessages > 0 ? "text-danger" : "text-success")">
+                @Model.UnreadContactMessages
+            </span>
+        </div>
+    </div>
+</div>

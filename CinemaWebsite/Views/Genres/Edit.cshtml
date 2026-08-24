@@ -1,9 +1,30 @@
 @model CinemaWebsite.Models.Genre
-<h3>Edit Genre</h3>
-<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-    <input type="hidden" asp-for="Id" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <label asp-for="Name" class="form-label"></label>
-    <input asp-for="Name" class="form-control mb-2" />
-    <button class="btn btn-primary" type="submit">Save</button>
-</form>
+
+@{
+    ViewData["Title"] = "Edit Genre";
+}
+
+<div class="page-header">
+    <h2>Edit Genre</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
+<div class="form-page-card">
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                <input type="hidden" asp-for="Id"/>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control"/>
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

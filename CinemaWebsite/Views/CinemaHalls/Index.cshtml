@@ -1,4 +1,67 @@
 @model IEnumerable<CinemaWebsite.Models.CinemaHall>
-<h3>Cinema Halls</h3>
-@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
-<table class="table"><tr><th>Name</th><th>Capacity</th><th></th></tr>@foreach (var h in Model){<tr><td>@h.Name</td><td>@h.Capacity</td><td><a asp-action="Details" asp-route-id="@h.Id">Details</a></td></tr>}</table>
+
+@{
+    ViewData["Title"] = "Cinema Halls";
+}
+
+<div class="page-header">
+    <h2>Cinema Halls</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Create hall</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">🏛️</div>
+        <p class="text-muted">No cinema halls found.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Number</th>
+                <th>Capacity</th>
+                <th>Type</th>
+                <th>Available</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var h in Model)
+            {
+                <tr>
+                    <td class="fw-semibold">@h.Name</td>
+                    <td>@h.Number</td>
+                    <td>@h.Capacity seats</td>
+                    <td><span class="badge bg-secondary">@h.HallType</span></td>
+                    <td>
+                        @if (h.IsAvailable)
+                        {
+                            <span class="text-success fw-semibold">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@h.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@h.Id" class="btn btn-sm btn-outline-secondary ms-1">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@h.Id" class="btn btn-sm btn-danger ms-1">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

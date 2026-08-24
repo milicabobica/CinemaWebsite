@@ -1,2 +1,34 @@
 @model CinemaWebsite.Models.Service
-<h3>@Model.Name</h3><p>@Model.Description</p>
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="page-header">
+    <h2 class="h3">@Model.Name</h2>
+    <div class="d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <p class="text-muted mb-0" style="white-space: pre-line;">@Model.Description</p>
+                }
+                else
+                {
+                    <p class="text-muted fst-italic mb-0">No description provided.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

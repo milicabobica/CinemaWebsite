@@ -1,16 +1,69 @@
 @model IEnumerable<CinemaWebsite.ViewModels.ReservationDisplayViewModel>
-<h3>All Reservations</h3>
-<table class="table"><tr><th>User</th>
-    <th>Movie</th>
-    <th>Screening</th>
-    <th>Seats</th>
-    <th>Tickets</th>
-    <th>Status</th>
-</tr>@foreach (var r in Model){<tr>
-         <td>@(r.CustomerEmail ?? "-")</td>
-         <td>@r.MovieTitle</td>
-         <td>@r.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</td>
-         <td>@(r.Seats.Any() ? string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}")) : "-")</td>
-         <td>@r.NumberOfTickets</td>
-         <td>@r.Status</td>
-         </tr>}</table>
+
+@{
+    ViewData["Title"] = "All Reservations";
+}
+
+<div class="page-header">
+    <h2>All Reservations</h2>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">🎟️</div>
+        <p class="text-muted">No reservations found.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Movie</th>
+                <th>Screening</th>
+                <th>Seats</th>
+                <th>Tickets</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@(r.CustomerEmail ?? "-")</td>
+                    <td class="fw-semibold">@r.MovieTitle</td>
+                    <td>@r.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        @if (r.Seats.Any())
+                        {
+                            <span class="small text-muted">@string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}"))</span>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                    <td>@r.NumberOfTickets</td>
+                    <td>
+                        @if (r.Status == CinemaWebsite.Models.ReservationStatus.Confirmed)
+                        {
+                            <span class="badge bg-success">@r.Status</span>
+                        }
+                        else if (r.Status == CinemaWebsite.Models.ReservationStatus.Cancelled)
+                        {
+                            <span class="badge bg-danger">@r.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">@r.Status</span>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

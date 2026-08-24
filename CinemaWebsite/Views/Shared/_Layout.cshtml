@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -13,91 +13,60 @@
 </head>
 <body class="@ViewData["BodyClass"]">
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CinemaWebsite</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🎬 CinemaWebsite</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    @* <li class="nav-item"> *@
-                    @*     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
-                    @* </li> *@
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Movies" asp-action="Index">Movies</a>
+                        <a class="nav-link" asp-controller="Movies" asp-action="Index">Movies</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Services" asp-action="Index">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="News" asp-action="Index">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="ContactMessages" asp-action="Create">Contact</a>
+                    </li>
+                    
                     @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="AdminDashboard">Admin Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Genres" asp-action="Index">Genres</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="CinemaHalls" asp-action="Index">Cinema Halls</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">Employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="ContactMessages" asp-action="Index">Contact Messages</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Screenings" asp-action="Index">Screenings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Reservations" asp-action="Index">Reservations</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin Tools
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="AdminDashboard">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Screenings" asp-action="Index">Manage Screenings</a></li>
+                                <li><a class="dropdown-item" asp-controller="Reservations" asp-action="Index">All Reservations</a></li>
+                                <li><a class="dropdown-item" asp-controller="CinemaHalls" asp-action="Index">Cinema Halls</a></li>
+                                <li><a class="dropdown-item" asp-controller="Genres" asp-action="Index">Genres</a></li>
+                                <li><a class="dropdown-item" asp-controller="Employees" asp-action="Index">Employees</a></li>
+                                <li><a class="dropdown-item" asp-controller="ContactMessages" asp-action="Index">Inbox</a></li>
+                            </ul>
                         </li>
                     }
                     else if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Reservations" asp-action="MyReservations">My Reservations</a>
+                            <a class="nav-link" asp-controller="Reservations" asp-action="MyReservations">My Reservations</a>
                         </li>
                     }
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Services" asp-action="Index">Services</a>
-                    </li>
-                    @* <li class="nav-item"> *@
-                    @*     <a class="nav-link text-dark" asp-controller="Employees" asp-action="Index">Employees</a> *@
-                    @* </li> *@
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="News" asp-action="Index">News</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="ContactMessages" asp-action="Create">Contact</a>
-                    </li>
                 </ul>
-                @* <form asp-controller="Home" asp-action="SetLanguage" method="post" class="me-2"> *@
-                @*     @Html.AntiForgeryToken() *@
-                @*     <input type="hidden" name="culture" value="en" /> *@
-                @*     <button class="btn btn-sm btn-outline-secondary" type="submit">EN</button> *@
-                @* </form> *@
-                @* <form asp-controller="Home" asp-action="SetLanguage" method="post" class="me-2"> *@
-                @*     @Html.AntiForgeryToken() *@
-                @*     <input type="hidden" name="culture" value="mk" /> *@
-                @*     <button class="btn btn-sm btn-outline-secondary" type="submit">MK</button> *@
-                @* </form> *@
-                @* <form asp-controller="Home" asp-action="SetCookieConsent" method="post" class="me-2"> *@
-                @*     @Html.AntiForgeryToken() *@
-                @*     <input type="hidden" name="consent" value="AcceptAll" /> *@
-                @*     <button class="btn btn-sm btn-outline-success" type="submit">Accept All Cookies</button> *@
-                @* </form> *@
-                @* <form asp-controller="Home" asp-action="SetCookieConsent" method="post" class="me-2"> *@
-                @*     @Html.AntiForgeryToken() *@
-                @*     <input type="hidden" name="consent" value="NecessaryOnly" /> *@
-                @*     <button class="btn btn-sm btn-outline-warning" type="submit">Necessary Only</button> *@
-                @* </form> *@
                 <partial name="_LoginPartial"/>
             </div>
         </div>
     </nav>
 </header>
 <div class="container">
-    <main role="main" class="pb-3">
+    <main role="main" class="pb-3 pt-4">
         @RenderBody()
     </main>
 </div>

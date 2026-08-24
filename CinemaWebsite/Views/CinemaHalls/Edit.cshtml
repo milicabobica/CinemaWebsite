@@ -1,25 +1,53 @@
 @model CinemaWebsite.Models.CinemaHall
-<h3>Edit Hall</h3>
-<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-    <input type="hidden" asp-for="Id" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <label asp-for="Name" class="form-label"></label>
-    <input asp-for="Name" class="form-control mb-2" />
+@{
+    ViewData["Title"] = "Edit Hall";
+}
 
-    <label asp-for="Number" class="form-label"></label>
-    <input asp-for="Number" class="form-control mb-2" />
+<div class="page-header">
+    <h2>Edit Hall</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
 
-    <label asp-for="Capacity" class="form-label"></label>
-    <input asp-for="Capacity" class="form-control mb-2" />
+<div class="form-page-card">
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                <input type="hidden" asp-for="Id"/>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
 
-    <label asp-for="HallType" class="form-label"></label>
-    <select asp-for="HallType" asp-items="Html.GetEnumSelectList<CinemaWebsite.Models.HallType>()" class="form-select mb-2"></select>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="Number" class="form-label"></label>
+                        <input asp-for="Number" class="form-control"/>
+                    </div>
+                </div>
 
-    <div class="form-check mb-2">
-        <input asp-for="IsAvailable" class="form-check-input" />
-        <label asp-for="IsAvailable" class="form-check-label"></label>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label asp-for="Capacity" class="form-label"></label>
+                        <input asp-for="Capacity" class="form-control"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="HallType" class="form-label"></label>
+                        <select asp-for="HallType" asp-items="Html.GetEnumSelectList<CinemaWebsite.Models.HallType>()" class="form-select"></select>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="IsAvailable" class="form-check-input"/>
+                    <label asp-for="IsAvailable" class="form-check-label">Available</label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <button class="btn btn-primary" type="submit">Save</button>
-</form>
+</div>

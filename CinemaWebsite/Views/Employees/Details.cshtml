@@ -1,2 +1,69 @@
 @model CinemaWebsite.Models.Employee
-<h3>@Model.FirstName @Model.LastName</h3><p>@Model.Position</p><p>@Model.Email</p><p>@Model.Phone</p>
+
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+}
+
+<div class="page-header">
+    <h2 class="h3">@Model.FirstName @Model.LastName</h2>
+    <div class="d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4 col-lg-3">
+        <div class="card overflow-hidden">
+            @if (!string.IsNullOrWhiteSpace(Model.PhotoUrl))
+            {
+                <img src="@Model.PhotoUrl" class="img-fluid w-100" alt="Photo of @Model.FirstName @Model.LastName" style="aspect-ratio: 1; object-fit: cover;">
+            }
+            else
+            {
+                <div class="d-flex align-items-center justify-content-center bg-dark w-100" style="aspect-ratio: 1;">
+                    <span class="display-4 text-muted">@Model.FirstName.FirstOrDefault()@Model.LastName.FirstOrDefault()</span>
+                </div>
+            }
+        </div>
+    </div>
+    
+    <div class="col-md-8 col-lg-9">
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="text-muted small">Position</div>
+                        <div class="fw-semibold fs-5">@Model.Position</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-muted small">Email</div>
+                        @if (!string.IsNullOrWhiteSpace(Model.Email))
+                        {
+                            <div class="fw-semibold"><a href="mailto:@Model.Email">@Model.Email</a></div>
+                        }
+                        else
+                        {
+                            <div class="text-muted fst-italic">Not provided</div>
+                        }
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-muted small">Phone</div>
+                        @if (!string.IsNullOrWhiteSpace(Model.Phone))
+                        {
+                            <div class="fw-semibold"><a href="tel:@Model.Phone">@Model.Phone</a></div>
+                        }
+                        else
+                        {
+                            <div class="text-muted fst-italic">Not provided</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

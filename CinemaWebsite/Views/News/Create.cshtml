@@ -1,27 +1,56 @@
 @model CinemaWebsite.Models.News
-<h3>Create News</h3>
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <label asp-for="Title" class="form-label"></label>
-    <input asp-for="Title" class="form-control mb-2" />
+@{
+    ViewData["Title"] = "Create Article";
+}
 
-    <label asp-for="Summary" class="form-label"></label>
-    <input asp-for="Summary" class="form-control mb-2" />
+<div class="page-header">
+    <h2>Create Article</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
 
-    <label asp-for="Content" class="form-label"></label>
-    <textarea asp-for="Content" class="form-control mb-2"></textarea>
+<div class="form-page-card">
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
 
-    <label asp-for="Author" class="form-label"></label>
-    <input asp-for="Author" class="form-control mb-2" />
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control"/>
+                </div>
 
-    <label asp-for="PublishedDate" class="form-label"></label>
-    <input asp-for="PublishedDate" type="datetime-local" class="form-control mb-2" />
+                <div class="mb-3">
+                    <label asp-for="Summary" class="form-label"></label>
+                    <input asp-for="Summary" class="form-control"/>
+                </div>
 
-    <div class="form-check mb-2">
-        <input asp-for="IsPublished" class="form-check-input" />
-        <label asp-for="IsPublished" class="form-check-label"></label>
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label"></label>
+                    <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label asp-for="Author" class="form-label"></label>
+                        <input asp-for="Author" class="form-control"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="PublishedDate" class="form-label"></label>
+                        <input asp-for="PublishedDate" type="datetime-local" class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="IsPublished" class="form-check-input"/>
+                    <label asp-for="IsPublished" class="form-check-label">Published</label>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <button class="btn btn-primary" type="submit">Save</button>
-</form>
+</div>

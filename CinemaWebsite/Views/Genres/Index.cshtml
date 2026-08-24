@@ -1,4 +1,45 @@
 @model IEnumerable<CinemaWebsite.Models.Genre>
-<h3>Genres</h3>
-@if (User.IsInRole("Admin")){<p><a asp-action="Create" class="btn btn-success">Create</a></p>}
-<ul>@foreach (var g in Model){<li><a asp-action="Details" asp-route-id="@g.Id">@g.Name</a></li>}</ul>
+
+@{
+    ViewData["Title"] = "Genres";
+}
+
+<div class="page-header">
+    <h2>Genres</h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-success">+ Create genre</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">🎭</div>
+        <p class="text-muted">No genres found.</p>
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var g in Model)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column gap-2">
+                        <h6 class="card-title mb-0">@g.Name</h6>
+                        <small class="text-muted">@g.MovieGenres.Count movie(s)</small>
+                        <div class="mt-auto d-flex gap-2 flex-wrap">
+                            <a asp-action="Details" asp-route-id="@g.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@g.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@g.Id" class="btn btn-sm btn-danger">Delete</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

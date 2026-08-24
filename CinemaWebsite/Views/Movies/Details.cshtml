@@ -1,209 +1,204 @@
 @model CinemaWebsite.Models.Movie
 
-<div class="container py-4">
-    
-    <div class="row g-4 mb-5">
-        <div class="col-md-4 col-lg-3">
-            <div class="card border-0 shadow-sm overflow-hidden">
-                <img src="@Model.PosterUrl"
-                     class="img-fluid"
-                     alt="@Model.Title poster"/>
-            </div>
-        </div>
+@{
+    ViewData["Title"] = Model.Title;
 
-        <div class="col-md-8 col-lg-9">
-            <h1 class="display-5 fw-bold mb-2">@Model.Title</h1>
-            @if (Model.MovieGenres.Any()) {
-                <div class="mb-3">
-                    @foreach (var movieGenre in Model.MovieGenres) {
-                        <span class="badge bg-secondary me-1">
-                            @movieGenre.Genre.Name
-                        </span>
+    string? trailer = Model.TrailerUrl;
+    string? embedUrl = null;
+
+    if (!string.IsNullOrWhiteSpace(trailer))
+    {
+        if (trailer.Contains("youtube.com/embed/"))
+            embedUrl = trailer;
+        else if (trailer.Contains("watch?v="))
+            embedUrl = trailer.Replace("watch?v=", "embed/");
+        else if (trailer.Contains("youtu.be/"))
+            embedUrl = $"https://www.youtube.com/embed/{trailer.Split('/').Last()}";
+    }
+}
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back to Movies</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm ms-2">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm ms-2">Delete</a>
+    }
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- poster -->
+    <div class="col-md-4 col-lg-3">
+        <div class="card border-0 overflow-hidden" style="aspect-ratio:2/3">
+            <img src="@(string.IsNullOrWhiteSpace(Model.PosterUrl) ? "https://placehold.co/400x600/12172A/5B7B9A?text=No+Poster" : Model.PosterUrl)"
+                 class="img-fluid w-100 h-100"
+                 style="object-fit:cover"
+                 alt="@Model.Title poster"/>
+        </div>
+    </div>
+
+    <!-- info -->
+    <div class="col-md-8 col-lg-9 d-flex flex-column gap-3">
+        <div>
+            <h1 class="fw-bold mb-1">@Model.Title</h1>
+            @if (Model.MovieGenres.Any())
+            {
+                <div class="mb-2">
+                    @foreach (var mg in Model.MovieGenres)
+                    {
+                        <span class="badge bg-secondary me-1">@mg.Genre.Name</span>
                     }
                 </div>
             }
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p class="text-muted mb-0">@Model.Description</p>
+            }
+        </div>
 
-            <p class="lead text-muted mb-4">
-                @Model.Description
-            </p>
-            
-            <div class="card border-0 shadow-sm bg-dark text-white">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3">Movie Information</h5>
-
-                    <div class="row g-3">
+        <!-- metadata grid -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
+                    @if (!string.IsNullOrWhiteSpace(Model.Director))
+                    {
                         <div class="col-sm-6">
                             <div class="text-muted small">Director</div>
                             <div class="fw-semibold">@Model.Director</div>
                         </div>
-
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Cast))
+                    {
                         <div class="col-sm-6">
                             <div class="text-muted small">Cast</div>
                             <div class="fw-semibold">@Model.Cast</div>
                         </div>
-
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Language))
+                    {
                         <div class="col-sm-6">
                             <div class="text-muted small">Language</div>
                             <div class="fw-semibold">@Model.Language</div>
                         </div>
-
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.SubtitleLanguage))
+                    {
                         <div class="col-sm-6">
-                            <div class="text-muted small">Subtitle Language</div>
+                            <div class="text-muted small">Subtitles</div>
                             <div class="fw-semibold">@Model.SubtitleLanguage</div>
                         </div>
-
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.AgeRating))
+                    {
                         <div class="col-sm-6">
                             <div class="text-muted small">Age Rating</div>
                             <div class="fw-semibold">@Model.AgeRating</div>
                         </div>
-
+                    }
+                    @if (Model.Rating > 0)
+                    {
                         <div class="col-sm-6">
                             <div class="text-muted small">Rating</div>
-                            <div class="fw-semibold">
-                                ★ @Model.Rating
-                            </div>
+                            <div class="fw-semibold">★ @Model.Rating</div>
                         </div>
+                    }
+                    @if (Model.Duration > 0)
+                    {
+                        <div class="col-sm-6">
+                            <div class="text-muted small">Duration</div>
+                            <div class="fw-semibold">@Model.Duration min</div>
+                        </div>
+                    }
+                    <div class="col-sm-6">
+                        <div class="text-muted small">Release Date</div>
+                        <div class="fw-semibold">@Model.ReleaseDate.ToString("dd MMM yyyy")</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+</div>
+
+<!-- trailer -->
+@if (!string.IsNullOrWhiteSpace(embedUrl))
+{
     <div class="mb-5">
-        <h2 class="fw-bold mb-3">Trailer</h2>
+        <h3 class="fw-bold mb-3">Trailer</h3>
+        <div class="ratio ratio-16x9 rounded overflow-hidden" style="border:1px solid var(--border)">
+            <iframe src="@embedUrl"
+                    title="@Model.Title Trailer"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+}
+else if (!string.IsNullOrWhiteSpace(trailer))
+{
+    <div class="mb-5">
+        <h3 class="fw-bold mb-3">Trailer</h3>
+        <a href="@trailer" target="_blank" rel="noopener" class="btn btn-primary">Watch Trailer ↗</a>
+    </div>
+}
 
-        @{
-            string? trailer = Model.TrailerUrl;
-            string? embedUrl = null;
-
-            if (!string.IsNullOrWhiteSpace(trailer)) {
-                if (trailer.Contains("youtube.com/embed/")) {
-                    embedUrl = trailer;
-                }
-                else if (trailer.Contains("watch?v=")) {
-                    embedUrl = trailer.Replace("watch?v=", "embed/");
-                }
-                else if (trailer.Contains("youtu.be/")) {
-                    var id = trailer.Split('/').Last();
-                    embedUrl = $"https://www.youtube.com/embed/{id}";
-                }
+<!-- screenings -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3 class="fw-bold mb-1">Upcoming Screenings</h3>
+            @if (ViewBag.FilteredDay != null)
+            {
+                <p class="text-muted mb-0 small">Showing screenings for <strong>@ViewBag.FilteredDay</strong></p>
             }
-        }
-
-        @if (!string.IsNullOrWhiteSpace(embedUrl)) {
-            <div class="ratio ratio-16x9 rounded shadow-sm overflow-hidden">
-                <iframe src="@embedUrl"
-                        title="@Model.Title Trailer"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen>
-                </iframe>
-            </div>
-        }
-        else if (!string.IsNullOrWhiteSpace(trailer)) {
-            <div class="card border-0 bg-light shadow-sm">
-                <div class="card-body">
-                    <a href="@trailer"
-                       target="_blank"
-                       rel="noopener"
-                       class="btn btn-outline-primary">
-                        Watch Trailer
-                    </a>
-                </div>
-            </div>
-        }
-        else {
-            <p class="text-muted">Trailer not available.</p>
-        }
-    </div>
-    
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <h2 class="fw-bold mb-1">Upcoming Screenings</h2>
-
-                @if (ViewBag.FilteredDay != null) {
-                    <p class="text-muted mb-0">
-                        Showing screenings for
-                        <strong>@ViewBag.FilteredDay</strong>
-                    </p>
-                }
-                else {
-                    <p class="text-muted mb-0">
-                        Choose a screening time and book your seats.
-                    </p>
-                }
-            </div>
+            else
+            {
+                <p class="text-muted mb-0 small">Choose a screening time and book your seats.</p>
+            }
         </div>
+    </div>
 
-        @if (Model.Screenings.Any()) {
-            <div class="d-flex flex-column gap-3">
-                @foreach (var screening in Model.Screenings) {
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="row align-items-center g-3">
-                                <div class="col-md-4">
-                                    <div class="text-muted small mb-1">
-                                        Date & Time
-                                    </div>
-
-                                    <div class="fw-bold fs-5">
-                                        @screening.StartTime.ToString("dd/MM/yyyy")
-                                    </div>
-
-                                    <div class="text-primary fw-semibold">
-                                        @screening.StartTime.ToString("HH:mm")
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-3">
-                                    <div class="text-muted small mb-1">
-                                        Cinema Hall
-                                    </div>
-
-                                    <div class="fw-semibold">
-                                        @screening.CinemaHall.Name
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="text-muted small mb-1">
-                                        Price
-                                    </div>
-
-                                    <div class="fw-bold">
-                                        @screening.Price
-                                    </div>
-                                </div>
-                                <div class="col-md-3 text-md-end">
-                                    <a asp-controller="Reservations"
-                                       asp-action="Create"
-                                       asp-route-screeningId="@screening.Id"
-                                       class="btn btn-primary px-4">
-                                        Book
-                                    </a>
-                                </div>
-
+    @if (Model.Screenings.Any())
+    {
+        <div class="d-flex flex-column gap-2">
+            @foreach (var screening in Model.Screenings)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="text-muted small mb-1">Date</div>
+                                <div class="fw-bold">@screening.StartTime.ToString("dd/MM/yyyy")</div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="text-muted small mb-1">Time</div>
+                                <div class="fw-bold" style="color:var(--accent)">@screening.StartTime.ToString("HH:mm")</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-muted small mb-1">Cinema Hall</div>
+                                <div class="fw-semibold">@screening.CinemaHall.Name</div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="text-muted small mb-1">Price</div>
+                                <div class="fw-bold">@screening.Price</div>
+                            </div>
+                            <div class="col-12 col-md-2 text-md-end">
+                                <a asp-controller="Reservations"
+                                   asp-action="Create"
+                                   asp-route-screeningId="@screening.Id"
+                                   class="btn btn-primary w-100 w-md-auto">Book</a>
                             </div>
                         </div>
                     </div>
-                }
-            </div>
-        }
-        else {
-            <div class="card border-0 bg-light shadow-sm">
-                <div class="card-body text-center py-5">
-                    <h5 class="fw-bold">No upcoming screenings</h5>
-                    <p class="text-muted mb-0">
-                        There are currently no upcoming screenings for this movie.
-                    </p>
                 </div>
-            </div>
-        }
-    </div>
-    <div>
-        <a asp-action="Index" class="btn btn-outline-secondary">
-            ← Back to Movies
-        </a>
-    </div>
-
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🎟️</div>
+            <p class="text-muted">No upcoming screenings for this movie.</p>
+        </div>
+    }
 </div>

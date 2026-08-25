@@ -1,16 +1,16 @@
 /* ── palette ─────────────────────────────────────────────── */
 :root {
-  --bg:           #0A0E1A;
-  --bg-elevated:  #12172A;
-  --bg-card:      #161C30;
-  --text:         #F0F0F0;
-  --text-muted:   rgba(240,240,240,.55);
+  --bg:           #050507;
+  --bg-elevated:  #0C0E14;
+  --bg-card:      #121620;
+  --text:         #F4F4F5;
+  --text-muted:   rgba(244,244,245,.6);
   --accent:       #5B7B9A;
-  --accent-hover: #6E8FB0;
+  --accent-hover: #7296B9;
   --accent-dim:   rgba(91,123,154,.15);
-  --border:       rgba(240,240,240,.08);
-  --danger:       #c0392b;
-  --success:      #1a7a4a;
+  --border:       rgba(255,255,255,.08);
+  --danger:       #E53935;
+  --success:      #10B981;
 }
 
 /* ── base ────────────────────────────────────────────────── */
@@ -24,7 +24,15 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text);
-  margin-bottom: 60px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
 }
 
 a {
@@ -36,11 +44,11 @@ a:hover {
 
 /* ── navbar ──────────────────────────────────────────────── */
 .navbar {
-  background-color: rgba(18, 23, 42, 0.85) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(240, 240, 240, 0.05);
-  min-height: 70px;
+  background-color: rgba(5, 5, 7, 0.7) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  min-height: 76px;
   position: sticky;
   top: 0;
   z-index: 1030;
@@ -49,15 +57,15 @@ a:hover {
 
 .navbar-brand {
   color: var(--text) !important;
-  font-weight: 700;
-  font-size: 1.35rem;
-  letter-spacing: -.02em;
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: .03em;
+  text-transform: uppercase;
   transition: transform 0.3s ease, text-shadow 0.3s ease;
 }
 
 .navbar-brand:hover {
-  transform: translateY(-1px);
-  text-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+  text-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
 }
 
 .navbar .nav-link,
@@ -128,16 +136,43 @@ a:hover {
 
 /* ── footer ──────────────────────────────────────────────── */
 footer {
-  background-color: var(--bg-elevated) !important;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border);
-  padding: .9rem 0;
+  background: linear-gradient(to bottom, var(--bg) 0%, rgba(12, 14, 20, 0.4) 100%);
+  border-top: none !important;
+  position: relative;
 }
-footer a {
-  color: var(--text-muted);
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
 }
-footer a:hover {
-  color: var(--text);
+
+.footer-link {
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+.footer-link:hover {
+  color: var(--accent) !important;
+  transform: translateX(4px);
+}
+
+.footer-social-link {
+  text-decoration: none;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.footer-social-link:hover {
+  background: var(--accent);
+  color: #fff !important;
+  transform: translateY(-2px);
 }
 
 /* ── cards ───────────────────────────────────────────────── */
@@ -145,10 +180,22 @@ footer a:hover {
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   color: var(--text);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: all .3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(91,123,154,.4);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4), 0 0 12px rgba(91,123,154,.1);
 }
 .card-header {
   background-color: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
+}
+.card-img-top {
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
 }
 
 /* ── forms ───────────────────────────────────────────────── */
@@ -186,20 +233,31 @@ footer a:hover {
 .form-floating > .form-control:focus::placeholder { text-align: start; }
 
 /* ── buttons ─────────────────────────────────────────────── */
+.btn {
+  border-radius: 6px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  padding: .5rem 1.25rem;
+  transition: all .2s ease;
+}
+
 .btn:focus, .btn:active:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 .1rem var(--bg), 0 0 0 .25rem var(--accent);
+  box-shadow: 0 0 0 .1rem var(--bg), 0 0 0 .25rem var(--accent-dim);
 }
 
 .btn-primary {
   background-color: var(--accent);
   border-color: var(--accent);
   color: #fff;
+  box-shadow: 0 2px 10px rgba(91,123,154,.2);
 }
 .btn-primary:hover,
 .btn-primary:focus {
   background-color: var(--accent-hover);
   border-color: var(--accent-hover);
   color: #fff;
+  box-shadow: 0 4px 15px rgba(91,123,154,.4);
+  transform: translateY(-1px);
 }
 
 .btn-success {
@@ -208,9 +266,10 @@ footer a:hover {
   color: #fff;
 }
 .btn-success:hover {
-  background-color: #1e8f55;
-  border-color: #1e8f55;
+  background-color: #0e9f6e;
+  border-color: #0e9f6e;
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .btn-outline-secondary {

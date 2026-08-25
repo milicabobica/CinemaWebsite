@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - CinemaWebsite</title>
     <script type="importmap"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true"/>
@@ -71,9 +74,48 @@
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
+<footer class="border-top footer pt-5 pb-4 mt-auto">
     <div class="container">
-        &copy; 2026 - CinemaWebsite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4 col-md-6">
+                <h4 class="fw-bold text-white mb-3 text-uppercase tracking-wider" style="letter-spacing: .05em;">🎬 CinemaWebsite</h4>
+                <p class="text-white-50 small pe-lg-4">Your premium destination for the latest blockbusters and timeless classics. Experience cinema like never before with our state-of-the-art halls and exclusive premieres.</p>
+            </div>
+            <div class="col-lg-2 col-md-3 col-6">
+                <h6 class="fw-bold text-white mb-3">Explore</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                    <li><a class="text-white-50 text-decoration-none footer-link" asp-controller="Movies" asp-action="Index">Now Showing</a></li>
+                    <li><a class="text-white-50 text-decoration-none footer-link" asp-controller="Movies" asp-action="Index" asp-route-status="ComingSoon">Coming Soon</a></li>
+                    <li><a class="text-white-50 text-decoration-none footer-link" asp-controller="News" asp-action="Index">Latest News</a></li>
+                    <li><a class="text-white-50 text-decoration-none footer-link" asp-controller="Services" asp-action="Index">Our Services</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-3 col-6">
+                <h6 class="fw-bold text-white mb-3">Support</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                    <li><a class="text-white-50 text-decoration-none footer-link" asp-controller="ContactMessages" asp-action="Create">Contact Us</a></li>
+                    <li><a class="text-white-50 text-decoration-none footer-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
+                    <li><a class="text-white-50 text-decoration-none footer-link" href="#">Terms of Service</a></li>
+                    <li><a class="text-white-50 text-decoration-none footer-link" href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <h6 class="fw-bold text-white mb-3">Subscribe to Newsletter</h6>
+                <p class="text-white-50 small mb-3">Get exclusive offers, premier invites, and the latest movie news delivered directly to your inbox.</p>
+                <form class="d-flex" onsubmit="event.preventDefault();">
+                    <input type="email" class="form-control bg-dark text-white border-secondary me-2" placeholder="Email address" aria-label="Email address" style="border-radius: 6px;">
+                    <button class="btn btn-primary px-4 fw-bold" type="button" style="border-radius: 6px;">Join</button>
+                </form>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-4 border-top border-secondary border-opacity-25">
+            <p class="text-white-50 small mb-0">&copy; @DateTime.Now.Year CinemaWebsite. All rights reserved.</p>
+            <div class="d-flex gap-3 mt-3 mt-md-0">
+                <a href="#" class="text-white-50 footer-social-link">𝕏</a>
+                <a href="#" class="text-white-50 footer-social-link">📷</a>
+                <a href="#" class="text-white-50 footer-social-link">▶️</a>
+            </div>
+        </div>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

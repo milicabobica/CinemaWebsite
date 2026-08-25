@@ -1,9 +1,9 @@
-﻿.payment-page,
+.payment-page,
 .confirmation-page {
     max-width: 1140px;
     margin: 0 auto;
     padding: 3rem 0 2rem;
-    color: #171717;
+    color: var(--text);
 }
 
 .payment-breadcrumb {
@@ -11,26 +11,26 @@
     align-items: center;
     gap: 0.55rem;
     margin-bottom: 1.25rem;
-    color: #7a7a7a;
+    color: var(--text-muted);
     font-size: 0.92rem;
 }
 
 .payment-breadcrumb a {
-    color: #555;
+    color: var(--text-muted);
     text-decoration: none;
 }
 
 .payment-breadcrumb a:hover {
-    color: #111;
+    color: var(--text);
 }
 
 .payment-card,
 .payment-summary,
 .confirmation-card {
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 1.25rem;
-    box-shadow: 0 14px 34px rgba(20, 20, 20, 0.06);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
 }
 
 .payment-card {
@@ -46,7 +46,7 @@
 
 .payment-subtitle {
     margin: 0.75rem 0 1.5rem;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .payment-field {
@@ -55,45 +55,45 @@
 
 .payment-page .form-label {
     font-weight: 600;
-    color: #272727;
+    color: var(--text);
 }
 
 .payment-page .form-control {
-    border-radius: 0.9rem;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    background: #fff;
-    color: #111;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    color: var(--text);
     min-height: 2.9rem;
     padding: 0.65rem 0.85rem;
 }
 
 .payment-page .form-control:focus {
-    border-color: #909090;
-    box-shadow: 0 0 0 0.22rem rgba(51, 51, 51, 0.13);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.22rem var(--accent-dim);
 }
 
 .payment-page .form-text {
-    color: #777;
+    color: var(--text-muted);
 }
 
 .payment-cta {
     width: 100%;
-    border-radius: 999px;
+    border-radius: 8px;
     min-height: 3rem;
     margin-top: 0.4rem;
     font-weight: 600;
     font-size: 1rem;
-    background: #1d1d1d;
-    border-color: #1d1d1d;
+    background: var(--accent);
+    border-color: var(--accent);
     color: #fff;
     transition: all 0.2s ease;
 }
 
 .payment-cta:hover {
-    background: #090909;
-    border-color: #090909;
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
     color: #fff;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 .payment-summary {
@@ -118,19 +118,19 @@
 
 .payment-summary-row span,
 .confirmation-row span {
-    color: #6c6c6c;
+    color: var(--text-muted);
 }
 
 .payment-summary-row strong,
 .confirmation-row strong {
-    color: #151515;
+    color: var(--text);
     text-align: right;
     font-weight: 600;
 }
 
 .payment-summary hr,
 .confirmation-details hr {
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: var(--border);
     margin: 1.2rem 0;
 }
 
@@ -170,9 +170,9 @@
 .confirmation-icon {
     width: 2.2rem;
     height: 2.2rem;
-    border-radius: 999px;
-    background: #e6f7eb;
-    color: #1b7f38;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -187,15 +187,15 @@
 
 .confirmation-success p {
     margin: 0.2rem 0 0;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .confirmation-alert {
     margin-bottom: 1rem;
-    background: #eff9f1;
-    color: #1a6e34;
-    border: 1px solid #cde8d4;
-    border-radius: 0.9rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 8px;
     padding: 0.75rem 0.9rem;
 }
 
@@ -204,7 +204,7 @@
 }
 
 .confirmation-actions .btn {
-    border-radius: 999px;
+    border-radius: 8px;
     min-height: 2.8rem;
     min-width: 8rem;
     font-weight: 600;

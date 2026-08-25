@@ -136,8 +136,16 @@ a:hover {
 
 /* ── footer ──────────────────────────────────────────────── */
 footer {
-  background-color: var(--bg-elevated) !important;
-  border-top: 1px solid var(--border) !important;
+  background: linear-gradient(to bottom, var(--bg) 0%, rgba(12, 14, 20, 0.4) 100%);
+  border-top: none !important;
+  position: relative;
+}
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
 }
 
 .footer-link {

@@ -1,30 +1,106 @@
 @model CinemaWebsite.Models.Reservation
-@{ var screening = ViewBag.Screening as CinemaWebsite.Models.Screening; var seatMap = ViewBag.SeatMap; }
-<h3>Reserve Tickets</h3>
+@{
+    var screening = ViewBag.Screening as CinemaWebsite.Models.Screening;
+    ViewData["Title"] = "Reserve Tickets";
+}
+
+<div class="mb-4">
+    <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">← Back</a>
+</div>
+
 @if (screening is null)
 {
     <div class="alert alert-danger">Screening information is unavailable. Please return and try again.</div>
 }
 else
 {
-    <p>@screening.Movie.Title - @screening.StartTime.ToString("dd/MM/yyyy HH:mm") </p>
-}
-
-<form asp-action="Create" method="post">
-    <input type="hidden" asp-for="ScreeningId" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div class="mb-3">
-        <div class="form-label">Select seats</div>
-            <div class="mb-1 text-muted">Price per seat: <strong>@(screening?.Price.ToString("C"))</strong></div>
-            @Html.Partial("_SeatMap")
-            <div class="form-text">Click seats to select. Ticket count must match selected seats.</div>
+    <div class="row g-4 mb-5">
+        <!-- Movie Info Side -->
+        <div class="col-lg-4">
+            <div class="card border-0 overflow-hidden sticky-top" style="top: 100px; border-radius: 16px;">
+                <div class="position-relative" style="aspect-ratio: 2/3;">
+                    <img src="@(string.IsNullOrWhiteSpace(screening.Movie.PosterUrl) ? "https://placehold.co/400x600/12172A/5B7B9A?text=No+Poster" : screening.Movie.PosterUrl)"
+                         class="img-fluid w-100 h-100" style="object-fit:cover" alt="@screening.Movie.Title poster" />
+                    <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(to top, rgba(5,5,7,1) 0%, rgba(5,5,7,0.8) 40%, transparent 100%);">
+                        <h2 class="fw-bold mb-1 text-white">@screening.Movie.Title</h2>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge" style="background:var(--accent);color:#fff;">@screening.Movie.AgeRating</span>
+                            <span class="text-white-50 small">@screening.Movie.Duration min</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4" style="background: var(--bg-card);">
+                    <div class="mb-3">
+                        <div class="text-muted small mb-1">Date & Time</div>
+                        <div class="fw-semibold fs-5 text-white">@screening.StartTime.ToString("dd MMM yyyy, HH:mm")</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="text-muted small mb-1">Cinema Hall</div>
+                        <div class="fw-semibold text-white">@screening.CinemaHall.Name</div>
+                    </div>
+                    <div>
+                        <div class="text-muted small mb-1">Price per Seat</div>
+                        <div class="fw-bold text-success fs-5">@screening.Price.ToString("C")</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <label asp-for="NumberOfTickets" class="form-label"></label>
-        <input asp-for="NumberOfTickets" class="form-control mb-2" />
-        <span asp-validation-for="NumberOfTickets" class="text-danger"></span>
-        <div class="form-text mt-1">* Reservation lasts 10 minutes.</div>
+        <!-- Seat Map & Booking Form -->
+        <div class="col-lg-8">
+            <div class="card p-lg-5 p-4 h-100" style="border-radius: 16px;">
+                <h3 class="fw-bold mb-4">Select Your Seats</h3>
+                
+                <form asp-action="Create" method="post" id="reservationForm">
+                    <input type="hidden" asp-for="ScreeningId" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <button class="btn btn-primary" type="submit">Reserve</button>
-</form>
+                    <div class="mb-4">
+                        @Html.Partial("_SeatMap")
+                    </div>
+                    
+                    <div class="alert mb-4" style="background: var(--accent-dim); border: 1px solid rgba(91,123,154,0.3); border-radius: 12px;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fs-2">🎟️</div>
+                            <div>
+                                <h6 class="mb-1 fw-bold text-white">Reservation Policy</h6>
+                                <p class="mb-0 small text-white-50">Your selected seats will be held for exactly 10 minutes. Please complete payment promptly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-end mb-4 d-none">
+                        <div class="col-md-6">
+                            <label asp-for="NumberOfTickets" class="form-label fw-bold">Number of Tickets</label>
+                            <input asp-for="NumberOfTickets" class="form-control" readonly />
+                            <span asp-validation-for="NumberOfTickets" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-5 pt-3 border-top border-secondary border-opacity-25">
+                        <button class="btn btn-primary btn-lg px-5" type="submit" id="reserveBtn" disabled>Continue to Payment →</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('reservationForm');
+            const reserveBtn = document.getElementById('reserveBtn');
+            const seatMap = document.getElementById('seat-map');
+            
+            // Watch for changes in seat selection
+            seatMap.addEventListener('click', function() {
+                // Give the seatmap.js time to update the inputs
+                setTimeout(() => {
+                    const selectedCount = document.querySelectorAll('.seat-select-input:checked').length;
+                    reserveBtn.disabled = selectedCount === 0;
+                }, 50);
+            });
+        });
+    </script>
+}

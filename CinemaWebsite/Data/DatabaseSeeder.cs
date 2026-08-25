@@ -359,7 +359,7 @@ public static class DatabaseSeeder
         new(
             "Obsession",
             "A hopeless romantic gets his wish for love, only to find that the supernatural bargain turns sinister.",
-            "https://www.dolby.com/globalassets/cinema/obsession_focus-dolby_ka_1080x1600_r05_13_fin02-2.jpg",
+            "https://m.media-amazon.com/images/S/pv-target-images/d7a3aab77c66dc1a9e7ccebad64a5a483a0fbe03ea2f27fb5f3b7b4eb9837ac6.jpg",
             "https://youtu.be/gMC8kkwbIQQ?si=piZcSOvweJ7jJLo5",
             109,
             new DateTime(2026, 5, 15),

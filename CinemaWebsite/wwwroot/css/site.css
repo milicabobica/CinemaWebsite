@@ -24,9 +24,11 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text);
-  margin-bottom: 60px;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6, .navbar-brand {

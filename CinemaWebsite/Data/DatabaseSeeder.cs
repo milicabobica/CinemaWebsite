@@ -213,6 +213,24 @@ public static class DatabaseSeeder
             await context.SaveChangesAsync();
         }
 
+        var existingMoviesToUpdate = await context.Movies
+            .Where(m => existingMovieTitles.Contains(m.Title))
+            .ToListAsync();
+        var existingMoviesByTitle = existingMoviesToUpdate
+            .ToDictionary(m => m.Title, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var seed in MovieSeeds) {
+            if (existingMoviesByTitle.TryGetValue(seed.Title, out var existing)) {
+                existing.PosterUrl = seed.PosterUrl;
+                existing.TrailerUrl = seed.TrailerUrl;
+                existing.Description = seed.Description;
+            }
+        }
+
+        if (context.ChangeTracker.HasChanges()) {
+            await context.SaveChangesAsync();
+        }
+        
         var moviesByTitle = (await context.Movies.ToListAsync())
             .ToDictionary(movie => movie.Title, StringComparer.OrdinalIgnoreCase);
         var genresByName = (await context.Genres.ToListAsync())

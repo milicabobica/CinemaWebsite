@@ -135,15 +135,34 @@ a:hover {
 /* ── footer ──────────────────────────────────────────────── */
 footer {
   background-color: var(--bg-elevated) !important;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border);
-  padding: .9rem 0;
+  border-top: 1px solid var(--border) !important;
 }
-footer a {
-  color: var(--text-muted);
+
+.footer-link {
+  transition: all 0.2s ease;
+  display: inline-block;
 }
-footer a:hover {
-  color: var(--text);
+.footer-link:hover {
+  color: var(--accent) !important;
+  transform: translateX(4px);
+}
+
+.footer-social-link {
+  text-decoration: none;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.footer-social-link:hover {
+  background: var(--accent);
+  color: #fff !important;
+  transform: translateY(-2px);
 }
 
 /* ── cards ───────────────────────────────────────────────── */

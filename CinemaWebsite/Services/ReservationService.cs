@@ -1,3 +1,4 @@
+using System.Data;
 using CinemaWebsite.Data;
 using CinemaWebsite.Models;
 using Microsoft.EntityFrameworkCore;
@@ -128,8 +129,10 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             return (false, "One or more selected seats do not belong to the screening hall.", null);
         }
 
-        // Check availability atomically
-        using var tx = await context.Database.BeginTransactionAsync();
+        // Serializable forces SQLite to take the write lock immediately (BEGIN IMMEDIATE)
+        // instead of deferring it, so a concurrent request for the same seat blocks here
+        // rather than reading a stale "available" snapshot and double-booking it.
+        using var tx = await context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
         try
         {
             var now = DateTime.UtcNow;

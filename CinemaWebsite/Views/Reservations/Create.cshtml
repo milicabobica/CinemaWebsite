@@ -9,7 +9,14 @@
 }
 
 <div class="mb-4">
-    <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">← Back</a>
+    @if (screening is not null)
+    {
+        <a asp-controller="Movies" asp-action="Details" asp-route-id="@screening.MovieId" class="btn btn-outline-secondary btn-sm">← Back</a>
+    }
+    else
+    {
+        <a asp-controller="Movies" asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back</a>
+    }
 </div>
 
 @if (expiredMessage is not null)

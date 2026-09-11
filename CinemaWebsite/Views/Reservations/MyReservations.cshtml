@@ -1,38 +1,84 @@
+@using CinemaWebsite.Models
 @model IEnumerable<CinemaWebsite.ViewModels.ReservationDisplayViewModel>
-<h3>My Reservations</h3>
-<table class="table">
-    <tr>
-        <th>Movie</th>
-        <th>Screening</th>
-        <th>Seats</th>
-        <th>Tickets</th>
-        <th>Total</th>
-        <th>Status</th>
-        <th></th>
-    </tr>
-    @foreach (var r in Model)
-    {
-        var isPastReservation = r.ScreeningStartTime <= DateTime.UtcNow;
-        var canCancel = !isPastReservation && r.Status != CinemaWebsite.Models.ReservationStatus.Cancelled;
+@{
+    ViewData["Title"] = "My Reservations";
+}
 
-        <tr>
-            <td>@r.MovieTitle</td>
-            <td>@r.ScreeningStartTime.ToString("dd/MM/yyyy HH:mm")</td>
-            <td>@(r.Seats.Any() ? string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}")) : "-")</td>
-            <td>@r.NumberOfTickets</td>
-            <td>@r.TotalPrice</td>
-            <td>@r.Status</td>
-            <td>
-                <a asp-action="Details" asp-route-id="@r.Id">Details</a>
-                @if (canCancel)
+<div class="page-header">
+    <h2>My Reservations</h2>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">🎟️</div>
+        <p class="text-muted">You haven't made any reservations yet.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Browse movies</a>
+    </div>
+}
+else
+{
+    <div class="reservations-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th>Movie</th>
+                    <th>Screening</th>
+                    <th>Seats</th>
+                    <th>Tickets</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var r in Model)
                 {
-                    <span>|</span>
-                    <form asp-action="Cancel" asp-route-id="@r.Id" method="post" class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-link p-0 align-baseline">Cancel</button>
-                    </form>
+                    var canCancel = r.Status != ReservationStatus.Cancelled && r.ScreeningStartTime > DateTime.UtcNow;
+                    var (statusModifier, statusLabel) = r.Status switch
+                    {
+                        ReservationStatus.Confirmed => ("is-confirmed", "Paid"),
+                        ReservationStatus.Cancelled when r.ExpiresAtUtc.HasValue => ("is-expired", "Expired"),
+                        ReservationStatus.Cancelled => ("is-cancelled", "Cancelled"),
+                        _ => ("is-pending", "Awaiting payment")
+                    };
+
+                    <tr>
+                        <td class="reservation-movie">@r.MovieTitle</td>
+                        <td>
+                            <span class="reservation-screening-date">@r.ScreeningStartTime.ToString("dd/MM/yyyy")</span>
+                            <span class="reservation-screening-time">@r.ScreeningStartTime.ToString("HH:mm")</span>
+                        </td>
+                        <td>
+                            @if (r.Seats.Any())
+                            {
+                                <span class="small text-muted">@string.Join(", ", r.Seats.Select(s => $"{s.Row}{s.Number}"))</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                        <td>@r.NumberOfTickets</td>
+                        <td>@r.TotalPrice.ToString("C", new System.Globalization.CultureInfo("de-DE"))</td>
+                        <td><span class="status-chip @statusModifier">@statusLabel</span></td>
+                        <td>
+                            <div class="reservations-actions">
+                                <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-outline-secondary">Details</a>
+                                @if (canCancel)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@r.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger">Cancel</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
                 }
-            </td>
-        </tr>
-    }
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

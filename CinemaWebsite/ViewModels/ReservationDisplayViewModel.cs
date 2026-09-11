@@ -12,5 +12,6 @@ public class ReservationDisplayViewModel
     public int NumberOfTickets { get; set; }
     public decimal TotalPrice { get; set; }
     public ReservationStatus Status { get; set; }
+    public DateTime? ExpiresAtUtc { get; set; }
     public List<ReservationSeatViewModel> Seats { get; set; } = new();
 }

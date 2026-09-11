@@ -392,6 +392,7 @@ public class ReservationsController(
             return Forbid();
         }
 
+        ViewBag.GuestToken = token;
         return View(MapReservationToDisplayModel(reservation));
     }
 
@@ -498,6 +499,7 @@ public class ReservationsController(
             NumberOfTickets = reservation.NumberOfTickets,
             TotalPrice = reservation.TotalPrice,
             Status = reservation.Status,
+            ExpiresAtUtc = reservation.ExpiresAtUtc,
             Seats = MapSeats(reservation)
         };
     }

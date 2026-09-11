@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/payment.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/CinemaWebsite.styles.css" asp-append-version="true"/>
+    @await RenderSectionAsync("Head", required: false)
 </head>
 <body class="@ViewData["BodyClass"]">
 <header>

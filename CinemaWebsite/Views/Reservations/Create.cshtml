@@ -8,6 +8,10 @@
             : null);
 }
 
+@section Head {
+    <link href="~/css/seatmap.css" rel="stylesheet" asp-append-version="true"/>
+}
+
 <div class="mb-4">
     <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">← Back</a>
 </div>
@@ -96,6 +100,7 @@ else
 }
 
 @section Scripts {
+    <script src="~/js/seatmap.js" asp-append-version="true"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('reservationForm');

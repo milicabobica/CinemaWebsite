@@ -431,10 +431,55 @@ table {
   border-bottom-color: rgba(192,57,43,.2);
 }
 
+/* ── cookie consent banner ───────────────────────────────── */
+.cookie-consent-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, .35);
+}
+.cookie-consent-text {
+  margin: 0;
+  max-width: 640px;
+  color: var(--text-muted);
+  font-size: .88rem;
+}
+.cookie-consent-text a {
+  color: var(--accent-hover);
+}
+.cookie-consent-actions {
+  display: flex;
+  gap: .6rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.cookie-consent-actions form {
+  margin: 0;
+}
+
 /* ── responsive helpers ──────────────────────────────────── */
 @media (max-width: 575.98px) {
   .page-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .cookie-consent-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cookie-consent-actions {
+    margin-left: 0;
   }
 }

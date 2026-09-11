@@ -392,6 +392,7 @@ public class ReservationsController(
             return Forbid();
         }
 
+        ViewBag.GuestToken = token;
         return View(MapReservationToDisplayModel(reservation));
     }
 

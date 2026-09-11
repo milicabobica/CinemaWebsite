@@ -230,6 +230,103 @@
     line-height: 1.8rem;
 }
 
+/* ── reservations table ─────────────────────────────────────── */
+.reservations-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.reservations-card .table {
+    margin-bottom: 0;
+}
+
+.reservations-card .table thead th {
+    padding: 1rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.reservations-card .table tbody td {
+    padding: 1rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.reservations-card .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.reservations-card .table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.reservation-movie {
+    font-weight: 600;
+}
+
+.reservation-screening-date {
+    font-weight: 500;
+}
+
+.reservation-screening-time {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.32rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-chip::before {
+    content: "";
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+.status-chip.is-confirmed {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.status-chip.is-cancelled {
+    background: rgba(229, 57, 53, 0.15);
+    color: var(--danger);
+}
+
+.status-chip.is-expired {
+    background: var(--border);
+    color: var(--text-muted);
+}
+
+.status-chip.is-pending {
+    background: var(--accent-dim);
+    color: var(--accent-hover);
+}
+
+.reservations-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.reservations-actions .btn {
+    border-radius: 999px;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.9rem;
+}
+
 @media (max-width: 991.98px) {
     .payment-summary {
         position: static;

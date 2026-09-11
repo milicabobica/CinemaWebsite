@@ -26,19 +26,19 @@ else
     <div class="row g-4 mb-5">
         <!-- Movie Info Side -->
         <div class="col-lg-4">
-            <div class="card border-0 overflow-hidden sticky-top" style="top: 100px; border-radius: 16px;">
-                <div class="position-relative" style="aspect-ratio: 2/3;">
+            <div class="card booking-summary-card border-0 overflow-hidden sticky-top">
+                <div class="poster-frame position-relative">
                     <img src="@(string.IsNullOrWhiteSpace(screening.Movie.PosterUrl) ? "https://placehold.co/400x600/12172A/5B7B9A?text=No+Poster" : screening.Movie.PosterUrl)"
-                         class="img-fluid w-100 h-100" style="object-fit:cover" alt="@screening.Movie.Title poster" />
-                    <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(to top, rgba(5,5,7,1) 0%, rgba(5,5,7,0.8) 40%, transparent 100%);">
+                         class="img-fluid w-100 h-100" alt="@screening.Movie.Title poster" />
+                    <div class="poster-overlay position-absolute bottom-0 start-0 w-100 p-4">
                         <h2 class="fw-bold mb-1 text-white">@screening.Movie.Title</h2>
                         <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge" style="background:var(--accent);color:#fff;">@screening.Movie.AgeRating</span>
+                            <span class="badge badge-accent-solid">@screening.Movie.AgeRating</span>
                             <span class="text-white-50 small">@screening.Movie.Duration min</span>
                         </div>
                     </div>
                 </div>
-                <div class="card-body p-4" style="background: var(--bg-card);">
+                <div class="card-body p-4">
                     <div class="mb-3">
                         <div class="text-muted small mb-1">Date & Time</div>
                         <div class="fw-semibold fs-5 text-white">@screening.StartTime.ToString("dd MMM yyyy, HH:mm")</div>
@@ -57,9 +57,9 @@ else
 
         <!-- Seat Map & Booking Form -->
         <div class="col-lg-8">
-            <div class="card p-lg-5 p-4 h-100" style="border-radius: 16px;">
+            <div class="card p-lg-5 p-4 h-100">
                 <h3 class="fw-bold mb-4">Select Your Seats</h3>
-                
+
                 <form asp-action="Create" method="post" id="reservationForm">
                     <input type="hidden" asp-for="ScreeningId" />
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -67,8 +67,8 @@ else
                     <div class="mb-4">
                         @Html.Partial("_SeatMap")
                     </div>
-                    
-                    <div class="alert mb-4" style="background: var(--accent-dim); border: 1px solid rgba(91,123,154,0.3); border-radius: 12px;">
+
+                    <div class="reservation-policy-banner alert mb-4">
                         <div class="d-flex align-items-center gap-3">
                             <div class="fs-2">🎟️</div>
                             <div>

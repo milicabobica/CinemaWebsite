@@ -18,9 +18,18 @@
                 <h1 class="payment-title">Confirm and pay</h1>
                 <p class="payment-subtitle">Complete payment to finalize your reservation.</p>
 
+                @if (Model.ExpiresAtUtc.HasValue)
+                {
+                    <div id="holdCountdown" class="payment-countdown" data-expires-at="@(Model.ExpiresAtUtc.Value.ToString("yyyy-MM-ddTHH:mm:ss.fff") + "Z")">
+                        <span aria-hidden="true">⏱</span>
+                        <span>Your seats are held for <strong id="holdCountdownValue">10:00</strong></span>
+                    </div>
+                }
+
                 <form asp-action="Payment" method="post" class="payment-form">
                     @Html.AntiForgeryToken()
                     <input asp-for="ReservationId" type="hidden" />
+                    <input asp-for="ScreeningId" type="hidden" />
                     <input asp-for="AccessToken" type="hidden" />
                     <input asp-for="IsEmailRequired" type="hidden" />
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -123,4 +132,41 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @if (Model.ExpiresAtUtc.HasValue)
+    {
+        <script>
+            (function () {
+                var countdownEl = document.getElementById('holdCountdown');
+                var valueEl = document.getElementById('holdCountdownValue');
+                if (!countdownEl || !valueEl) return;
+
+                var expiresAtMs = new Date(countdownEl.dataset.expiresAt).getTime();
+                var redirectUrl = '@Url.Action("Create", "Reservations", new { screeningId = Model.ScreeningId, expired = 1 })';
+                var redirected = false;
+
+                function tick() {
+                    var remainingMs = expiresAtMs - Date.now();
+                    if (remainingMs <= 0) {
+                        valueEl.textContent = '0:00';
+                        countdownEl.classList.add('is-urgent');
+                        if (!redirected) {
+                            redirected = true;
+                            window.location.href = redirectUrl;
+                        }
+                        return;
+                    }
+
+                    var totalSeconds = Math.floor(remainingMs / 1000);
+                    var minutes = Math.floor(totalSeconds / 60);
+                    var seconds = totalSeconds % 60;
+                    valueEl.textContent = minutes + ':' + String(seconds).padStart(2, '0');
+                    countdownEl.classList.toggle('is-urgent', totalSeconds <= 60);
+                }
+
+                tick();
+                setInterval(tick, 1000);
+            })();
+        </script>
+    }
 }

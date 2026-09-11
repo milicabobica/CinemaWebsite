@@ -2,11 +2,20 @@
 @{
     var screening = ViewBag.Screening as CinemaWebsite.Models.Screening;
     ViewData["Title"] = "Reserve Tickets";
+    var expiredMessage = TempData["ReservationExpiredMessage"] as string
+        ?? (Context.Request.Query["expired"] == "1"
+            ? "Your seats were released because payment wasn't completed in time. Please select seats again."
+            : null);
 }
 
 <div class="mb-4">
     <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">← Back</a>
 </div>
+
+@if (expiredMessage is not null)
+{
+    <div class="confirmation-alert is-notice mb-4">@expiredMessage</div>
+}
 
 @if (screening is null)
 {

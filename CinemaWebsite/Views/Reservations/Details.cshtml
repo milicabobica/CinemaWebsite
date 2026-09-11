@@ -48,6 +48,11 @@
             <div class="confirmation-alert">@paymentSuccessMessage</div>
         }
 
+        @if (TempData["ReservationNoticeMessage"] is string reservationNoticeMessage)
+        {
+            <div class="confirmation-alert is-notice">@reservationNoticeMessage</div>
+        }
+
         <div class="confirmation-details">
             <div class="confirmation-row">
                 <span>Movie</span>

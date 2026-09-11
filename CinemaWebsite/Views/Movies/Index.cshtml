@@ -7,39 +7,37 @@
 }
 
 <div class="page-header align-items-center mb-4 pb-0 border-0">
-    <h1 class="display-6 fw-bold mb-0 text-white" style="text-shadow: 0 4px 15px rgba(0,0,0,0.5);">Browse Movies</h1>
+    <h1 class="display-6 fw-bold mb-0 text-white">Browse Movies</h1>
     @if (User.IsInRole("Admin"))
     {
-        <a asp-action="Create" class="btn btn-success rounded-pill fw-bold">+ Create Movie</a>
+        <a asp-action="Create" class="btn btn-success fw-bold">+ Create Movie</a>
     }
 </div>
 
 <!-- Cinematic Filter Bar -->
-<div class="card border-0 mb-5 p-2 shadow-sm" style="background: rgba(255,255,255,0.03); border-radius: 12px; backdrop-filter: blur(10px);">
+<div class="card filter-bar border-0 mb-5 p-2 shadow-sm">
     <form method="get" class="row g-2 align-items-center">
         <div class="col-12 col-sm-6 col-md-3">
             <input class="form-control bg-dark text-white border-0"
                    name="search"
                    value="@Context.Request.Query["search"]"
-                   placeholder="🔍 Search movies…"
-                   style="border-radius: 8px;"/>
+                   placeholder="🔍 Search movies…"/>
         </div>
         <div class="col-6 col-sm-4 col-md-2">
             <input class="form-control bg-dark text-white border-0"
                    name="language"
                    value="@Context.Request.Query["language"]"
-                   placeholder="🌐 Language"
-                   style="border-radius: 8px;"/>
+                   placeholder="🌐 Language"/>
         </div>
         <div class="col-6 col-sm-4 col-md-2">
-            <select class="form-select bg-dark text-white border-0" name="status" style="border-radius: 8px;">
+            <select class="form-select bg-dark text-white border-0" name="status">
                 <option value="">Status</option>
                 <option value="NowShowing" selected="@(Context.Request.Query["status"] == "NowShowing")">Now showing</option>
                 <option value="ComingSoon" selected="@(Context.Request.Query["status"] == "ComingSoon")">Coming soon</option>
             </select>
         </div>
         <div class="col-6 col-sm-4 col-md-2">
-            <select class="form-select bg-dark text-white border-0" name="day" style="border-radius: 8px;">
+            <select class="form-select bg-dark text-white border-0" name="day">
                 <option value="" selected="@(selectedDay is null)">Any day</option>
                 @foreach (var day in days)
                 {
@@ -48,7 +46,7 @@
             </select>
         </div>
         <div class="col-6 col-sm-4 col-md-2">
-            <select name="genreId" class="form-select bg-dark text-white border-0" style="border-radius: 8px;">
+            <select name="genreId" class="form-select bg-dark text-white border-0">
                 <option value="">All genres</option>
                 @foreach (var genre in ViewBag.Genres)
                 {
@@ -57,18 +55,18 @@
             </select>
         </div>
         <div class="col-12 col-md-1 ms-auto text-end">
-            <button class="btn btn-primary w-100 fw-bold" type="submit" style="border-radius: 8px;">Filter</button>
+            <button class="btn btn-primary w-100 fw-bold" type="submit">Filter</button>
         </div>
     </form>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="empty-state card border-0 p-5" style="background: var(--bg-elevated); border-radius: 12px;">
+    <div class="empty-state card border-0 p-5">
         <div class="empty-icon fs-1 mb-3">🎬</div>
         <h5 class="fw-bold text-white">No movies found</h5>
         <p class="text-muted">Try adjusting your filters or search query.</p>
-        <div><a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Clear filters</a></div>
+        <div><a asp-action="Index" class="btn btn-outline-secondary">Clear filters</a></div>
     </div>
 }
 else
@@ -91,14 +89,14 @@ else
                         <small class="text-muted">@item.ReleaseDate.ToString("dd MMM yyyy")</small>
                         @if (!string.IsNullOrWhiteSpace(item.Language))
                         {
-                            <span class="badge" style="background:var(--accent-dim);color:var(--accent-hover);border:1px solid rgba(91,123,154,.3)">@item.Language</span>
+                            <span class="badge bg-secondary">@item.Language</span>
                         }
                     </div>
                     @if (User.IsInRole("Admin"))
                     {
                         <div class="mt-auto d-flex gap-2 border-top border-secondary border-opacity-25 pt-2">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary flex-grow-1" style="border-radius: 6px;">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger flex-grow-1" style="border-radius: 6px;">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary flex-grow-1">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger flex-grow-1">Delete</a>
                         </div>
                     }
                 </div>

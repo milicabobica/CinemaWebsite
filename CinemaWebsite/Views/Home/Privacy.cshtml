@@ -1,6 +1,92 @@
-﻿@{
+@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="page-header">
+    <h1 class="h2">@ViewData["Title"]</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-body" style="line-height:1.75">
+                <p class="lead text-muted">
+                    Last updated: @DateTime.UtcNow.ToString("MMMM yyyy")
+                </p>
+                <p>
+                    This policy explains what information CinemaWebsite collects when you browse
+                    movies, book tickets, or contact us, why we collect it, and how long we keep it.
+                </p>
+
+                <h2 class="h4 mt-4">Information we collect</h2>
+
+                <h3 class="h6 mt-3">Account information</h3>
+                <p>
+                    If you register for an account, we store your first name, last name, email
+                    address, and a securely hashed password. We never store your password in
+                    plain text.
+                </p>
+
+                <h3 class="h6 mt-3">Reservation and booking information</h3>
+                <p>
+                    When you reserve or book tickets — with or without an account — we store the
+                    screening, the seats you selected, the number of tickets, the total price, and
+                    an email address to send your booking confirmation to. Guest bookings (made
+                    without logging in) are tied to a secure access link rather than an account.
+                </p>
+
+                <h3 class="h6 mt-3">Payment information</h3>
+                <p>
+                    Card details entered on the payment page (cardholder name, card number,
+                    expiration date, CVV, billing address) are used only to process that single
+                    payment and are <strong>not saved</strong> to our database afterward.
+                </p>
+
+                <h3 class="h6 mt-3">Contact messages</h3>
+                <p>
+                    If you use our <a asp-controller="ContactMessages" asp-action="Create">Contact
+                    Us</a> form, we store the name, email address, subject, and message you submit
+                    so our team can respond to you.
+                </p>
+
+                <h3 class="h6 mt-3">Cookies</h3>
+                <p>
+                    We use a small number of cookies: one to keep you signed in, one to remember
+                    your language preference, and one to remember your cookie consent choice. These
+                    are essential to how the site works. You choose whether to accept optional
+                    cookies the first time you visit, via the banner at the bottom of the page.
+                </p>
+
+                <h2 class="h4 mt-4">Why we use this information</h2>
+                <p>
+                    We use the information above to create and manage your bookings, send booking
+                    confirmations, keep your account secure, respond to messages you send us, and
+                    keep the site working correctly across visits.
+                </p>
+
+                <h2 class="h4 mt-4">How long we keep it</h2>
+                <p>
+                    Account and reservation records are kept for as long as your account is active,
+                    so you can view your booking history. Cancelled and expired reservations are
+                    kept for record-keeping rather than deleted, so past bookings remain visible in
+                    your reservation history. Contact messages are kept until they've been handled.
+                </p>
+
+                <h2 class="h4 mt-4">Your rights</h2>
+                <p>
+                    You can review your reservations at any time from
+                    <a asp-controller="Reservations" asp-action="MyReservations">My Reservations</a>.
+                    To request a copy of your data, ask us to correct it, or ask us to delete your
+                    account, please reach out through the
+                    <a asp-controller="ContactMessages" asp-action="Create">Contact Us</a> page.
+                </p>
+
+                <h2 class="h4 mt-4">Contact</h2>
+                <p class="mb-0">
+                    Questions about this policy or your data can be sent through our
+                    <a asp-controller="ContactMessages" asp-action="Create">Contact Us</a> page.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,9 @@
-@{ var seatMap = ViewBag.SeatMap as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>(); var screening = ViewBag.Screening as CinemaWebsite.Models.Screening; }
+@model IEnumerable<CinemaWebsite.Services.SeatStatus>
 
 @{
-    var grouped = seatMap.GroupBy(s => (string)s.Row).OrderBy(g => g.Key);
+    var seatMap = Model ?? Enumerable.Empty<CinemaWebsite.Services.SeatStatus>();
+    var screening = ViewBag.Screening as CinemaWebsite.Models.Screening;
+    var grouped = seatMap.GroupBy(s => s.Row).OrderBy(g => g.Key);
 }
 
 <div id="seat-map" class="seat-map" data-price="@(screening?.Price.ToString("F2") ?? "0.00")" role="application" aria-label="Seat map">
@@ -12,24 +14,21 @@
         <div class="seat-row" data-row="@rowGroup.Key">
             <div class="row-label">@rowGroup.Key</div>
             <div class="row-seats">
-                @foreach (var seat in rowGroup.OrderBy(s => (int)s.Number))
+                @foreach (var seat in rowGroup.OrderBy(s => s.Number))
                 {
-                    var seatId = (int)seat.SeatId;
-                    var isReserved = (bool)seat.IsReserved;
                     var isCouple = seat.SeatType == CinemaWebsite.Models.SeatType.Couple;
-                    var pairSeatId = seat.PairSeatId as int?;
-                    var couplePosClass = isCouple ? ((int)seat.Number % 2 == 1 ? " couple-left" : " couple-right") : "";
-                    var css = (isReserved ? "seat reserved" : "seat available") + couplePosClass;
+                    var couplePosClass = isCouple ? (seat.Number % 2 == 1 ? " couple-left" : " couple-right") : "";
+                    var css = (seat.IsReserved ? "seat reserved" : "seat available") + couplePosClass;
                     var seatLabel = $"{rowGroup.Key}{seat.Number}";
-                    <button type="button" class="@css" data-seat-id="@seatId" data-pair-id="@(pairSeatId?.ToString() ?? "")" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(isReserved ? "disabled" : "")>
+                    <button type="button" class="@css" data-seat-id="@seat.SeatId" data-pair-id="@(seat.PairSeatId?.ToString() ?? "")" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(seat.IsReserved ? "disabled" : "")>
                         <span class="seat-number">@seat.Number</span>
                     </button>
                     <input type="checkbox"
                            class="d-none seat-select-input"
                            name="selectedSeatIds"
-                           value="@seatId"
-                           data-seat-id="@seatId"
-                           @(isReserved ? "disabled" : "") />
+                           value="@seat.SeatId"
+                           data-seat-id="@seat.SeatId"
+                           @(seat.IsReserved ? "disabled" : "") />
                 }
             </div>
         </div>

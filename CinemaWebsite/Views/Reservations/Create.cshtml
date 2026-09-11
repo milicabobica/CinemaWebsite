@@ -65,7 +65,7 @@ else
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-4">
-                        @Html.Partial("_SeatMap")
+                        <partial name="_SeatMap" model="@(ViewBag.SeatMap as IEnumerable<CinemaWebsite.Services.SeatStatus>)"/>
                     </div>
 
                     <div class="reservation-policy-banner alert mb-4">

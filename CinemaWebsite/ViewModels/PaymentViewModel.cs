@@ -7,6 +7,10 @@ public class PaymentViewModel
 {
     public int ReservationId { get; set; }
 
+    public int ScreeningId { get; set; }
+
+    public DateTime? ExpiresAtUtc { get; set; }
+
     public string? AccessToken { get; set; } = string.Empty;
 
     [Display(Name = "Email")]

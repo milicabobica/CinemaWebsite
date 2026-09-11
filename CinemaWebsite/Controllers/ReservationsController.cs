@@ -205,6 +205,8 @@ public class ReservationsController(
         var model = new PaymentViewModel
         {
             ReservationId = reservation.Id,
+            ScreeningId = reservation.ScreeningId,
+            ExpiresAtUtc = reservation.ExpiresAtUtc,
             TotalPrice = reservation.TotalPrice,
             Email = userEmail,
             IsEmailRequired = string.IsNullOrWhiteSpace(userEmail),
@@ -236,7 +238,8 @@ public class ReservationsController(
 
         if (reservation.Status != ReservationStatus.Pending)
         {
-            return BadRequest("Reservation is no longer pending.");
+            TempData["ReservationExpiredMessage"] = "Your seats were released because payment wasn't completed in time. Please select seats again.";
+            return RedirectToAction(nameof(Create), new { screeningId = reservation.ScreeningId });
         }
 
         var userId = userManager.GetUserId(User);
@@ -246,6 +249,8 @@ public class ReservationsController(
             return Forbid();
         }
 
+        model.ScreeningId = reservation.ScreeningId;
+        model.ExpiresAtUtc = reservation.ExpiresAtUtc;
         model.TotalPrice = reservation.TotalPrice;
         model.MovieTitle = reservation.Screening.Movie.Title;
         model.HallName = reservation.Screening.CinemaHall.Name;
@@ -436,7 +441,10 @@ public class ReservationsController(
         var result = await reservationService.CancelReservationAsync(reservation, userId, isAdmin);
         if (!result.Success)
         {
-            return result.Error == "Forbidden" ? Forbid() : BadRequest(result.Error);
+            if (result.Error == "Forbidden") return Forbid();
+
+            TempData["ReservationNoticeMessage"] = result.Error;
+            return RedirectToAction(nameof(Details), new { id, token });
         }
 
         if (string.IsNullOrWhiteSpace(userId))

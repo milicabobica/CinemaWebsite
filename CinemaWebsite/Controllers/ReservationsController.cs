@@ -498,6 +498,7 @@ public class ReservationsController(
             NumberOfTickets = reservation.NumberOfTickets,
             TotalPrice = reservation.TotalPrice,
             Status = reservation.Status,
+            ExpiresAtUtc = reservation.ExpiresAtUtc,
             Seats = MapSeats(reservation)
         };
     }

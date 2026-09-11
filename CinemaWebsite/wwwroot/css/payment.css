@@ -160,7 +160,7 @@
     padding: 1.8rem;
 }
 
-.confirmation-success {
+.confirmation-status {
     display: flex;
     align-items: center;
     gap: 0.9rem;
@@ -170,22 +170,41 @@
 .confirmation-icon {
     width: 2.2rem;
     height: 2.2rem;
+    flex-shrink: 0;
     border-radius: 50%;
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--success);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
 }
 
-.confirmation-success h1 {
+.confirmation-icon.is-confirmed {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.confirmation-icon.is-cancelled {
+    background: rgba(229, 57, 53, 0.15);
+    color: var(--danger);
+}
+
+.confirmation-icon.is-pending {
+    background: var(--accent-dim);
+    color: var(--accent-hover);
+}
+
+.confirmation-icon.is-expired {
+    background: var(--border);
+    color: var(--text-muted);
+}
+
+.confirmation-status h1 {
     margin: 0;
     font-size: 1.7rem;
     font-weight: 700;
 }
 
-.confirmation-success p {
+.confirmation-status p {
     margin: 0.2rem 0 0;
     color: var(--text-muted);
 }

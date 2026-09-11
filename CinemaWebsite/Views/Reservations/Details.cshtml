@@ -1,15 +1,43 @@
 @model CinemaWebsite.ViewModels.ReservationDisplayViewModel
 @{
     ViewData["Title"] = "Reservation Details";
+
+    var (statusIcon, statusHeading, statusSubtext, statusModifier, statusLabel) = Model.Status switch
+    {
+        ReservationStatus.Confirmed => (
+            "✓",
+            "Reservation confirmed!",
+            "Your booking details are ready.",
+            "is-confirmed",
+            "Paid"),
+        ReservationStatus.Cancelled when Model.ExpiresAtUtc.HasValue => (
+            "⏱",
+            "This reservation expired",
+            "The payment window closed and the seats have been released.",
+            "is-expired",
+            "Expired"),
+        ReservationStatus.Cancelled => (
+            "✕",
+            "Reservation cancelled",
+            "This booking is no longer valid and the seats have been released.",
+            "is-cancelled",
+            "Cancelled"),
+        _ => (
+            "→",
+            "Complete your payment",
+            "Your seats are being held — finish payment before the hold expires.",
+            "is-pending",
+            "Awaiting payment")
+    };
 }
 
 <section class="confirmation-page">
     <div class="confirmation-card">
-        <div class="confirmation-success">
-            <span class="confirmation-icon" aria-hidden="true">✓</span>
+        <div class="confirmation-status">
+            <span class="confirmation-icon @statusModifier" aria-hidden="true">@statusIcon</span>
             <div>
-                <h1>Reservation confirmed!</h1>
-                <p>Your booking details are ready.</p>
+                <h1>@statusHeading</h1>
+                <p>@statusSubtext</p>
             </div>
         </div>
 
@@ -41,7 +69,7 @@
             </div>
             <div class="confirmation-row">
                 <span>Status</span>
-                <strong>@(Model.Status == CinemaWebsite.Models.ReservationStatus.Confirmed ? "Paid" : Model.Status.ToString())</strong>
+                <strong>@statusLabel</strong>
             </div>
 
             <hr />

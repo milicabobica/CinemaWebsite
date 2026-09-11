@@ -29,8 +29,38 @@
 .confirmation-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+}
+
+/* ── booking summary card (Reservations/Create) ─────────────── */
+.booking-summary-card {
+    top: 100px;
+    border-radius: var(--radius-lg);
+}
+
+.poster-frame {
+    position: relative;
+    aspect-ratio: 2 / 3;
+}
+
+.poster-frame img {
+    object-fit: cover;
+}
+
+.poster-overlay {
+    background: linear-gradient(to top, rgba(5, 5, 7, 1) 0%, rgba(5, 5, 7, 0.8) 40%, transparent 100%);
+}
+
+.badge-accent-solid {
+    background: var(--accent);
+    color: #fff;
+}
+
+.reservation-policy-banner {
+    background: var(--accent-dim);
+    border: 1px solid rgba(91, 123, 154, 0.3);
+    border-radius: var(--radius-lg);
 }
 
 .payment-card {
@@ -82,7 +112,7 @@
 }
 
 .payment-page .form-control {
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
     color: var(--text);
@@ -101,7 +131,7 @@
 
 .payment-cta {
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     min-height: 3rem;
     margin-top: 0.4rem;
     font-weight: 600;
@@ -237,7 +267,7 @@
     background: rgba(16, 185, 129, 0.1);
     color: var(--success);
     border: 1px solid rgba(16, 185, 129, 0.25);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     padding: 0.75rem 0.9rem;
 }
 
@@ -252,7 +282,7 @@
 }
 
 .confirmation-actions .btn {
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     min-height: 2.8rem;
     min-width: 8rem;
     font-weight: 600;
@@ -263,7 +293,7 @@
 .reservations-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
@@ -367,7 +397,7 @@
     .payment-card,
     .payment-summary,
     .confirmation-card {
-        border-radius: 1rem;
+        border-radius: var(--radius-lg);
         padding: 1.2rem;
     }
 

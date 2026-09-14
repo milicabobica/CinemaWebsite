@@ -1,0 +1,237 @@
+/* Shared by local and built-in Identity authentication pages only. */
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 3rem 0 2rem;
+    color: var(--text);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    min-width: 0;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .2);
+    overflow-wrap: anywhere;
+}
+
+.auth-header {
+    margin-bottom: .75rem;
+    text-align: center;
+}
+
+.auth-eyebrow {
+    color: var(--accent-hover);
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.auth-card h1 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(1.65rem, 4vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.auth-card h2,
+.auth-card h3 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.auth-card p {
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 1rem;
+}
+
+.auth-card hr {
+    margin: 1.25rem 0;
+    border-color: var(--border);
+    opacity: 1;
+}
+
+/* Identity's default two-column forms share a single card at every size. */
+.auth-card .row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 0;
+}
+
+.auth-card .row > [class*="col-"] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.auth-card .row > [class*="col-"] + [class*="col-"] {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+}
+
+.auth-card .form-control {
+    min-height: 2.8rem;
+    padding: .75rem .9rem;
+    background: var(--bg-elevated);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+}
+
+.auth-card .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 .2rem var(--accent-dim);
+}
+
+/* Keep floating labels and their validation messages from overlapping. */
+.auth-card .form-floating > .form-control {
+    height: 3.5rem;
+    padding: 1.5rem .9rem .5rem;
+}
+
+.auth-card .form-floating > .form-control::placeholder {
+    color: transparent;
+}
+
+.auth-card .form-floating > label {
+    height: 3.5rem;
+    padding: 1rem .9rem;
+    color: var(--text-muted);
+}
+
+.auth-card .form-label {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.auth-card .checkbox,
+.auth-card .form-check {
+    margin: .25rem 0 1.25rem;
+}
+
+.auth-card .checkbox label,
+.auth-card .form-check-label {
+    font-size: .9rem;
+    line-height: 1.6;
+    cursor: pointer;
+}
+
+.auth-card .form-check-input {
+    margin-right: .45rem;
+}
+
+.auth-card .btn {
+    min-height: 2.8rem;
+    padding: .75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.auth-card form > button[type="submit"],
+.auth-card form > div > button[type="submit"] {
+    width: 100%;
+    margin: .25rem 0 1rem;
+}
+
+.auth-card #external-account p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.auth-card #external-account .btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.auth-card a:not(.btn) {
+    color: var(--accent-hover);
+    text-underline-offset: .2em;
+}
+
+.auth-card a:not(.btn):hover {
+    color: var(--text);
+}
+
+.auth-card a:focus-visible,
+.auth-card button:focus-visible {
+    outline: 2px solid var(--accent-hover);
+    outline-offset: 3px;
+}
+
+.auth-card .text-danger,
+.auth-card .field-validation-error {
+    color: #ff9693 !important;
+}
+
+.auth-card .field-validation-error {
+    display: block;
+    margin-top: .4rem;
+    font-size: .85rem;
+}
+
+.auth-card .input-validation-error {
+    border-color: var(--danger);
+}
+
+.auth-card .validation-summary-errors,
+.auth-card .alert {
+    padding: .75rem .9rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(229, 57, 53, .3);
+    border-radius: var(--radius-sm);
+    background: rgba(229, 57, 53, .1);
+}
+
+.auth-card .validation-summary-errors ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.auth-card .alert-success {
+    color: var(--success);
+    border-color: rgba(16, 185, 129, .25);
+    background: rgba(16, 185, 129, .1);
+}
+
+.auth-card .alert-warning,
+.auth-card .alert-info {
+    color: var(--accent-hover);
+    border-color: rgba(91, 123, 154, .3);
+    background: var(--accent-dim);
+}
+
+.auth-card > p:last-child,
+.auth-card section > div > p:last-child,
+.auth-card #external-account p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+    .auth-page {
+        min-height: auto;
+        padding: 1rem 0 2rem;
+    }
+
+    .auth-card {
+        padding: 1.5rem 1.2rem;
+    }
+}

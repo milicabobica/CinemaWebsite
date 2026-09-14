@@ -1,3 +1,8 @@
 ﻿@{
-    Layout = "/Views/Shared/_Layout.cshtml";
+    // Includes the built-in Identity UI pages without replacing their forms or PageModels.
+    var accountPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+    Layout = accountPage.StartsWith("/Account/", StringComparison.OrdinalIgnoreCase)
+        && !accountPage.StartsWith("/Account/Manage/", StringComparison.OrdinalIgnoreCase)
+        ? "/Areas/Identity/Pages/_AuthLayout.cshtml"
+        : "/Views/Shared/_Layout.cshtml";
 }

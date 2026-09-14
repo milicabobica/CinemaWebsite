@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!seatMap) return;
 
     const pricePerSeat = parseFloat(seatMap.dataset.price || '0');
+    const money = new Intl.NumberFormat(seatMap.dataset.currencyLocale, {
+        style: 'currency',
+        currency: seatMap.dataset.currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
     const selected = new Set();
 
     function seatButton(id) {
@@ -17,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const count = selected.size;
         if (selectedCountEl) selectedCountEl.textContent = String(count);
-        if (seatPriceEl) seatPriceEl.textContent = pricePerSeat.toFixed(2);
-        if (totalPriceEl) totalPriceEl.textContent = (pricePerSeat * count).toFixed(2);
+        if (seatPriceEl) seatPriceEl.textContent = money.format(pricePerSeat);
+        if (totalPriceEl) totalPriceEl.textContent = money.format(pricePerSeat * count);
         if (ticketInput) ticketInput.value = String(count === 0 ? ticketInput.value : count);
     }
 

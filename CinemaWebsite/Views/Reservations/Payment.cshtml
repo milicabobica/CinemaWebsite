@@ -112,18 +112,7 @@
 
                 <div class="payment-total">
                     <span>Total</span>
-                    <strong>@Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("de-DE"))</strong>
-                    @* Force a specific culture: *@
-                    @* @Model.TotalPrice.ToString("C", new System.Globalization.CultureInfo("en-GB")) *@
-                    @* // Output: £1,234.50 *@
-                    
-                    @* Remove the currency symbol but keep formatting: *@
-                    @* @Model.TotalPrice.ToString("N2") // Output: 1,234.50 *@
-                    
-                    @* Use a custom symbol: *@
-                    @* var culture = (System.Globalization.CultureInfo)System.Globalization.CultureInfo.CurrentCulture.Clone(); *@
-                    @* culture.NumberFormat.CurrencySymbol = "USD"; *@
-                    @* @Model.TotalPrice.ToString("C", culture) // Output: USD1,234.50 *@
+                    <strong>@Model.TotalPrice.ToMoney()</strong>
                 </div>
             </aside>
         </div>

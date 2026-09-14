@@ -39,7 +39,7 @@ else
                     <td class="fw-semibold">@s.Movie.Title</td>
                     <td>@s.CinemaHall.Name</td>
                     <td>@s.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@s.Price</td>
+                    <td>@s.Price.ToMoney()</td>
                     <td class="text-end">
                         <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary">Details</a>
                         @if (User.IsInRole("Admin"))

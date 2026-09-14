@@ -2,7 +2,6 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
-    Layout = "_Layout";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -28,7 +27,7 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Sign In</button>
         </form>
         <div class="auth-links">
             <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Already have an account? Log in</a>

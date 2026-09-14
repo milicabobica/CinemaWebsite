@@ -17,8 +17,7 @@ public class ReservationsController(
     UserManager<ApplicationUser> userManager,
     IDataProtectionProvider dataProtectionProvider) : Controller
 {
-    private readonly IDataProtector reservationTokenProtector =
-        dataProtectionProvider.CreateProtector("ReservationGuestAccessToken");
+    private readonly ReservationGuestTokens reservationTokens = new(dataProtectionProvider);
     public async Task<IActionResult> MyReservations()
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -166,7 +165,7 @@ public class ReservationsController(
         var reservationId = result.Reservation!.Id;
         if (string.IsNullOrWhiteSpace(userId))
         {
-            var guestToken = CreateReservationToken(reservationId);
+            var guestToken = reservationTokens.Create(reservationId);
             return RedirectToAction(nameof(Payment), new { id = reservationId, token = guestToken });
         }
 
@@ -188,16 +187,14 @@ public class ReservationsController(
             .FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
 
+        var userId = userManager.GetUserId(User);
+        var isAdmin = User.IsInRole("Admin");
+        var accessFailure = await GetReservationAccessFailureAsync(reservation, token, userId, isAdmin);
+        if (accessFailure is not null) return accessFailure;
+
         if (reservation.Status != ReservationStatus.Pending)
         {
             return RedirectToAction(nameof(Details), new { id, token });
-        }
-
-        var userId = userManager.GetUserId(User);
-        var isAdmin = User.IsInRole("Admin");
-        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
-        {
-            return Forbid();
         }
 
         var currentUser = await userManager.GetUserAsync(User);
@@ -236,17 +233,15 @@ public class ReservationsController(
             .FirstOrDefaultAsync(r => r.Id == model.ReservationId);
         if (reservation is null) return NotFound();
 
+        var userId = userManager.GetUserId(User);
+        var isAdmin = User.IsInRole("Admin");
+        var accessFailure = await GetReservationAccessFailureAsync(reservation, model.AccessToken, userId, isAdmin);
+        if (accessFailure is not null) return accessFailure;
+
         if (reservation.Status != ReservationStatus.Pending)
         {
             TempData["ReservationExpiredMessage"] = "Your seats were released because payment wasn't completed in time. Please select seats again.";
             return RedirectToAction(nameof(Create), new { screeningId = reservation.ScreeningId });
-        }
-
-        var userId = userManager.GetUserId(User);
-        var isAdmin = User.IsInRole("Admin");
-        if (!await CanAccessReservationAsync(reservation, model.AccessToken, userId, isAdmin))
-        {
-            return Forbid();
         }
 
         model.ScreeningId = reservation.ScreeningId;
@@ -321,7 +316,7 @@ public class ReservationsController(
         if (string.IsNullOrWhiteSpace(userId))
         {
             var guestToken = string.IsNullOrWhiteSpace(model.AccessToken)
-                ? CreateReservationToken(reservation.Id)
+                ? reservationTokens.Create(reservation.Id)
                 : model.AccessToken;
             return RedirectToAction(nameof(Details), new { id = reservation.Id, token = guestToken });
         }
@@ -392,10 +387,8 @@ public class ReservationsController(
 
         var userId = userManager.GetUserId(User);
         var isAdmin = User.IsInRole("Admin");
-        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
-        {
-            return Forbid();
-        }
+        var accessFailure = await GetReservationAccessFailureAsync(reservation, token, userId, isAdmin);
+        if (accessFailure is not null) return accessFailure;
 
         ViewBag.GuestToken = token;
         return View(MapReservationToDisplayModel(reservation));
@@ -413,10 +406,8 @@ public class ReservationsController(
 
         var userId = userManager.GetUserId(User);
         var isAdmin = User.IsInRole("Admin");
-        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
-        {
-            return Forbid();
-        }
+        var accessFailure = await GetReservationAccessFailureAsync(reservation, token, userId, isAdmin);
+        if (accessFailure is not null) return accessFailure;
 
         ViewBag.GuestToken = token;
         return View(reservation);
@@ -428,15 +419,13 @@ public class ReservationsController(
     {
         await reservationService.ExpirePendingReservationsAsync();
 
-        var reservation = await context.Reservations.FirstOrDefaultAsync(r => r.Id == id);
+        var reservation = await context.Reservations.Include(r => r.Screening).FirstOrDefaultAsync(r => r.Id == id);
         if (reservation is null) return NotFound();
 
         var userId = userManager.GetUserId(User);
         var isAdmin = User.IsInRole("Admin");
-        if (!await CanAccessReservationAsync(reservation, token, userId, isAdmin))
-        {
-            return Forbid();
-        }
+        var accessFailure = await GetReservationAccessFailureAsync(reservation, token, userId, isAdmin);
+        if (accessFailure is not null) return accessFailure;
 
         var result = await reservationService.CancelReservationAsync(reservation, userId, isAdmin);
         if (!result.Success)
@@ -455,44 +444,21 @@ public class ReservationsController(
         return RedirectToAction(nameof(MyReservations));
     }
 
-    private async Task<bool> CanAccessReservationAsync(Reservation reservation, string? token, string? userId, bool isAdmin)
+    private async Task<IActionResult?> GetReservationAccessFailureAsync(
+        Reservation reservation, string? token, string? userId, bool isAdmin)
     {
         if (await reservationService.CanAccessReservationAsync(reservation, userId, isAdmin))
+            return null;
+
+        var status = reservationTokens.Validate(reservation.Id, reservation.Screening.StartTime, token);
+        if (status == ReservationTokenStatus.Valid) return null;
+        if (status == ReservationTokenStatus.Expired)
         {
-            return true;
+            Response.StatusCode = StatusCodes.Status410Gone;
+            return View("LinkExpired");
         }
 
-        return IsValidReservationToken(reservation.Id, token);
-    }
-
-    private string CreateReservationToken(int reservationId)
-    {
-        var payload = $"{reservationId}|{DateTime.UtcNow.Ticks}";
-        return reservationTokenProtector.Protect(payload);
-    }
-
-    private bool IsValidReservationToken(int reservationId, string? token)
-    {
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            return false;
-        }
-
-        try
-        {
-            var payload = reservationTokenProtector.Unprotect(token);
-            var parts = payload.Split('|');
-            if (parts.Length != 2)
-            {
-                return false;
-            }
-
-            return int.TryParse(parts[0], out var tokenReservationId) && tokenReservationId == reservationId;
-        }
-        catch
-        {
-            return false;
-        }
+        return Forbid();
     }
 
     private static ReservationDisplayViewModel MapReservationToDisplayModel(Reservation reservation)

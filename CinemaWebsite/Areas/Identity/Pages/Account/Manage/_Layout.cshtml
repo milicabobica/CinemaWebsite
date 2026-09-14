@@ -1,0 +1,23 @@
+@{
+    Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+}
+
+<h1>Manage your account</h1>
+<p class="account-settings-intro">Update your profile, email and security settings.</p>
+
+<div class="account-settings-layout">
+    <nav class="account-settings-nav" aria-label="Account settings">
+        <partial name="_ManageNav" />
+    </nav>
+    <section class="account-settings-panel" aria-label="Selected account setting">
+        @RenderBody()
+    </section>
+</div>
+
+@section Head {
+    @await RenderSectionAsync("Head", required: false)
+}
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

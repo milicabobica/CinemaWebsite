@@ -215,7 +215,59 @@
 
 /* Account settings retain their existing navigation and content hierarchy. */
 .auth-card-manage {
-    max-width: 860px;
+    max-width: 1040px;
+}
+
+.auth-card-manage .account-settings-intro {
+    margin: -.5rem 0 2rem;
+    text-align: center;
+}
+
+.auth-card-manage .account-settings-layout {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    align-items: start;
+    gap: 1.5rem;
+}
+
+.auth-card-manage .account-settings-nav,
+.auth-card-manage .account-settings-panel {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+}
+
+.auth-card-manage .account-settings-nav {
+    padding: .5rem;
+}
+
+.auth-card-manage .account-settings-panel {
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
+}
+
+.auth-card-manage .account-settings-panel h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.auth-card-manage .account-settings-nav .nav-link {
+    white-space: normal;
+}
+
+.auth-card-manage .account-settings-nav .nav-link:not(.active):hover {
+    background: var(--accent-dim);
+}
+
+.auth-card-manage .account-settings-panel .input-group > .form-control {
+    min-width: 0;
+}
+
+.auth-card-manage .account-settings-panel img,
+.auth-card-manage .account-settings-panel canvas {
+    max-width: 100%;
+    height: auto;
 }
 
 .auth-card .nav-pills {
@@ -232,20 +284,9 @@
     color: #fff;
 }
 
-@media (min-width: 768px) {
-    .auth-card-manage > div > .row {
-        flex-wrap: nowrap;
-    }
-
-    .auth-card-manage > div > .row > .col-md-3 {
-        flex: 0 0 190px;
-    }
-
-    .auth-card-manage > div > .row > .col-md-9 {
-        flex: 1;
-        padding: 0 0 0 1.5rem;
-        border-top: 0;
-        border-left: 1px solid var(--border);
+@media (max-width: 991.98px) {
+    .auth-card-manage .account-settings-layout {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
@@ -257,5 +298,9 @@
 
     .auth-card {
         padding: 1.5rem 1.2rem;
+    }
+
+    .auth-card-manage .account-settings-panel {
+        padding: 1.2rem;
     }
 }

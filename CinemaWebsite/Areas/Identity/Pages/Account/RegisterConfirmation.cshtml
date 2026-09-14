@@ -4,7 +4,7 @@
     ViewData["Title"] = "Register confirmation";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Confirm your account</h1>
 @{
     if (@Model.DisplayConfirmAccountLink)
     {
@@ -20,4 +20,8 @@
 </p>
     }
 }
+
+<div class="auth-links">
+    <a class="btn btn-primary" asp-page="./Login">Back to login</a>
+</div>
 

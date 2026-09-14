@@ -1,0 +1,21 @@
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+    var accountPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+    var isManagementPage = accountPage.StartsWith("/Account/Manage/", StringComparison.OrdinalIgnoreCase);
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    @await RenderSectionAsync("Head", required: false)
+}
+
+<section class="auth-page" aria-label="Your account">
+    <div class="auth-card @(isManagementPage ? "auth-card-manage" : "")">
+        <div class="auth-header">Your cinema account</div>
+        @RenderBody()
+    </div>
+</section>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

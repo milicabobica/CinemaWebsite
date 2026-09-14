@@ -11,7 +11,8 @@ public class GenresController(ApplicationDbContext context) : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
-        return View(await context.Genres.AsNoTracking().OrderBy(g => g.Name).ToListAsync());
+        return View(await context.Genres.Include(g => g.MovieGenres)
+            .ThenInclude(mg => mg.Movie).AsNoTracking().OrderBy(g => g.Name).ToListAsync());
     }
 
     [AllowAnonymous]

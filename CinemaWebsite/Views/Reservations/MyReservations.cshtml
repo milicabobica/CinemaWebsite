@@ -61,7 +61,7 @@ else
                             }
                         </td>
                         <td>@r.NumberOfTickets</td>
-                        <td>@r.TotalPrice.ToString("C", new System.Globalization.CultureInfo("de-DE"))</td>
+                        <td>@r.TotalPrice.ToMoney()</td>
                         <td><span class="status-chip @statusModifier">@statusLabel</span></td>
                         <td>
                             <div class="reservations-actions">

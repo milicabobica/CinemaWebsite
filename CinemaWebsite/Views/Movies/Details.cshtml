@@ -163,7 +163,7 @@
                                 <div class="col-6 col-md-3 border-start border-secondary border-opacity-25 ps-4">
                                     <div class="text-muted small text-uppercase tracking-wider mb-1" style="font-size: 0.7rem;">Hall</div>
                                     <div class="fw-semibold">@screening.CinemaHall.Name</div>
-                                    <div class="text-success small fw-bold mt-1">@screening.Price.ToString("C")</div>
+                                    <div class="text-success small fw-bold mt-1">@screening.Price.ToMoney()</div>
                                 </div>
                                 <div class="col-12 col-md-3 text-md-end mt-4 mt-md-0">
                                     <a asp-controller="Reservations"

@@ -6,7 +6,7 @@
     var grouped = seatMap.GroupBy(s => s.Row).OrderBy(g => g.Key);
 }
 
-<div id="seat-map" class="seat-map" data-price="@(screening?.Price.ToString("F2") ?? "0.00")" role="application" aria-label="Seat map">
+<div id="seat-map" class="seat-map" data-price="@((screening?.Price ?? 0m).ToString(System.Globalization.CultureInfo.InvariantCulture))" data-currency="@MoneyExtensions.CurrencyCode" data-currency-locale="@MoneyExtensions.CultureName" role="application" aria-label="Seat map">
     <div class="screen">SCREEN</div>
 
     @foreach (var rowGroup in grouped)
@@ -36,8 +36,8 @@
 
     <div class="seat-summary mt-2">
         <span>Selected: <strong id="selectedCount">0</strong></span>
-        <span class="ms-3">Price per seat: <strong id="seatPrice">@((screening?.Price.ToString("F2")) ?? "0.00")</strong></span>
-        <span class="ms-3">Total: <strong id="totalPrice">0.00</strong></span>
+        <span class="ms-3">Price per seat: <strong id="seatPrice">@((screening?.Price ?? 0m).ToMoney())</strong></span>
+        <span class="ms-3">Total: <strong id="totalPrice">@(0m.ToMoney())</strong></span>
     </div>
 
     <div class="seat-legend mt-2">

@@ -26,6 +26,7 @@ else
                 <th>Screening</th>
                 <th>Seats</th>
                 <th>Tickets</th>
+                <th class="text-end">Total</th>
                 <th>Status</th>
             </tr>
             </thead>
@@ -47,6 +48,7 @@ else
                         }
                     </td>
                     <td>@r.NumberOfTickets</td>
+                    <td class="text-end text-nowrap">@r.TotalPrice.ToMoney()</td>
                     <td>
                         @if (r.Status == CinemaWebsite.Models.ReservationStatus.Confirmed)
                         {

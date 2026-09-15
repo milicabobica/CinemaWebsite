@@ -18,8 +18,6 @@ public class Employee
     [StringLength(100)]
     public string Position { get; set; } = string.Empty;
 
-    // public string? Biography { get; set; }
-
     [EmailAddress]
     [StringLength(150)]
     public string? Email { get; set; }

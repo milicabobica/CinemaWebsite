@@ -16,6 +16,7 @@ public class Screening
 
     public CinemaHall CinemaHall { get; set; } = null!;
 
+    // StartTime and EndTime store cinema-local (Europe/Skopje) wall-clock times.
     [Required]
     public DateTime StartTime { get; set; }
 

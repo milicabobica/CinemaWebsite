@@ -66,7 +66,7 @@ public class ReservationsController(
             .Include(s => s.CinemaHall)
             .FirstOrDefaultAsync(s => s.Id == screeningId);
         if (screening is null) return NotFound();
-        if (screening.StartTime < DateTime.UtcNow)
+        if (screening.StartTime <= CinemaTime.Now)
         {
             TempData["ScreeningStartedMessage"] = "This screening has already started";
             return RedirectToAction("Details", "Movies", new { id = screening.MovieId });
@@ -89,7 +89,7 @@ public class ReservationsController(
         var screening = await context.Screenings
             .FirstOrDefaultAsync(s => s.Id == model.ScreeningId);
         if (screening is null) return NotFound();
-        if (screening.StartTime < DateTime.UtcNow)
+        if (screening.StartTime <= CinemaTime.Now)
         {
             TempData["ScreeningStartedMessage"] = "This screening has already started";
             return RedirectToAction("Details", "Movies", new { id = screening.MovieId });

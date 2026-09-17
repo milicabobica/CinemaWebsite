@@ -112,7 +112,7 @@ public class ReservationService(ApplicationDbContext context) : IReservationServ
             return (false, "Screening not found.", null);
         }
 
-        if (screening.StartTime <= DateTime.UtcNow)
+        if (screening.StartTime <= CinemaTime.Now)
         {
             return (false, "Cannot reserve tickets for past screenings.", null);
         }

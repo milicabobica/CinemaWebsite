@@ -1,5 +1,6 @@
 using CinemaWebsite.Data;
 using CinemaWebsite.Models;
+using CinemaWebsite.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -52,9 +53,10 @@ public class MoviesController(ApplicationDbContext context) : Controller {
         // }
 
         if (!string.IsNullOrWhiteSpace(day) && Enum.TryParse<DayOfWeek>(day, true, out var selectedDay)) {
+            var screeningNow = CinemaTime.Now;
             query = query.Where(m => context.Screenings.Any(s =>
                 s.MovieId == m.Id &&
-                s.StartTime >= now &&
+                s.StartTime > screeningNow &&
                 s.StartTime.DayOfWeek == selectedDay));
             ViewBag.SelectedDay = selectedDay;
         }
@@ -75,7 +77,7 @@ public class MoviesController(ApplicationDbContext context) : Controller {
 
     [AllowAnonymous]
     public async Task<IActionResult> Details(int id, string? day) {
-        var now = DateTime.UtcNow;
+        var now = CinemaTime.Now;
 
         var movie = await context.Movies
             .Include(m => m.MovieGenres)
@@ -86,7 +88,7 @@ public class MoviesController(ApplicationDbContext context) : Controller {
         if (movie is null) return NotFound();
 
         movie.Screenings = movie.Screenings
-            .Where(s => s.StartTime >= now)
+            .Where(s => s.StartTime > now)
             .OrderBy(s => s.StartTime)
             .ToList();
 

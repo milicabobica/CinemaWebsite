@@ -45,7 +45,7 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
                 "To create a screening, add at least one movie and one available hall first.");
         }
 
-        var start = DateTime.Now.Date;
+        var start = CinemaTime.Now.Date;
         return View(new Screening
         {
             StartTime = start,

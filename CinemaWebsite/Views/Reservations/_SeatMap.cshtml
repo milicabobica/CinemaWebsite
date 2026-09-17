@@ -6,7 +6,7 @@
     var grouped = seatMap.GroupBy(s => s.Row).OrderBy(g => g.Key);
 }
 
-<div id="seat-map" class="seat-map" data-price="@((screening?.Price ?? 0m).ToString(System.Globalization.CultureInfo.InvariantCulture))" data-currency="@MoneyExtensions.CurrencyCode" data-currency-locale="@MoneyExtensions.CultureName" role="application" aria-label="Seat map">
+<div id="seat-map" class="seat-map" data-price="@((screening?.Price ?? 0m).ToString(System.Globalization.CultureInfo.InvariantCulture))" data-currency="@MoneyExtensions.CurrencyCode" data-currency-locale="@MoneyExtensions.CultureName" role="group" aria-label="Seat map">
     <div class="screen">SCREEN</div>
 
     @foreach (var rowGroup in grouped)
@@ -20,8 +20,16 @@
                     var couplePosClass = isCouple ? (seat.Number % 2 == 1 ? " couple-left" : " couple-right") : "";
                     var css = (seat.IsReserved ? "seat reserved" : "seat available") + couplePosClass;
                     var seatLabel = $"{rowGroup.Key}{seat.Number}";
-                    <button type="button" class="@css" data-seat-id="@seat.SeatId" data-pair-id="@(seat.PairSeatId?.ToString() ?? "")" title="Seat @seatLabel" aria-label="Seat @seatLabel" @(seat.IsReserved ? "disabled" : "")>
+                    var accessibleLabel = $"Seat {seatLabel}"
+                        + (isCouple ? ", couple seat" : "")
+                        + (seat.IsReserved ? ", reserved" : isCouple ? ", selects both seats" : "");
+                    <button type="button" class="@css" data-seat-id="@seat.SeatId" data-pair-id="@(seat.PairSeatId?.ToString() ?? "")" title="@accessibleLabel" aria-label="@accessibleLabel" aria-pressed="false" @(seat.IsReserved ? "disabled" : "")>
                         <span class="seat-number">@seat.Number</span>
+                        <span class="seat-state-marker seat-selected-marker" aria-hidden="true">✓</span>
+                        @if (seat.IsReserved)
+                        {
+                            <span class="seat-state-marker" aria-hidden="true">×</span>
+                        }
                     </button>
                     <input type="checkbox"
                            class="d-none seat-select-input"
@@ -41,9 +49,9 @@
     </div>
 
     <div class="seat-legend mt-2">
-        <span class="legend-item"><span class="legend-box available"></span> Available</span>
-        <span class="legend-item ms-3"><span class="legend-box selected"></span> Selected</span>
-        <span class="legend-item ms-3"><span class="legend-box reserved"></span> Reserved</span>
-        <span class="legend-item ms-3"><span class="legend-box couple"></span> Couple</span>
+        <span class="legend-item"><span class="legend-box available" aria-hidden="true"></span> Available</span>
+        <span class="legend-item ms-3"><span class="legend-box selected" aria-hidden="true">✓</span> Selected</span>
+        <span class="legend-item ms-3"><span class="legend-box reserved" aria-hidden="true">×</span> Reserved</span>
+        <span class="legend-item ms-3"><span class="legend-box couple" aria-hidden="true"></span> Couple (selected together)</span>
     </div>
 </div>

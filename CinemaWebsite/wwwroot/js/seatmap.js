@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!btn || btn.disabled) return;
         selected.add(id);
         btn.classList.add('selected');
+        btn.setAttribute('aria-pressed', 'true');
         if (input && !input.disabled) input.checked = true;
     }
 
@@ -45,7 +46,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const btn = seatButton(id);
         const input = seatInput(id);
         selected.delete(id);
-        if (btn) btn.classList.remove('selected');
+        if (btn) {
+            btn.classList.remove('selected');
+            btn.setAttribute('aria-pressed', 'false');
+        }
         if (input) input.checked = false;
     }
 

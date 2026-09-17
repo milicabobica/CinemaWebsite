@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class HomeController(ApplicationDbContext context) : Controller
 {
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var now = DateTime.UtcNow;
@@ -42,12 +44,14 @@ public class HomeController(ApplicationDbContext context) : Controller
         return View(viewModel);
     }
 
+    [AllowAnonymous]
     public IActionResult Privacy()
     {
         return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [AllowAnonymous]
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -55,6 +59,7 @@ public class HomeController(ApplicationDbContext context) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public IActionResult SetLanguage(string culture, string? returnUrl = null)
     {
         var supportedCultures = new[] { "en", "mk" };
@@ -73,6 +78,7 @@ public class HomeController(ApplicationDbContext context) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public IActionResult SetCookieConsent(string consent, string? returnUrl = null)
     {
         var safeConsent = consent == "AcceptAll" ? "AcceptAll" : "NecessaryOnly";
@@ -85,7 +91,6 @@ public class HomeController(ApplicationDbContext context) : Controller
         return LocalRedirect(returnUrl ?? Url.Action(nameof(Index))!);
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AdminDashboard()
     {
         var now = DateTime.UtcNow;

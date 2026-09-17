@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class ScreeningsController(ApplicationDbContext context, IScreeningService screeningService) : Controller
 {
     [AllowAnonymous]
@@ -31,7 +32,6 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
         return item is null ? NotFound() : View(item);
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create()
     {
         var hasMovies = await context.Movies.AnyAsync();
@@ -54,7 +54,6 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Screening item)
     {
@@ -84,7 +83,6 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
     {
         var item = await context.Screenings.FindAsync(id);
@@ -94,7 +92,6 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Screening item)
     {
@@ -118,7 +115,6 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var item = await context.Screenings
@@ -131,7 +127,6 @@ public class ScreeningsController(ApplicationDbContext context, IScreeningServic
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

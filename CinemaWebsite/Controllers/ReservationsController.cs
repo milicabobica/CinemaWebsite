@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize]
 public class ReservationsController(
     ApplicationDbContext context,
     IReservationService reservationService,
@@ -57,6 +58,7 @@ public class ReservationsController(
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Create(int screeningId)
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -80,6 +82,7 @@ public class ReservationsController(
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public async Task<IActionResult> Create(Reservation model, int[]? selectedSeatIds)
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -169,6 +172,7 @@ public class ReservationsController(
     }
 
     
+    [AllowAnonymous]
     public async Task<IActionResult> Payment(int id, string? token)
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -215,6 +219,7 @@ public class ReservationsController(
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public async Task<IActionResult> Payment(PaymentViewModel model)
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -351,6 +356,7 @@ public class ReservationsController(
         return true;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Details(int id, string? token)
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -374,6 +380,7 @@ public class ReservationsController(
         return View(MapReservationToDisplayModel(reservation));
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Cancel(int id, string? token)
     {
         await reservationService.ExpirePendingReservationsAsync();
@@ -395,6 +402,7 @@ public class ReservationsController(
 
     [HttpPost, ActionName("Cancel")]
     [ValidateAntiForgeryToken]
+    [AllowAnonymous]
     public async Task<IActionResult> CancelConfirmed(int id, string? token)
     {
         await reservationService.ExpirePendingReservationsAsync();

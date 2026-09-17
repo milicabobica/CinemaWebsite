@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class MoviesController(ApplicationDbContext context) : Controller {
     [AllowAnonymous]
     public async Task<IActionResult> Index(string? search, int? genreId, string? status, string? language,
@@ -95,7 +96,6 @@ public class MoviesController(ApplicationDbContext context) : Controller {
     }
 
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create() {
         ViewBag.Genres = await context.Genres
             .AsNoTracking()
@@ -107,7 +107,6 @@ public class MoviesController(ApplicationDbContext context) : Controller {
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Movie movie, int[] selectedGenreIds) {
         if (selectedGenreIds.Length == 0) {
@@ -137,7 +136,6 @@ public class MoviesController(ApplicationDbContext context) : Controller {
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id) {
         var movie = await context.Movies
             .Include(m => m.MovieGenres)
@@ -158,7 +156,6 @@ public class MoviesController(ApplicationDbContext context) : Controller {
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Movie movie, int[] selectedGenreIds) {
         if (id != movie.Id) return BadRequest();
@@ -208,7 +205,6 @@ public class MoviesController(ApplicationDbContext context) : Controller {
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id) {
         var movie = await context.Movies.FindAsync(id);
         if (movie is null) return NotFound();
@@ -216,7 +212,6 @@ public class MoviesController(ApplicationDbContext context) : Controller {
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id) {
         var movie = await context.Movies.FindAsync(id);

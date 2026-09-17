@@ -7,6 +7,26 @@ namespace CinemaWebsite.Tests;
 
 public class ReservationServiceTests
 {
+    [Theory]
+    [InlineData(-1, false)]
+    [InlineData(5, true)]
+    public async Task CreateReservationAsync_UsesCinemaLocalStartTime(int minutesFromNow, bool expectedSuccess)
+    {
+        using var db = await TestDb.CreateAsync();
+        await using var context = db.CreateContext();
+        var screening = await context.Screenings.SingleAsync(s => s.Id == db.ScreeningId);
+        screening.StartTime = CinemaTime.Now.AddMinutes(minutesFromNow);
+        screening.EndTime = screening.StartTime.AddHours(2);
+        await context.SaveChangesAsync();
+
+        var service = new ReservationService(context);
+        var result = await service.CreateReservationAsync(null, db.ScreeningId, [db.SeatId]);
+
+        Assert.Equal(expectedSuccess, result.Success);
+        Assert.Equal(expectedSuccess ? 1 : 0, await context.Reservations.CountAsync());
+        Assert.Equal(expectedSuccess ? 1 : 0, await context.ReservationSeats.CountAsync());
+    }
+
     [Fact]
     public async Task CreateReservationAsync_ConcurrentRequestsForSameSeat_OnlyOneSucceeds()
     {

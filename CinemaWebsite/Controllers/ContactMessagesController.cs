@@ -6,15 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class ContactMessagesController(ApplicationDbContext context) : Controller
 {
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
         return View(await context.ContactMessages.AsNoTracking().OrderByDescending(c => c.SentAt).ToListAsync());
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Details(int id)
     {
         var item = await context.ContactMessages.FirstOrDefaultAsync(c => c.Id == id);
@@ -41,7 +40,6 @@ public class ContactMessagesController(ApplicationDbContext context) : Controlle
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> MarkAsRead(int id)
     {
@@ -52,7 +50,6 @@ public class ContactMessagesController(ApplicationDbContext context) : Controlle
         return RedirectToAction(nameof(Details), new { id });
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var item = await context.ContactMessages.FirstOrDefaultAsync(c => c.Id == id);
@@ -60,7 +57,6 @@ public class ContactMessagesController(ApplicationDbContext context) : Controlle
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

@@ -1,5 +1,6 @@
 using CinemaWebsite.Data;
 using CinemaWebsite.Models;
+using CinemaWebsite.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Tests;
@@ -92,8 +93,8 @@ public sealed class TestDb : IDisposable
         {
             MovieId = movie.Id,
             CinemaHallId = hall.Id,
-            StartTime = DateTime.UtcNow.AddDays(1),
-            EndTime = DateTime.UtcNow.AddDays(1).AddHours(2),
+            StartTime = CinemaTime.Now.AddDays(1),
+            EndTime = CinemaTime.Now.AddDays(1).AddHours(2),
             Price = 10m,
             Language = "en"
         };

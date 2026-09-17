@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class GenresController(ApplicationDbContext context) : Controller
 {
     [AllowAnonymous]
@@ -25,11 +26,9 @@ public class GenresController(ApplicationDbContext context) : Controller
         return genre is null ? NotFound() : View(genre);
     }
 
-    [Authorize(Roles = "Admin")]
     public IActionResult Create() => View(new Genre());
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Genre genre)
     {
@@ -39,7 +38,6 @@ public class GenresController(ApplicationDbContext context) : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
     {
         var genre = await context.Genres.FindAsync(id);
@@ -47,7 +45,6 @@ public class GenresController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Genre genre)
     {
@@ -58,7 +55,6 @@ public class GenresController(ApplicationDbContext context) : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var genre = await context.Genres
@@ -69,7 +65,6 @@ public class GenresController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

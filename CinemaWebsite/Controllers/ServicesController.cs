@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class ServicesController(ApplicationDbContext context) : Controller
 {
     [AllowAnonymous]
@@ -21,11 +22,9 @@ public class ServicesController(ApplicationDbContext context) : Controller
         return item is null ? NotFound() : View(item);
     }
 
-    [Authorize(Roles = "Admin")]
     public IActionResult Create() => View(new Service());
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Service item)
     {
@@ -35,7 +34,6 @@ public class ServicesController(ApplicationDbContext context) : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
     {
         var item = await context.Services.FindAsync(id);
@@ -43,7 +41,6 @@ public class ServicesController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Service item)
     {
@@ -54,7 +51,6 @@ public class ServicesController(ApplicationDbContext context) : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var item = await context.Services.FindAsync(id);
@@ -62,7 +58,6 @@ public class ServicesController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

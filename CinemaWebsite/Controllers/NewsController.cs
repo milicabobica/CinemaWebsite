@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CinemaWebsite.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class NewsController(ApplicationDbContext context) : Controller
 {
     [AllowAnonymous]
@@ -30,11 +31,9 @@ public class NewsController(ApplicationDbContext context) : Controller
         return View(item);
     }
 
-    [Authorize(Roles = "Admin")]
     public IActionResult Create() => View(new News { PublishedDate = DateTime.UtcNow });
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(News item)
     {
@@ -45,7 +44,6 @@ public class NewsController(ApplicationDbContext context) : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
     {
         var item = await context.News.FindAsync(id);
@@ -53,7 +51,6 @@ public class NewsController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, News item)
     {
@@ -64,7 +61,6 @@ public class NewsController(ApplicationDbContext context) : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var item = await context.News.FindAsync(id);
@@ -72,7 +68,6 @@ public class NewsController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Admin")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

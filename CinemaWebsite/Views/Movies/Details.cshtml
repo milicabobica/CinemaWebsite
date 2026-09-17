@@ -17,6 +17,11 @@
     }
 }
 
+@if (TempData["ScreeningStartedMessage"] is string screeningStartedMessage)
+{
+    <div class="alert alert-warning" role="alert">@screeningStartedMessage</div>
+}
+
 <div class="mb-4">
     <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back to Movies</a>
     @if (User.IsInRole("Admin"))

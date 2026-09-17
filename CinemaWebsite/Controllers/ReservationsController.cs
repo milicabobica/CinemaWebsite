@@ -68,6 +68,7 @@ public class ReservationsController(
         if (screening is null) return NotFound();
         if (screening.StartTime < DateTime.UtcNow)
         {
+            TempData["ScreeningStartedMessage"] = "This screening has already started";
             return RedirectToAction("Details", "Movies", new { id = screening.MovieId });
         }
 
@@ -90,8 +91,8 @@ public class ReservationsController(
         if (screening is null) return NotFound();
         if (screening.StartTime < DateTime.UtcNow)
         {
-            ModelState.AddModelError(string.Empty, "This screening has already started or passed.");
-            return RedirectToAction(nameof(Create), new { screeningId = model.ScreeningId });
+            TempData["ScreeningStartedMessage"] = "This screening has already started";
+            return RedirectToAction("Details", "Movies", new { id = screening.MovieId });
         }
 
         if (selectedSeatIds is null || selectedSeatIds.Length == 0)

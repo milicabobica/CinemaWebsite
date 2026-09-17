@@ -41,16 +41,7 @@ public class MoviesController(ApplicationDbContext context) : Controller {
                 query = query.Where(m => m.ReleaseDate > now);
             }
         }
-
-
-        // if (!string.IsNullOrWhiteSpace(day))
-        // {
-        //     if (Enum.TryParse<DayOfWeek>(day, true, out var selectedDay))
-        //     {
-        //         query = query.Where(m =>
-        //             m.ReleaseDate.DayOfWeek == selectedDay);
-        //     }
-        // }
+        
 
         if (!string.IsNullOrWhiteSpace(day) && Enum.TryParse<DayOfWeek>(day, true, out var selectedDay)) {
             var screeningNow = CinemaTime.Now;

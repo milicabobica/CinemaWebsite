@@ -1,5 +1,9 @@
 @model CinemaWebsite.ViewModels.HomeViewModel
 
+@section Head {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true"/>
+}
+
 @{
     ViewData["Title"] = "Home";
     ViewData["BodyClass"] = "home-page";

@@ -1,5 +1,10 @@
 @using CinemaWebsite.Models
 @model IEnumerable<CinemaWebsite.ViewModels.ReservationDisplayViewModel>
+
+@section Head {
+    <link rel="stylesheet" href="~/css/payment.css" asp-append-version="true"/>
+}
+
 @{
     ViewData["Title"] = "My Reservations";
 }

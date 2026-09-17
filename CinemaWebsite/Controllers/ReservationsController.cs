@@ -124,11 +124,6 @@ public class ReservationsController(
                     $"{x.Key}: {e.ErrorMessage} {e.Exception?.Message}"
                 ))
                 .ToList();
-
-            foreach (var error in errors)
-            {
-                Console.WriteLine("MODELSTATE ERROR: " + error);
-            }
             
             screening = await context.Screenings
                 .Include(s => s.Movie)
@@ -287,22 +282,6 @@ public class ReservationsController(
             ModelState.AddModelError(nameof(model.ExpirationDate), "Card expiration date is invalid or already expired.");
         }
         
-        foreach (var state in ModelState)
-        {
-            foreach (var error in state.Value.Errors)
-            {
-                Console.WriteLine(
-                    $"PAYMENT MODELSTATE ERROR: {state.Key} - {error.ErrorMessage}"
-                );
-
-                if (error.Exception != null)
-                {
-                    Console.WriteLine(
-                        $"EXCEPTION: {error.Exception.Message}"
-                    );
-                }
-            }
-        }
 
         if (!ModelState.IsValid)
         {

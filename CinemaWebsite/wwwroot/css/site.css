@@ -70,6 +70,66 @@ a:hover {
   text-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
 }
 
+.motion-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.motion-brand-logo {
+  display: block;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.motion-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  text-align: left;
+  white-space: nowrap;
+  word-break: normal;
+}
+
+.motion-brand-name {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.85rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: .025em;
+  text-transform: none;
+}
+
+.motion-brand-tagline {
+  color: #d4b17a;
+  font-size: .65rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: none;
+}
+
+.motion-brand-footer .motion-brand-logo {
+  width: 96px;
+  height: 96px;
+}
+
+.motion-brand:hover {
+  color: var(--text);
+}
+
+.motion-brand:focus-visible {
+  outline: 2px solid #d4b17a;
+  outline-offset: 5px;
+  border-radius: 8px;
+}
+
 .navbar .nav-link,
 .navbar .btn-link.nav-link {
   color: var(--text-muted) !important;

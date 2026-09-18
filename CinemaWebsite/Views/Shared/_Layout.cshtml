@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - CinemaWebsite</title>
+    <title>@ViewData["Title"] - Motion</title>
+    <link rel="icon" type="image/png" href="~/logo.png" asp-append-version="true"/>
     <script type="importmap"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +18,9 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🎬 CinemaWebsite</a>
+            <a class="navbar-brand motion-brand" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Motion — Home">
+                <img class="motion-brand-logo" src="~/logo.png" asp-append-version="true" alt="Motion — Experience Cinema" width="64" height="64"/>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -77,7 +80,9 @@
     <div class="container">
         <div class="row g-4 mb-4">
             <div class="col-lg-6 col-md-6">
-                <h4 class="fw-bold text-white mb-3 text-uppercase tracking-wider">🎬 CinemaWebsite</h4>
+                <a class="motion-brand motion-brand-footer mb-3" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Motion — Home">
+                    <partial name="_MotionBrand"/>
+                </a>
                 <p class="text-white-50 small pe-lg-4">Your premium destination for the latest blockbusters and timeless classics. Experience cinema like never before with our state-of-the-art halls and exclusive premieres.</p>
             </div>
             <div class="col-lg-3 col-md-3 col-6">
@@ -98,7 +103,7 @@
             </div>
         </div>
         <div class="pt-4 border-top border-secondary border-opacity-25">
-            <p class="text-white-50 small mb-0">&copy; @DateTime.Now.Year CinemaWebsite. All rights reserved.</p>
+            <p class="text-white-50 small mb-0">&copy; @DateTime.Now.Year Motion. All rights reserved.</p>
         </div>
     </div>
 </footer>

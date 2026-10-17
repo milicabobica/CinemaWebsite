@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+.git/
+.idea/
+.vs/
+.build/
+.stack-data/
+**/TestResults/
+**/*.user
+**/*.suo
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/*.db-journal
+**/.env
+**/.env.*

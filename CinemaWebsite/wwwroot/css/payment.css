@@ -136,15 +136,15 @@
     margin-top: 0.4rem;
     font-weight: 600;
     font-size: 1rem;
-    /*background: var(--accent);*/
-    /*border-color: var(--accent);*/
+    background: var(--accent);
+    border-color: var(--accent);
     color: #fff;
     transition: all 0.2s ease;
 }
 
 .payment-cta:hover {
-    /*background: var(--accent-hover);*/
-    /*border-color: var(--accent-hover);*/
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
     color: #fff;
     transform: translateY(-2px);
 }

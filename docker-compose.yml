@@ -1,0 +1,11 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    cpus: 0.5
+    mem_limit: 512m
+    volumes:
+      - ./.stack-data/app-data:/app/data
+  

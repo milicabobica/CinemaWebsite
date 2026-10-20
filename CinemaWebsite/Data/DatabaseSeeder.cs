@@ -183,6 +183,30 @@ public static class DatabaseSeeder
 
         await SeedMoviesAndScreeningsAsync(context);
         await SeedNewsAndServicesAsync(context);
+        await SeedEmployeesAsync(context);
+    }
+
+    private static async Task SeedEmployeesAsync(ApplicationDbContext context)
+    {
+        const string employeeEmail = "theo.james@gmail.com";
+        var existingEmployeeEmails = await context.Employees
+            .Select(employee => employee.Email)
+            .ToListAsync();
+        if (existingEmployeeEmails.Contains(employeeEmail, StringComparer.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        context.Employees.Add(new Employee
+        {
+            FirstName = "Theo",
+            LastName = "James",
+            Position = "Manager",
+            Email = employeeEmail,
+            Phone = "01478596523",
+            PhotoUrl = "https://wallpapers.com/images/file/teenager-pictures-zva5guy9wdvihwt0.jpg"
+        });
+        await context.SaveChangesAsync();
     }
 
     private static async Task SeedNewsAndServicesAsync(ApplicationDbContext context)

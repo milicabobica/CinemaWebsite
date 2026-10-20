@@ -23,7 +23,7 @@ public static class DatabaseSeeder
             }
         }
 
-        const string adminEmail = "admin@cineverse.local";
+        const string adminEmail = "admin@motion.cinema";
         var admin = await userManager.Users.FirstOrDefaultAsync(u => u.Email == adminEmail);
         if (admin is null)
         {

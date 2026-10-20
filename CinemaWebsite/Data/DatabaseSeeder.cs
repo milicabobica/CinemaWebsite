@@ -182,6 +182,71 @@ public static class DatabaseSeeder
         }
 
         await SeedMoviesAndScreeningsAsync(context);
+        await SeedNewsAndServicesAsync(context);
+    }
+
+    private static async Task SeedNewsAndServicesAsync(ApplicationDbContext context)
+    {
+        const string newsTitle = "Movie Night Just Got Better: Discover Our New Snack Combos";
+        var existingNewsTitles = await context.News.Select(news => news.Title).ToListAsync();
+        if (!existingNewsTitles.Contains(newsTitle, StringComparer.OrdinalIgnoreCase))
+        {
+            context.News.Add(new News
+            {
+                Title = newsTitle,
+                Summary = "Motion introduces new food and drink combinations created to make your next movie night even better.",
+                Content = "No cinema experience is complete without something to snack on. Motion has expanded its food and drinks selection with new combinations featuring freshly prepared popcorn, refreshing drinks, and popular sweet and savory snacks. The new combos make it easier for visitors to choose everything they need before heading into the screening hall. Options are available for individual visitors as well as friends and families sharing snacks during a movie. Visit our concession area before your next screening and find your perfect movie-night combination.",
+                PublishedDate = new DateTime(2026, 9, 18, 0, 0, 0, DateTimeKind.Utc),
+                Author = "Ed Power",
+                IsPublished = true
+            });
+        }
+
+        Service[] serviceSeeds =
+        [
+            new()
+            {
+                Name = "Food & Drinks",
+                Description = """
+                    Complete your cinema experience with your favorite movie snacks and refreshing drinks. At Motion, our concession area offers a selection of classic cinema treats and tasty options to enjoy before or during your movie.
+
+                    From freshly prepared popcorn and sweet snacks to soft drinks and refreshing beverages, there’s something for every movie night.
+
+                    Service Highlights:
+                    • Freshly prepared popcorn
+                    • Soft drinks and refreshments
+                    • Sweet and savory snacks
+                    • Combo menus for easy ordering
+                    • Quick service before your screening
+                    • Convenient concession area
+                    """
+            },
+            new()
+            {
+                Name = "Premium Cinema Experience",
+                Description = """
+                    Experience movies the way they were meant to be seen. Motion combines crystal-clear digital projection, immersive surround sound, and comfortable seating to bring every scene to life.
+
+                    Our modern cinema halls are designed to provide excellent visibility and sound from every seat, whether you're watching the latest blockbuster, an animated adventure, or a timeless classic. Sit back, relax, and enjoy an unforgettable big-screen experience.
+
+                    Service Highlights:
+                    • High-quality digital projection
+                    • Immersive surround sound
+                    • Comfortable cinema seating
+                    • Modern, climate-controlled halls
+                    • Carefully selected latest releases
+                    • Easy online ticket reservations
+                    """
+            }
+        ];
+        var existingServiceNames = await context.Services.Select(service => service.Name).ToListAsync();
+        context.Services.AddRange(serviceSeeds.Where(seed =>
+            !existingServiceNames.Contains(seed.Name, StringComparer.OrdinalIgnoreCase)));
+
+        if (context.ChangeTracker.HasChanges())
+        {
+            await context.SaveChangesAsync();
+        }
     }
 
     private static async Task SeedMoviesAndScreeningsAsync(ApplicationDbContext context)

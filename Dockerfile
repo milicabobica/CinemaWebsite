@@ -14,10 +14,9 @@ WORKDIR /app
 
 ENV ASPNETCORE_HTTP_PORTS=8080
 
-RUN mkdir -p /app/data && chown app:app /app/data
+RUN mkdir -p /app/data 
 COPY --from=build /app/publish .
 
-USER app
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "CinemaWebsite.dll"]

@@ -5,4 +5,4 @@ ingress:
     port: 8080
     primary: true
     access:
-      type: team
+      type: public
